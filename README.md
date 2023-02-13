@@ -9,9 +9,9 @@
 
 <p align="center">
 <a href="https://go.adapty.io/subhub-community-ios-rep"><img src="https://img.shields.io/badge/Adapty-discord-purple"></a>
-<a href="http://bit.ly/3qXy7cf"><img src="https://img.shields.io/cocoapods/v/AdaptyUI.svg?style=flat"></a>
+<a href="https://cocoapods.org/pods/AdaptyUI"><img src="https://img.shields.io/cocoapods/v/AdaptyUI.svg?style=flat"></a>
 <a href="https://github.com/adaptyteam/AdaptyUI-iOS/blob/master/LICENSE"><img src="https://img.shields.io/cocoapods/l/AdaptyUI.svg?style=flat"></a>
-<a href="http://bit.ly/3qXy7cf2"><img src="https://img.shields.io/cocoapods/p/Adapty.svg?style=flat"></a>
+<a href="https://cocoapods.org/pods/AdaptyUI"><img src="https://img.shields.io/cocoapods/p/AdaptyUI.svg?style=flat"></a>
 <a href="https://docs.adapty.io/docs/paywall-builder-installation">
 <img src="https://img.shields.io/badge/SwiftPM-compatible-orange.svg"></a>
 </p>
