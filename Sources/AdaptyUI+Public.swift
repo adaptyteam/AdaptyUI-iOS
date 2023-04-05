@@ -117,7 +117,7 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
 }
 
 extension AdaptyUI {
-    public static let sdkVersion = "1.0.0"
+    public static let sdkVersion = "1.0.1"
 
     /// Right after receiving ``AdaptyUI.ViewConfiguration``, you can create the corresponding ``AdaptyPaywallController`` to present it afterwards.
     ///
