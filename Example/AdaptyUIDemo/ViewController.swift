@@ -103,7 +103,7 @@ class ViewController: UIViewController {
         guard let paywall = paywall else { return }
 
         setInProgress(true)
-                
+
         AdaptyUI.getViewConfiguration(forPaywall: paywall) { [weak self] result in
             self?.setInProgress(false)
 
@@ -135,19 +135,22 @@ extension ViewController: AdaptyPaywallControllerDelegate {
         print("#ExampleUI# didFailRestoreWith \(error)")
     }
 
-    public func paywallControllerDidCancelPurchase(_ controller: AdaptyPaywallController) {
+    public func paywallController(_ controller: AdaptyPaywallController,
+                                  didCancelPurchase product: AdaptyProduct) {
         print("#ExampleUI# paywallControllerDidCancelPurchase")
     }
 
     public func paywallController(_ controller: AdaptyPaywallController,
-                                  didFinishPurchaseWith profile: AdaptyProfile) {
-        print("#ExampleUI# didFinishPurchaseWith")
+                                  didFinishPurchase product: AdaptyProduct,
+                                  profile: AdaptyProfile) {
+        print("#ExampleUI# didFinishPurchase")
 
         controller.dismiss(animated: true)
     }
 
     public func paywallController(_ controller: AdaptyPaywallController,
-                                  didFailPurchaseWith error: AdaptyError) {
+                                  didFailPurchase product: AdaptyProduct,
+                                  error: AdaptyError) {
         print("#ExampleUI# didFailPurchaseWith \(error)")
     }
 

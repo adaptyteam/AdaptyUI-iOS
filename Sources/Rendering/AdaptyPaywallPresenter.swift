@@ -37,7 +37,7 @@ class AdaptyPaywallPresenter {
 
     private var cancellable = Set<AnyCancellable>()
 
-    var onPurchase: ((AdaptyResult<AdaptyProfile>) -> Void)?
+    var onPurchase: ((AdaptyResult<AdaptyProfile>, AdaptyProduct) -> Void)?
     var onRestore: ((AdaptyResult<AdaptyProfile>) -> Void)?
 
     public init(
@@ -79,7 +79,7 @@ class AdaptyPaywallPresenter {
 
         purchaseInProgress = true
         Adapty.makePurchase(product: selectedProduct) { [weak self] result in
-            self?.onPurchase?(result)
+            self?.onPurchase?(result, selectedProduct)
             self?.purchaseInProgress = false
 
             switch result {

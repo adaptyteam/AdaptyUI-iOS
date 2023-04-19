@@ -129,8 +129,8 @@ public class AdaptyPaywallController: UIViewController {
     }
 
     private func subscribeForEvents() {
-        presenter.onPurchase = { [weak self] result in
-            self?.handlePurchaseResult(result)
+        presenter.onPurchase = { [weak self] result, product in
+            self?.handlePurchaseResult(result, product)
         }
 
         presenter.onRestore = { [weak self] result in
@@ -138,24 +138,24 @@ public class AdaptyPaywallController: UIViewController {
         }
     }
 
-    private func handlePurchaseResult(_ result: AdaptyResult<AdaptyProfile>) {
+    private func handlePurchaseResult(_ result: AdaptyResult<AdaptyProfile>, _ product: AdaptyProduct) {
         switch result {
         case let .success(profile):
-            delegate?.paywallController(self, didFinishPurchaseWith: profile)
+            delegate?.paywallController(self, didFinishPurchase: product, profile: profile)
         case let .failure(error):
             if error.adaptyErrorCode == .paymentCancelled {
-                delegate?.paywallControllerDidCancelPurchase(self)
+                delegate?.paywallController(self, didCancelPurchase: product)
             } else if let alertDialog = delegate?.paywallController(
                 self,
                 buildDialogWith: .error(error),
                 onDialogDismissed: { [weak self] in
                     guard let self = self else { return }
-                    self.delegate?.paywallController(self, didFailPurchaseWith: error)
+                    self.delegate?.paywallController(self, didFailPurchase: product, error: error)
                 }
             ) {
                 present(alertDialog, animated: true)
             } else {
-                delegate?.paywallController(self, didFailPurchaseWith: error)
+                delegate?.paywallController(self, didFailPurchase: product, error: error)
             }
         }
     }

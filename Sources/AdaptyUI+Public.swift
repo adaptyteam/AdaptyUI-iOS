@@ -29,6 +29,12 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
     /// - Parameter controller: an ``AdaptyPaywallController`` within which the event occurred.
     func paywallControllerDidPressCloseButton(_ controller: AdaptyPaywallController)
 
+    func paywallController(_ controller: AdaptyPaywallController,
+                           didSelectProduct product: AdaptyProduct)
+
+    func paywallController(_ controller: AdaptyPaywallController,
+                           didStartPurchase product: AdaptyProduct)
+
     /// This method is invoked when a successful purchase is made.
     ///
     /// The default implementation is simply dismissing the controller:
@@ -39,18 +45,21 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
     ///   - controller: an ``AdaptyPaywallController`` within which the event occurred.
     ///   - profile: an ``AdaptyProfile`` object containing up to date information about the user.
     func paywallController(_ controller: AdaptyPaywallController,
-                           didFinishPurchaseWith profile: AdaptyProfile)
+                           didFinishPurchase product: AdaptyProduct,
+                           profile: AdaptyProfile)
 
     /// This method is invoked when the purchase process fails.
     /// - Parameters:
     ///   - controller: an ``AdaptyPaywallController`` within which the event occurred.
     ///   - error: an ``AdaptyError`` object representing the error.
     func paywallController(_ controller: AdaptyPaywallController,
-                           didFailPurchaseWith error: AdaptyError)
+                           didFailPurchase product: AdaptyProduct,
+                           error: AdaptyError)
 
     /// This method is invoked when user cancel the purchase manually.
     /// - Parameter controller: an ``AdaptyPaywallController`` within which the event occurred.
-    func paywallControllerDidCancelPurchase(_ controller: AdaptyPaywallController)
+    func paywallController(_ controller: AdaptyPaywallController,
+                           didCancelPurchase product: AdaptyProduct)
 
     /// This method is invoked when a successful restore is made.
     ///
