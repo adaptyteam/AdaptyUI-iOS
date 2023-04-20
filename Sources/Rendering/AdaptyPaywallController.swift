@@ -14,6 +14,7 @@ public class AdaptyPaywallController: UIViewController {
 
     public var paywall: AdaptyPaywall { presenter.paywall }
     public weak var delegate: AdaptyPaywallControllerDelegate?
+    public weak var layoutDelegate: AdaptyPaywallControllerLayoutDelegate?
 
     private let scrollViewDelegate = AdaptyCoverImageScrollDelegate()
     private let presenter: AdaptyPaywallPresenter
@@ -23,7 +24,8 @@ public class AdaptyPaywallController: UIViewController {
         paywall: AdaptyPaywall,
         products: [AdaptyPaywallProduct]?,
         viewConfiguration: AdaptyUI.ViewConfiguration,
-        delegate: AdaptyPaywallControllerDelegate?
+        delegate: AdaptyPaywallControllerDelegate?,
+        layoutDelegate: AdaptyPaywallControllerLayoutDelegate?
     ) {
         let logId = AdaptyUI.generateLogId()
 
@@ -31,6 +33,7 @@ public class AdaptyPaywallController: UIViewController {
 
         self.logId = logId
         self.delegate = delegate
+        self.layoutDelegate = layoutDelegate
 
         let localizedConfig = viewConfiguration.extractLocale(paywall.locale)
 
@@ -248,6 +251,13 @@ public class AdaptyPaywallController: UIViewController {
             useHaptic: true,
             selectedProductId: presenter.selectedProduct?.vendorProductId,
             reader: reader,
+            productTitleFunc: { [weak self] product in
+                guard let self = self, let delegate = self.layoutDelegate else {
+                    return product.localizedTitle
+                }
+                
+                return delegate.paywallController(self, titleForProduct: product)
+            },
             onProductSelected: { [weak self] productId in
                 self?.presenter.selectProduct(id: productId)
             }

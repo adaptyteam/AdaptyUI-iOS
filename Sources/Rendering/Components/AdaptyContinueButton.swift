@@ -56,7 +56,7 @@ class AdaptyContinueButton: UIButton {
 
         let progressView = UIActivityIndicatorView(style: .medium)
         progressView.translatesAutoresizingMaskIntoConstraints = false
-        progressView.tintColor = text.color?.uiColor ?? .white
+        progressView.color = text.color?.uiColor ?? .white
         progressView.isHidden = true
         addSubview(progressView)
 

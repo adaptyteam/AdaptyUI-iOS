@@ -75,7 +75,8 @@ class ViewController: UIViewController {
             for: paywall,
             products: products,
             viewConfiguration: viewConfiguration,
-            delegate: self
+            delegate: self,
+            layoutDelegate: self
         )
 
         present(vc, animated: true)
@@ -164,5 +165,11 @@ extension ViewController: AdaptyPaywallControllerDelegate {
                                   error: AdaptyError) -> Bool {
         print("#ExampleUI# didFailLoadingProductsWith \(error)")
         return false
+    }
+}
+
+extension ViewController: AdaptyPaywallControllerLayoutDelegate {
+    func paywallController(_ controller: AdaptyPaywallController, titleForProduct product: AdaptyProduct) -> String {
+        product.vendorProductId
     }
 }

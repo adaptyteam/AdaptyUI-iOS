@@ -13,6 +13,7 @@ class AdaptyProductsListComponent: UIStackView {
 
     private let paywall: AdaptyPaywall
     private var products: [AdaptyPaywallProduct]?
+    private let productTitleFunc: (AdaptyPaywallProduct) -> String
     private let underlayColor: AdaptyUI.Color
     private let accentColor: AdaptyUI.Color
     private let titleColor: AdaptyUI.Color
@@ -26,6 +27,7 @@ class AdaptyProductsListComponent: UIStackView {
 
     init(paywall: AdaptyPaywall,
          products: [AdaptyPaywallProduct]?,
+         productTitleFunc: @escaping (AdaptyPaywallProduct) -> String,
          underlayColor: AdaptyUI.Color,
          accentColor: AdaptyUI.Color,
          titleColor: AdaptyUI.Color,
@@ -37,6 +39,7 @@ class AdaptyProductsListComponent: UIStackView {
          onProductSelected: @escaping (String) -> Void) {
         self.paywall = paywall
         self.products = products
+        self.productTitleFunc = productTitleFunc
         self.underlayColor = underlayColor
         self.accentColor = accentColor
         self.titleColor = titleColor
@@ -90,6 +93,7 @@ class AdaptyProductsListComponent: UIStackView {
             for i in 0 ..< products.count {
                 let product = products[i]
                 let productButton = AdaptyProductItemComponent(product: product,
+                                                               productTitleFunc: productTitleFunc,
                                                                underlayColor: underlayColor,
                                                                accentColor: accentColor,
                                                                titleColor: titleColor,
