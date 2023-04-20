@@ -109,7 +109,13 @@ public class AdaptyPaywallController: UIViewController {
         presenter.$selectedProduct
             .receive(on: RunLoop.main)
             .sink { [weak self] value in
-                self?.updateSelectedProductId(value)
+                guard let self = self else { return }
+
+                self.updateSelectedProductId(value)
+
+                if let delegate = self.delegate, let product = value {
+                    delegate.paywallController(self, didSelectProduct: product)
+                }
             }
             .store(in: &cancellable)
 
@@ -178,12 +184,6 @@ public class AdaptyPaywallController: UIViewController {
 
         case let .failure(error):
             guard error.adaptyErrorCode != .paymentCancelled else { break }
-
-            if let alertDialog = delegate?.paywallController(self,
-                                                             buildDialogWith: .error(error),
-                                                             onDialogDismissed: nil) {
-                present(alertDialog, animated: true)
-            }
 
             if let alertDialog = delegate?.paywallController(
                 self,
@@ -257,7 +257,13 @@ public class AdaptyPaywallController: UIViewController {
             on: baseStack,
             reader: reader,
             onTap: { [weak self] in
-                self?.presenter.makePurchase()
+                guard let self = self else { return }
+
+                self.presenter.makePurchase()
+
+                if let delegate = self.delegate, let product = self.presenter.selectedProduct {
+                    delegate.paywallController(self, didStartPurchase: product)
+                }
             }
         )
 
@@ -289,7 +295,7 @@ public class AdaptyPaywallController: UIViewController {
         if reader.showCloseButton {
             closeButton = AdaptyInterfaceBilder.buildCloseButton(on: view) { [weak self] in
                 self?.log(.verbose, "onClose tap")
-                
+
                 guard let self = self else { return }
                 self.delegate?.paywallControllerDidPressCloseButton(self)
             }
