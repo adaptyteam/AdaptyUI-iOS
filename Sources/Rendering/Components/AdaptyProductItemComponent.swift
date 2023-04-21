@@ -16,7 +16,7 @@ class AdaptyProductItemComponent: UIView {
     }
 
     private(set) var product: AdaptyPaywallProduct
-    private let productTitleFunc: (AdaptyPaywallProduct) -> String
+    private let productsTitlesResolver: (AdaptyProduct) -> String
     private let underlayColor: AdaptyUI.Color
     private let accentColor: AdaptyUI.Color
     private let titleColor: AdaptyUI.Color
@@ -30,7 +30,7 @@ class AdaptyProductItemComponent: UIView {
 
     init(
         product: AdaptyPaywallProduct,
-        productTitleFunc: @escaping (AdaptyPaywallProduct) -> String,
+        productsTitlesResolver: @escaping (AdaptyProduct) -> String,
         underlayColor: AdaptyUI.Color,
         accentColor: AdaptyUI.Color,
         titleColor: AdaptyUI.Color,
@@ -41,7 +41,7 @@ class AdaptyProductItemComponent: UIView {
         useHaptic: Bool
     ) {
         self.product = product
-        self.productTitleFunc = productTitleFunc
+        self.productsTitlesResolver = productsTitlesResolver
         self.underlayColor = underlayColor
         self.accentColor = accentColor
         self.titleColor = titleColor
@@ -161,7 +161,7 @@ class AdaptyProductItemComponent: UIView {
 
         addSubview(button)
 
-        titleLabel.text = productTitleFunc(product)
+        titleLabel.text = productsTitlesResolver(product)
         subtitleLabel.text = product.eligibleOfferString()        
         priceTitleLabel.text = product.localizedPrice
         priceSubtitleLabel.text = product.perWeekPriceString()

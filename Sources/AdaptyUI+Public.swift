@@ -139,11 +139,6 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
                            onDialogDismissed: (() -> Void)?) -> UIViewController
 }
 
-/// Implement this protocol configure layout details.
-public protocol AdaptyPaywallControllerLayoutDelegate: NSObject {
-    func paywallController(_ controller: AdaptyPaywallController, titleForProduct product: AdaptyProduct) -> String
-}
-
 extension AdaptyUI {
     public static let sdkVersion = "1.0.1"
 
@@ -160,14 +155,14 @@ extension AdaptyUI {
         products: [AdaptyPaywallProduct]? = nil,
         viewConfiguration: AdaptyUI.ViewConfiguration,
         delegate: AdaptyPaywallControllerDelegate?,
-        layoutDelegate: AdaptyPaywallControllerLayoutDelegate?
+        productsTitlesResolver: ((AdaptyProduct) -> String)?
     ) -> AdaptyPaywallController {
         AdaptyPaywallController(
             paywall: paywall,
             products: products,
             viewConfiguration: viewConfiguration,
             delegate: delegate,
-            layoutDelegate: layoutDelegate
+            productsTitlesResolver: productsTitlesResolver
         )
     }
 }

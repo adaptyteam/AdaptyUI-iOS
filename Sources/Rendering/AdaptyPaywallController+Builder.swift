@@ -195,13 +195,13 @@ struct AdaptyInterfaceBilder {
         useHaptic: Bool,
         selectedProductId: String?,
         reader: AdaptyTemplateReader,
-        productTitleFunc: @escaping (AdaptyPaywallProduct) -> String,
+        productsTitlesResolver: @escaping (AdaptyProduct) -> String,
         onProductSelected: @escaping (String) -> Void
     ) throws -> AdaptyProductsListComponent {
         let productsList = AdaptyProductsListComponent(
             paywall: paywall,
             products: products,
-            productTitleFunc: productTitleFunc,
+            productsTitlesResolver: productsTitlesResolver,
             underlayColor: try reader.colorProductButtonBackground(),
             accentColor: try reader.colorMainAccent(),
             titleColor: try reader.colorProductTitle(),
