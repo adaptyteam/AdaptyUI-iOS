@@ -155,7 +155,7 @@ extension AdaptyUI {
         products: [AdaptyPaywallProduct]? = nil,
         viewConfiguration: AdaptyUI.ViewConfiguration,
         delegate: AdaptyPaywallControllerDelegate?,
-        productsTitlesResolver: ((AdaptyProduct) -> String)?
+        productsTitlesResolver: ((AdaptyProduct) -> String)? = nil
     ) -> AdaptyPaywallController {
         AdaptyPaywallController(
             paywall: paywall,
