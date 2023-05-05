@@ -38,15 +38,15 @@ extension AdaptyPaywallControllerDelegate {
     }
 
     public func paywallController(_ controller: AdaptyPaywallController,
-                                  didSelectProduct product: AdaptyProduct) {
+                                  didSelectProduct product: AdaptyPaywallProduct) {
     }
 
     public func paywallController(_ controller: AdaptyPaywallController,
-                                  didStartPurchase product: AdaptyProduct) {
+                                  didStartPurchase product: AdaptyPaywallProduct) {
     }
 
     public func paywallController(_ controller: AdaptyPaywallController,
-                                  didFinishPurchase product: AdaptyProduct,
+                                  didFinishPurchase product: AdaptyPaywallProduct,
                                   profile: AdaptyProfile) {
         controller.dismiss(animated: true)
     }
@@ -61,7 +61,8 @@ extension AdaptyPaywallControllerDelegate {
         false
     }
 
-    public func paywallController(_ controller: AdaptyPaywallController, openURL url: URL) {
+    public func paywallController(_ controller: AdaptyPaywallController,
+                                  openURL url: URL) {
         UIApplication.shared.open(url, options: [:])
     }
 

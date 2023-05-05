@@ -150,7 +150,7 @@ public class AdaptyPaywallController: UIViewController {
         }
     }
 
-    private func handlePurchaseResult(_ result: AdaptyResult<AdaptyProfile>, _ product: AdaptyProduct) {
+    private func handlePurchaseResult(_ result: AdaptyResult<AdaptyProfile>, _ product: AdaptyPaywallProduct) {
         switch result {
         case let .success(profile):
             delegate?.paywallController(self, didFinishPurchase: product, profile: profile)

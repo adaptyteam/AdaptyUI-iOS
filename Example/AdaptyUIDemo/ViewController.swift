@@ -124,7 +124,8 @@ extension ViewController: AdaptyPaywallControllerDelegate {
         controller.dismiss(animated: true)
     }
 
-    public func paywallController(_ controller: AdaptyPaywallController, didFinishRestoreWith profile: AdaptyProfile) {
+    public func paywallController(_ controller: AdaptyPaywallController,
+                                  didFinishRestoreWith profile: AdaptyProfile) {
         print("#ExampleUI# didFinishRestoreWith")
 
         if profile.accessLevels["premium"]?.isActive ?? false {
@@ -132,17 +133,18 @@ extension ViewController: AdaptyPaywallControllerDelegate {
         }
     }
 
-    public func paywallController(_ controller: AdaptyPaywallController, didFailRestoreWith error: AdaptyError) {
+    public func paywallController(_ controller: AdaptyPaywallController,
+                                  didFailRestoreWith error: AdaptyError) {
         print("#ExampleUI# didFailRestoreWith \(error)")
     }
 
     public func paywallController(_ controller: AdaptyPaywallController,
-                                  didCancelPurchase product: AdaptyProduct) {
+                                  didCancelPurchase product: AdaptyPaywallProduct) {
         print("#ExampleUI# paywallControllerDidCancelPurchase")
     }
 
     public func paywallController(_ controller: AdaptyPaywallController,
-                                  didFinishPurchase product: AdaptyProduct,
+                                  didFinishPurchase product: AdaptyPaywallProduct,
                                   profile: AdaptyProfile) {
         print("#ExampleUI# didFinishPurchase")
 
@@ -150,7 +152,7 @@ extension ViewController: AdaptyPaywallControllerDelegate {
     }
 
     public func paywallController(_ controller: AdaptyPaywallController,
-                                  didFailPurchase product: AdaptyProduct,
+                                  didFailPurchase product: AdaptyPaywallProduct,
                                   error: AdaptyError) {
         print("#ExampleUI# didFailPurchaseWith \(error)")
     }

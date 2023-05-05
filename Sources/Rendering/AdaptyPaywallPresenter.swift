@@ -37,7 +37,7 @@ class AdaptyPaywallPresenter {
 
     private var cancellable = Set<AnyCancellable>()
 
-    var onPurchase: ((AdaptyResult<AdaptyProfile>, AdaptyProduct) -> Void)?
+    var onPurchase: ((AdaptyResult<AdaptyProfile>, AdaptyPaywallProduct) -> Void)?
     var onRestore: ((AdaptyResult<AdaptyProfile>) -> Void)?
 
     public init(

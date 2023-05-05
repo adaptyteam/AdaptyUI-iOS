@@ -33,17 +33,17 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
     ///
     /// - Parameters:
     ///     - controller: an ``AdaptyPaywallController`` within which the event occurred.
-    ///     - product: an ``AdaptyProduct`` which was selected.
+    ///     - product: an ``AdaptyPaywallProduct`` which was selected.
     func paywallController(_ controller: AdaptyPaywallController,
-                           didSelectProduct product: AdaptyProduct)
+                           didSelectProduct product: AdaptyPaywallProduct)
 
     /// If user initiates the purchase process, this method will be invoked.
     ///
     /// - Parameters:
     ///     - controller: an ``AdaptyPaywallController`` within which the event occurred.
-    ///     - product: an ``AdaptyProduct`` of the purchase.
+    ///     - product: an ``AdaptyPaywallProduct`` of the purchase.
     func paywallController(_ controller: AdaptyPaywallController,
-                           didStartPurchase product: AdaptyProduct)
+                           didStartPurchase product: AdaptyPaywallProduct)
 
     /// This method is invoked when a successful purchase is made.
     ///
@@ -53,27 +53,27 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
     /// ```
     /// - Parameters:
     ///   - controller: an ``AdaptyPaywallController`` within which the event occurred.
-    ///   - product: an ``AdaptyProduct`` of the purchase.
+    ///   - product: an ``AdaptyPaywallProduct`` of the purchase.
     ///   - profile: an ``AdaptyProfile`` object containing up to date information about the user.
     func paywallController(_ controller: AdaptyPaywallController,
-                           didFinishPurchase product: AdaptyProduct,
+                           didFinishPurchase product: AdaptyPaywallProduct,
                            profile: AdaptyProfile)
 
     /// This method is invoked when the purchase process fails.
     /// - Parameters:
     ///   - controller: an ``AdaptyPaywallController`` within which the event occurred.
-    ///   - product: an ``AdaptyProduct`` of the purchase.
+    ///   - product: an ``AdaptyPaywallProduct`` of the purchase.
     ///   - error: an ``AdaptyError`` object representing the error.
     func paywallController(_ controller: AdaptyPaywallController,
-                           didFailPurchase product: AdaptyProduct,
+                           didFailPurchase product: AdaptyPaywallProduct,
                            error: AdaptyError)
 
     /// This method is invoked when user cancel the purchase manually.
     /// - Parameters
     ///     - controller: an ``AdaptyPaywallController`` within which the event occurred.
-    ///     - product: an ``AdaptyProduct`` of the purchase.
+    ///     - product: an ``AdaptyPaywallProduct`` of the purchase.
     func paywallController(_ controller: AdaptyPaywallController,
-                           didCancelPurchase product: AdaptyProduct)
+                           didCancelPurchase product: AdaptyPaywallProduct)
 
     /// This method is invoked when a successful restore is made.
     ///
