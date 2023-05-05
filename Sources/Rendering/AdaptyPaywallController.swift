@@ -12,7 +12,10 @@ import UIKit
 public class AdaptyPaywallController: UIViewController {
     fileprivate let logId: String
 
+    public let id = UUID()
     public var paywall: AdaptyPaywall { presenter.paywall }
+    public var viewConfiguration: AdaptyUI.LocalizedViewConfiguration { presenter.viewConfiguration }
+    
     public weak var delegate: AdaptyPaywallControllerDelegate?
 
     private let productsTitlesResolver: (AdaptyProduct) -> String
@@ -24,7 +27,7 @@ public class AdaptyPaywallController: UIViewController {
         paywall: AdaptyPaywall,
         products: [AdaptyPaywallProduct]?,
         viewConfiguration: AdaptyUI.ViewConfiguration,
-        delegate: AdaptyPaywallControllerDelegate?,
+        delegate: AdaptyPaywallControllerDelegate,
         productsTitlesResolver: ((AdaptyProduct) -> String)?
     ) {
         let logId = AdaptyUI.generateLogId()
