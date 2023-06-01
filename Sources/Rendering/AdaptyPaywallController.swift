@@ -115,13 +115,19 @@ public class AdaptyPaywallController: UIViewController {
         presenter.$selectedProduct
             .receive(on: RunLoop.main)
             .sink { [weak self] value in
-                guard let self = self else { return }
-
-                self.updateSelectedProductId(value)
-
-                if let delegate = self.delegate, let product = value {
-                    delegate.paywallController(self, didSelectProduct: product)
+                self?.updateSelectedProductId(value)
+            }
+            .store(in: &cancellable)
+        
+        presenter.$selectedProduct
+            .receive(on: RunLoop.main)
+            .dropFirst()
+            .sink { [weak self] value in
+                guard let self = self, let delegate = self.delegate, let product = value else {
+                    return
                 }
+                
+                delegate.paywallController(self, didSelectProduct: product)
             }
             .store(in: &cancellable)
 
