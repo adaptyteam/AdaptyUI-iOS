@@ -18,11 +18,15 @@ extension AdaptyUI {
         return result
     }
 
-    static func writeLog(level: AdaptyLogLevel,
-                         message: String,
-                         file: String = #fileID,
-                         function: String = #function,
-                         line: UInt = #line) {
-        Adapty.writeLog(level: level, message: "[UI \(AdaptyUI.sdkVersion)] \(message)", file: file, function: function, line: line)
+    public static func writeLog(level: AdaptyLogLevel,
+                                message: String,
+                                file: String = #fileID,
+                                function: String = #function,
+                                line: UInt = #line) {
+        Adapty.writeLog(level: level,
+                        message: "[UI \(AdaptyUI.sdkVersion)] \(message)",
+                        file: file,
+                        function: function,
+                        line: line)
     }
 }
