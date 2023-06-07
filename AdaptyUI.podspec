@@ -28,7 +28,7 @@ AdaptyUI is an extension for AdaptySDK.
   
   s.source_files = 'Sources/**/*.swift'
   
-  s.dependency 'Adapty', '~> 2.3'
+  s.dependency 'Adapty', '~> 2.4.0'
 
   s.frameworks = 'Foundation'
   s.ios.framework = 'UIKit'
