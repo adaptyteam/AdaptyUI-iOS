@@ -145,7 +145,7 @@ extension ViewController: AdaptyPaywallControllerDelegate {
 
     public func paywallController(_ controller: AdaptyPaywallController,
                                   didFinishPurchase product: AdaptyPaywallProduct,
-                                  profile: AdaptyProfile) {
+                                  purchasedInfo: AdaptyPurchasedInfo) {
         print("#ExampleUI# didFinishPurchase")
 
         controller.dismiss(animated: true)

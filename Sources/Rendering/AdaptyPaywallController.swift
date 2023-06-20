@@ -169,7 +169,7 @@ public class AdaptyPaywallController: UIViewController {
         case let .success(info):
             delegate?.paywallController(self,
                                         didFinishPurchase: product,
-                                        profile: info.profile)
+                                        purchasedInfo: info)
         case let .failure(error):
             if error.adaptyErrorCode == .paymentCancelled {
                 delegate?.paywallController(self, didCancelPurchase: product)

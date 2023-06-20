@@ -47,7 +47,7 @@ extension AdaptyPaywallControllerDelegate {
 
     public func paywallController(_ controller: AdaptyPaywallController,
                                   didFinishPurchase product: AdaptyPaywallProduct,
-                                  profile: AdaptyProfile) {
+                                  purchasedInfo: AdaptyPurchasedInfo) {
         controller.dismiss(animated: true)
     }
 
