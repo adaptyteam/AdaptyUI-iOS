@@ -105,12 +105,10 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
     /// This method is invoked in case of errors during the products loading process.
     /// - Parameters:
     ///   - controller: an ``AdaptyPaywallController`` within which the event occurred.
-    ///   - policy: an ``AdaptyProductsFetchPolicy`` value, with which the `getProducts` method was called.
     ///   - error: an ``AdaptyError`` object representing the error.
     /// - Returns: Return `true`, if you want to retry products fetching.
     func paywallController(_ controller: AdaptyPaywallController,
-                           didFailLoadingProductsWith policy: AdaptyProductsFetchPolicy,
-                           error: AdaptyError) -> Bool
+                           didFailLoadingProductsWith error: AdaptyError) -> Bool
 
     /// If the user presses the "Terms" or "Privacy Policy" buttons, this method will be invoked.
     ///

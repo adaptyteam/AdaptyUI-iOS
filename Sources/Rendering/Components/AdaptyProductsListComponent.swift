@@ -14,6 +14,7 @@ class AdaptyProductsListComponent: UIStackView {
     private let paywall: AdaptyPaywall
     private var products: [AdaptyPaywallProduct]?
     private let productsTitlesResolver: (AdaptyProduct) -> String
+    private var introductoryOffersEligibilities: [String: AdaptyEligibility]?
     private let underlayColor: AdaptyUI.Color
     private let accentColor: AdaptyUI.Color
     private let titleColor: AdaptyUI.Color
@@ -28,6 +29,7 @@ class AdaptyProductsListComponent: UIStackView {
     init(paywall: AdaptyPaywall,
          products: [AdaptyPaywallProduct]?,
          productsTitlesResolver: @escaping (AdaptyProduct) -> String,
+         introductoryOffersEligibilities: [String: AdaptyEligibility]?,
          underlayColor: AdaptyUI.Color,
          accentColor: AdaptyUI.Color,
          titleColor: AdaptyUI.Color,
@@ -40,6 +42,7 @@ class AdaptyProductsListComponent: UIStackView {
         self.paywall = paywall
         self.products = products
         self.productsTitlesResolver = productsTitlesResolver
+        self.introductoryOffersEligibilities = introductoryOffersEligibilities
         self.underlayColor = underlayColor
         self.accentColor = accentColor
         self.titleColor = titleColor
@@ -49,7 +52,7 @@ class AdaptyProductsListComponent: UIStackView {
         self.tagText = tagText
         self.useHaptic = useHaptic
         self.onProductSelected = onProductSelected
-        
+
         super.init(frame: .zero)
 
         setupView()
@@ -92,16 +95,19 @@ class AdaptyProductsListComponent: UIStackView {
 
             for i in 0 ..< products.count {
                 let product = products[i]
-                let productButton = AdaptyProductItemComponent(product: product,
-                                                               productsTitlesResolver: productsTitlesResolver,
-                                                               underlayColor: underlayColor,
-                                                               accentColor: accentColor,
-                                                               titleColor: titleColor,
-                                                               subtitleColor: subtitleColor,
-                                                               priceColor: priceColor,
-                                                               priceSubtitleColor: priceSubtitleColor,
-                                                               tagText: i == 0 ? tagText : nil,
-                                                               useHaptic: useHaptic)
+                let productButton = AdaptyProductItemComponent(
+                    product: product,
+                    productsTitlesResolver: productsTitlesResolver,
+                    introductoryOfferEligibility: introductoryOffersEligibilities?[product.vendorProductId] ?? .ineligible,
+                    underlayColor: underlayColor,
+                    accentColor: accentColor,
+                    titleColor: titleColor,
+                    subtitleColor: subtitleColor,
+                    priceColor: priceColor,
+                    priceSubtitleColor: priceSubtitleColor,
+                    tagText: i == 0 ? tagText : nil,
+                    useHaptic: useHaptic
+                )
 
                 addArrangedSubview(productButton)
 
@@ -132,6 +138,15 @@ class AdaptyProductsListComponent: UIStackView {
         cleanupView()
         setupView()
         updateSelectedState(selectedProductId)
+    }
+    
+    func updateIntroEligibilities(_ eligibilities: [String: AdaptyEligibility]?) {
+        productButtons?.forEach { button in
+            let productId = button.product.vendorProductId
+            if let eligibility = eligibilities?[productId] {
+                button.updateIntroEligibility(eligibility)
+            }
+        }
     }
 
     func updateSelectedState(_ productId: String?) {

@@ -15,7 +15,7 @@ public class AdaptyPaywallController: UIViewController {
     public let id = UUID()
     public var paywall: AdaptyPaywall { presenter.paywall }
     public var viewConfiguration: AdaptyUI.LocalizedViewConfiguration { presenter.viewConfiguration }
-    
+
     public weak var delegate: AdaptyPaywallControllerDelegate?
 
     private let productsTitlesResolver: (AdaptyProduct) -> String
@@ -111,6 +111,13 @@ public class AdaptyPaywallController: UIViewController {
                 self?.productsList?.updateProducts(value, selectedProductId: selectedProductId)
             }
             .store(in: &cancellable)
+        
+        presenter.$introductoryOffersEligibilities
+            .receive(on: RunLoop.main)
+            .sink { [weak self] value in
+                self?.productsList?.updateIntroEligibilities(value)
+            }
+            .store(in: &cancellable)
 
         presenter.$selectedProduct
             .receive(on: RunLoop.main)
@@ -118,7 +125,7 @@ public class AdaptyPaywallController: UIViewController {
                 self?.updateSelectedProductId(value)
             }
             .store(in: &cancellable)
-        
+
         presenter.$selectedProduct
             .receive(on: RunLoop.main)
             .dropFirst()
@@ -126,7 +133,7 @@ public class AdaptyPaywallController: UIViewController {
                 guard let self = self, let delegate = self.delegate, let product = value else {
                     return
                 }
-                
+
                 delegate.paywallController(self, didSelectProduct: product)
             }
             .store(in: &cancellable)
@@ -156,10 +163,13 @@ public class AdaptyPaywallController: UIViewController {
         }
     }
 
-    private func handlePurchaseResult(_ result: AdaptyResult<AdaptyProfile>, _ product: AdaptyPaywallProduct) {
+    private func handlePurchaseResult(_ result: AdaptyResult<AdaptyPurchasedInfo>,
+                                      _ product: AdaptyPaywallProduct) {
         switch result {
-        case let .success(profile):
-            delegate?.paywallController(self, didFinishPurchase: product, profile: profile)
+        case let .success(info):
+            delegate?.paywallController(self,
+                                        didFinishPurchase: product,
+                                        profile: info.profile)
         case let .failure(error):
             if error.adaptyErrorCode == .paymentCancelled {
                 delegate?.paywallController(self, didCancelPurchase: product)
@@ -256,6 +266,7 @@ public class AdaptyPaywallController: UIViewController {
         let productsList = try AdaptyInterfaceBilder.buildProductsBlock(
             paywall,
             presenter.products,
+            presenter.introductoryOffersEligibilities,
             on: baseStack,
             useHaptic: true,
             selectedProductId: presenter.selectedProduct?.vendorProductId,
@@ -317,8 +328,8 @@ public class AdaptyPaywallController: UIViewController {
 }
 
 extension AdaptyPaywallController: AdaptyPaywallPresenterDelegate {
-    func didFailLoadingProducts(with policy: AdaptyProductsFetchPolicy, error: AdaptyError) -> Bool {
-        delegate?.paywallController(self, didFailLoadingProductsWith: policy, error: error) ?? false
+    func didFailLoadingProducts(with error: AdaptyError) -> Bool {
+        delegate?.paywallController(self, didFailLoadingProductsWith: error) ?? false
     }
 }
 

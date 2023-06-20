@@ -24,11 +24,11 @@ extension AdaptyProductDiscount {
 }
 
 extension AdaptyPaywallProduct {
-    func eligibleOfferString() -> String? {
+    func eligibleOfferString(introEligibility: AdaptyEligibility) -> String? {
         if let promotionalOfferId = promotionalOfferId,
            let promotionalOffer = discounts.first(where: { $0.identifier == promotionalOfferId }) {
             return promotionalOffer.localizedDescriptionString()
-        } else if introductoryOfferEligibility == .eligible {
+        } else if introEligibility == .eligible {
             return introductoryDiscount?.localizedDescriptionString()
         } else {
             return nil

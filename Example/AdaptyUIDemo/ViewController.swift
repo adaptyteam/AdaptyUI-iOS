@@ -163,8 +163,7 @@ extension ViewController: AdaptyPaywallControllerDelegate {
     }
 
     public func paywallController(_ controller: AdaptyPaywallController,
-                                  didFailLoadingProductsWith policy: AdaptyProductsFetchPolicy,
-                                  error: AdaptyError) -> Bool {
+                                  didFailLoadingProductsWith error: AdaptyError) -> Bool {
         print("#ExampleUI# didFailLoadingProductsWith \(error)")
         return false
     }

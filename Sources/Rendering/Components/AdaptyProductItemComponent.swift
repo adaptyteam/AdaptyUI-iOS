@@ -17,6 +17,7 @@ class AdaptyProductItemComponent: UIView {
 
     private(set) var product: AdaptyPaywallProduct
     private let productsTitlesResolver: (AdaptyProduct) -> String
+    private(set) var introductoryOfferEligibility: AdaptyEligibility
     private let underlayColor: AdaptyUI.Color
     private let accentColor: AdaptyUI.Color
     private let titleColor: AdaptyUI.Color
@@ -31,6 +32,7 @@ class AdaptyProductItemComponent: UIView {
     init(
         product: AdaptyPaywallProduct,
         productsTitlesResolver: @escaping (AdaptyProduct) -> String,
+        introductoryOfferEligibility: AdaptyEligibility,
         underlayColor: AdaptyUI.Color,
         accentColor: AdaptyUI.Color,
         titleColor: AdaptyUI.Color,
@@ -42,6 +44,7 @@ class AdaptyProductItemComponent: UIView {
     ) {
         self.product = product
         self.productsTitlesResolver = productsTitlesResolver
+        self.introductoryOfferEligibility = introductoryOfferEligibility
         self.underlayColor = underlayColor
         self.accentColor = accentColor
         self.titleColor = titleColor
@@ -61,6 +64,11 @@ class AdaptyProductItemComponent: UIView {
         setupView()
         setupConstraints()
         setupActions()
+    }
+
+    func updateIntroEligibility(_ eligibility: AdaptyEligibility) {
+        introductoryOfferEligibility = eligibility
+        subtitleLabel.text = product.eligibleOfferString(introEligibility: eligibility)
     }
 
     required init?(coder: NSCoder) {
@@ -99,7 +107,7 @@ class AdaptyProductItemComponent: UIView {
         priceTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         priceTitleLabel.textColor = priceColor.uiColor
         priceTitleLabel.textAlignment = .right
-        
+
         let titleStack = UIStackView(arrangedSubviews: [titleLabel, priceTitleLabel])
         titleStack.translatesAutoresizingMaskIntoConstraints = false
         titleStack.axis = .horizontal
@@ -138,18 +146,18 @@ class AdaptyProductItemComponent: UIView {
             tagLabel.insets = UIEdgeInsets(top: 0.0, left: 8.0, bottom: 0.0, right: 8.0)
             tagLabel.layer.cornerRadius = 10.0
             tagLabel.layer.masksToBounds = true
-            
+
             tagLabel.font = tagText.font?.uiFont()
             tagLabel.backgroundColor = accentColor.uiColor
             tagLabel.textColor = tagText.color?.uiColor
 
             let attr = NSMutableAttributedString(string: tagText.value ?? "")
             attr.addAttributes([
-                NSAttributedString.Key.kern: 0.2
+                NSAttributedString.Key.kern: 0.2,
             ], range: NSRange(location: 0, length: attr.length))
-            
+
             tagLabel.attributedText = attr
-            
+
             addSubview(tagLabel)
 
             self.tagLabel = tagLabel
@@ -162,7 +170,7 @@ class AdaptyProductItemComponent: UIView {
         addSubview(button)
 
         titleLabel.text = productsTitlesResolver(product)
-        subtitleLabel.text = product.eligibleOfferString()        
+        subtitleLabel.text = product.eligibleOfferString(introEligibility: introductoryOfferEligibility)
         priceTitleLabel.text = product.localizedPrice
         priceSubtitleLabel.text = product.perWeekPriceString()
 

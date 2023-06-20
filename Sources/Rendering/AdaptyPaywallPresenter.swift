@@ -9,15 +9,8 @@ import Adapty
 import Combine
 import Foundation
 
-extension Array where Element == AdaptyPaywallProduct {
-    var hasUnknownEligibiity: Bool {
-        contains(where: { $0.introductoryDiscount != nil && $0.introductoryOfferEligibility == .unknown })
-    }
-}
-
 protocol AdaptyPaywallPresenterDelegate: NSObject {
-    func didFailLoadingProducts(with policy: AdaptyProductsFetchPolicy,
-                                error: AdaptyError) -> Bool
+    func didFailLoadingProducts(with error: AdaptyError) -> Bool
 }
 
 class AdaptyPaywallPresenter {
@@ -30,6 +23,7 @@ class AdaptyPaywallPresenter {
 
     @Published var viewConfiguration: AdaptyUI.LocalizedViewConfiguration
     @Published var products: [AdaptyPaywallProduct]?
+    @Published var introductoryOffersEligibilities: [String : AdaptyEligibility]?
     @Published var selectedProduct: AdaptyPaywallProduct?
     @Published var productsFetchingInProgress: Bool = false
     @Published var purchaseInProgress: Bool = false
@@ -37,7 +31,7 @@ class AdaptyPaywallPresenter {
 
     private var cancellable = Set<AnyCancellable>()
 
-    var onPurchase: ((AdaptyResult<AdaptyProfile>, AdaptyPaywallProduct) -> Void)?
+    var onPurchase: ((AdaptyResult<AdaptyPurchasedInfo>, AdaptyPaywallProduct) -> Void)?
     var onRestore: ((AdaptyResult<AdaptyProfile>) -> Void)?
 
     public init(
@@ -113,14 +107,12 @@ class AdaptyPaywallPresenter {
     func loadProductsIfNeeded() {
         guard !productsLoadingInProgress else { return }
 
-        guard let products = products else {
+        guard products != nil, introductoryOffersEligibilities == nil else {
             loadProducts()
             return
         }
 
-        if products.hasUnknownEligibiity {
-            loadProductsEnsuringEligibility()
-        }
+        loadProductsIntroductoryEligibilities()
     }
 
     private var productsLoadingInProgress = false
@@ -144,17 +136,13 @@ class AdaptyPaywallPresenter {
                         self?.selectedProduct = products.first
                     }
 
-                    if products.hasUnknownEligibiity {
-                        self?.loadProductsEnsuringEligibility()
-                    } else {
-                        self?.productsLoadingInProgress = false
-                    }
-
+                    self?.productsLoadingInProgress = false
+                    self?.loadProductsIntroductoryEligibilities()
                 case let .failure(error):
                     self?.log(.error, "loadProducts fail: \(error)")
                     self?.productsLoadingInProgress = false
 
-                    if self?.delegate?.didFailLoadingProducts(with: .default, error: error) ?? false {
+                    if self?.delegate?.didFailLoadingProducts(with: error) ?? false {
                         self?.queue.asyncAfter(deadline: .now() + .seconds(2)) { [weak self] in
                             self?.loadProducts()
                         }
@@ -163,32 +151,12 @@ class AdaptyPaywallPresenter {
             }
         }
     }
-
-    private func loadProductsEnsuringEligibility() {
-        productsLoadingInProgress = true
-
-        log(.verbose, "loadProductsEnsuringEligibility begin")
-
-        queue.async { [weak self] in
-            guard let self = self else { return }
-
-            Adapty.getPaywallProducts(paywall: self.paywall, fetchPolicy: .waitForReceiptValidation) { [weak self] result in
-                switch result {
-                case let .success(products):
-                    self?.log(.verbose, "loadProductsEnsuringEligibility success")
-                    self?.products = products
-                    self?.productsLoadingInProgress = false
-                case let .failure(error):
-                    self?.log(.error, "loadProductsEnsuringEligibility fail: \(error)")
-                    self?.productsLoadingInProgress = false
-
-                    if self?.delegate?.didFailLoadingProducts(with: .waitForReceiptValidation, error: error) ?? false {
-                        self?.queue.asyncAfter(deadline: .now() + .seconds(2)) { [weak self] in
-                            self?.loadProductsEnsuringEligibility()
-                        }
-                    }
-                }
-            }
+    
+    private func loadProductsIntroductoryEligibilities() {
+        guard let products = products else { return  }
+        
+        Adapty.getProductsIntroductoryOfferEligibility(products: products) { [weak self] result in
+            self?.introductoryOffersEligibilities = try? result.get()
         }
     }
 }

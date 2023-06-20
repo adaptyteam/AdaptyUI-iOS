@@ -191,6 +191,7 @@ struct AdaptyInterfaceBilder {
     static func buildProductsBlock(
         _ paywall: AdaptyPaywall,
         _ products: [AdaptyPaywallProduct]?,
+        _ introductoryOffersEligibilities: [String: AdaptyEligibility]?,
         on stackView: UIStackView,
         useHaptic: Bool,
         selectedProductId: String?,
@@ -202,6 +203,7 @@ struct AdaptyInterfaceBilder {
             paywall: paywall,
             products: products,
             productsTitlesResolver: productsTitlesResolver,
+            introductoryOffersEligibilities: introductoryOffersEligibilities,
             underlayColor: try reader.colorProductButtonBackground(),
             accentColor: try reader.colorMainAccent(),
             titleColor: try reader.colorProductTitle(),
