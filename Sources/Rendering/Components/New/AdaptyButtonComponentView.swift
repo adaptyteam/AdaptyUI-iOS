@@ -25,6 +25,33 @@ extension CAShapeLayer {
     }
 }
 
+extension CAGradientLayer {
+    static func create(_ asset: any LinarGradientAsset) -> CAGradientLayer {
+        let layer = CAGradientLayer()
+
+        layer.colors = asset.values.map { $0.1.cgColor }
+        layer.locations = asset.values.map { NSNumber(floatLiteral: $0.0) }
+        layer.startPoint = CGPoint(x: asset.startPoint.0, y: asset.startPoint.1)
+        layer.endPoint = CGPoint(x: asset.endPoint.0, y: asset.endPoint.1)
+
+        return layer
+    }
+}
+
+extension TextComponent {
+    var attributedString: NSAttributedString? {
+        let text = value ?? ""
+        let color = uiColor ?? .darkText
+        let font = uiFont ?? .systemFont(ofSize: 15)
+
+        return NSAttributedString(string: text,
+                                  attributes: [
+                                      NSAttributedString.Key.foregroundColor: color,
+                                      NSAttributedString.Key.font: font,
+                                  ])
+    }
+}
+
 final class AdaptyButtonComponentView: UIButton {
     private let component: any ButtonComponent
     private let onTap: () -> Void
@@ -37,8 +64,10 @@ final class AdaptyButtonComponentView: UIButton {
 
         layer.masksToBounds = true
 
-        setTitle(component.text?.value, for: .normal)
-        setTitleColor(component.text?.uiColor, for: .normal)
+        setAttributedTitle(component.text?.attributedString, for: .normal)
+
+//        setTitle(component.text?.value, for: .normal)
+//        setTitleColor(component.text?.uiColor, for: .normal)
 
         addTarget(self, action: #selector(buttonDidTouchUp), for: .touchUpInside)
 
@@ -69,7 +98,10 @@ final class AdaptyButtonComponentView: UIButton {
         super.layoutSubviews()
 
         updateShapeMask()
+        updateShapeBackground()
     }
+
+    private var gradientLayer: CAGradientLayer?
 
     private func updateShapeBackground() {
         guard let background = component.shape?.background else {
@@ -82,10 +114,17 @@ final class AdaptyButtonComponentView: UIButton {
             backgroundColor = color.uiColor
         case let .image(image):
             setBackgroundImage(image.uiImage, for: .normal)
-//            setImage(image.uiImage, for: .normal)
-            backgroundColor = .red
-        default:
-            backgroundColor = .white
+            backgroundColor = .clear
+        case let .gradient(gradient):
+            if let gradientLayer = gradientLayer {
+                gradientLayer.frame = bounds
+            } else {
+                let gradientLayer = CAGradientLayer.create(gradient)
+                gradientLayer.frame = bounds
+                layer.insertSublayer(gradientLayer, at: 0)
+                self.gradientLayer = gradientLayer
+            }
+            backgroundColor = .clear
         }
     }
 

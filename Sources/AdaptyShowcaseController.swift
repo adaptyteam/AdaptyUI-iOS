@@ -12,6 +12,30 @@ extension Mock.Text {
     static func body(_ value: String, _ color: UIColor = .darkText) -> Mock.Text {
         .init(value: value, uiFont: .systemFont(ofSize: 15.0), uiColor: color)
     }
+    
+    static func mediumBody(_ value: String, _ color: UIColor = .darkText) -> Mock.Text {
+        .init(value: value, uiFont: .systemFont(ofSize: 20.0, weight: .bold), uiColor: color)
+    }
+}
+
+extension Mock.LinearGradient {
+    static var purple: Mock.LinearGradient {
+        .init(startPoint: (0.0, 0.5),
+              endPoint: (1.0, 0.5),
+              values: [
+                (0.0, .red),
+                (0.5, .purple),
+              ])
+    }
+    
+    static var orange: Mock.LinearGradient {
+        .init(startPoint: (0.0, 0.0),
+              endPoint: (1.0, 1.0),
+              values: [
+                (0.0, .yellow),
+                (1.0, .orange),
+              ])
+    }
 }
 
 extension Mock.Shape {
@@ -26,13 +50,19 @@ extension Mock.Shape {
               mask: .rect,
               rectCornerRadius: 16.0)
     }
-    
+
+    static var roundedRectGradient: Mock.Shape {
+        .init(background: .gradient(Mock.LinearGradient.purple),
+              mask: .rect,
+              rectCornerRadius: 16.0)
+    }
+
     static var circle: Mock.Shape {
-        .init(background: .color(Mock.Color(.orange)),
+        .init(background: .gradient(Mock.LinearGradient.orange),
               mask: .circle,
               rectCornerRadius: 0.0)
     }
-    
+
     static var closeImage: Mock.Shape {
         .init(background: .image(UIImage(systemName: "xmark.circle.fill")!),
               mask: .circle,
@@ -53,12 +83,18 @@ extension Mock.Button {
               align: .fill)
     }
     
+    static var continueButton3: Mock.Button {
+        .init(shape: .roundedRectGradient,
+              text: .body("Continue", .white),
+              align: .fill)
+    }
+
     static var circleTextButton: Mock.Button {
         .init(shape: .circle,
-              text: .body("Hey", .white),
+              text: .mediumBody("Test", .white),
               align: .center)
     }
-    
+
     static var closeButton: Mock.Button {
         .init(shape: .closeImage,
               text: nil,
@@ -88,37 +124,43 @@ public final class AdaptyShowcaseController: UIViewController {
         stackView.axis = .vertical
         stackView.spacing = 8.0
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         view.addSubview(stackView)
         view.addConstraints([
             stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 24.0),
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24.0),
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
         ])
-        
+
         let button1 = AdaptyButtonComponentView(component: Mock.Button.continueButton1) {
             print("button pressed")
         }
-        
+
         let button2 = AdaptyButtonComponentView(component: Mock.Button.continueButton2) {
             print("button pressed")
         }
         
+        let button5 = AdaptyButtonComponentView(component: Mock.Button.continueButton3) {
+            print("button pressed")
+        }
+
         let button3 = AdaptyButtonComponentView(component: Mock.Button.circleTextButton) {
             print("button pressed")
         }
-        
+
         let button4 = AdaptyButtonComponentView(component: Mock.Button.closeButton) {
             print("button pressed")
         }
-        
+
         stackView.addArrangedSubview(button1)
         stackView.addArrangedSubview(button2)
+        stackView.addArrangedSubview(button5)
         stackView.addArrangedSubview(button3)
         stackView.addArrangedSubview(button4)
-        
+
         stackView.addConstraint(button1.heightAnchor.constraint(equalToConstant: 58.0))
         stackView.addConstraint(button2.heightAnchor.constraint(equalToConstant: 58.0))
+        stackView.addConstraint(button5.heightAnchor.constraint(equalToConstant: 58.0))
         stackView.addConstraint(button3.heightAnchor.constraint(equalToConstant: 100.0))
         stackView.addConstraint(button3.widthAnchor.constraint(equalToConstant: 100.0))
         stackView.addConstraint(button4.heightAnchor.constraint(equalToConstant: 64.0))

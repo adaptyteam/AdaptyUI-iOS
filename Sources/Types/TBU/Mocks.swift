@@ -19,6 +19,18 @@ struct Mock {
             uiColor = color
         }
     }
+    
+    struct LinearGradient: LinarGradientAsset {
+        let startPoint: Point
+        let endPoint: Point
+        let values: [Value]
+        
+        init(startPoint: Point, endPoint: Point, values: [Value]) {
+            self.startPoint = startPoint
+            self.endPoint = endPoint
+            self.values = values
+        }
+    }
 
     struct Font: FontAsset {
         let uiFont: UIFont

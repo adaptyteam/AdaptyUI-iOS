@@ -18,10 +18,8 @@ protocol FontAsset {
 }
 
 protocol LinarGradientAsset {
-    associatedtype ColorType
-
     typealias Point = (Double, Double)
-    typealias Value = (Double, ColorType)
+    typealias Value = (Double, UIColor)
 
     var startPoint: Point { get }
     var endPoint: Point { get }
