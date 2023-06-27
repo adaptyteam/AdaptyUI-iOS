@@ -50,7 +50,7 @@ class AdaptyContinueButton: UIButton {
             setTitleColor(color, for: .normal)
         }
 
-        if let font = text.font?.uiFont() {
+        if let font = text.uiFont {
             titleLabel?.font = font
         }
 

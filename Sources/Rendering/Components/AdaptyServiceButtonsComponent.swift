@@ -45,7 +45,7 @@ class AdaptyServiceButtonsComponent: UIStackView {
         let button = UIButton(type: .custom)
         button.setTitle(text.value, for: .normal)
         button.setTitleColor(text.color?.uiColor, for: .normal)
-        button.titleLabel?.font = text.font?.uiFont()
+        button.titleLabel?.font = text.uiFont
         return button
     }
 

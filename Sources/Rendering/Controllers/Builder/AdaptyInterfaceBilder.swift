@@ -1,26 +1,19 @@
 //
-//  AdaptyPaywallController_Builder.swift
+//  AdaptyInterfaceBilder.swift
 //
 //
-//  Created by Alexey Goncharov on 2023-01-19.
+//  Created by Alexey Goncharov on 27.6.23..
 //
 
 import Adapty
 import UIKit
 
-struct AdaptyInterfaceBilder {
-    static func buildCloseButton(on superview: UIView, onTap: @escaping () -> Void) -> AdaptyCloseButton {
-        let button = AdaptyCloseButton(onTap: onTap)
+struct AdaptyInterfaceBilder { }
 
-        superview.addSubview(button)
-        superview.addConstraints([
-            button.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: 24.0),
-            button.topAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.topAnchor, constant: 16.0),
-        ])
 
-        return button
-    }
 
+
+extension AdaptyInterfaceBilder {
     static func buildInProgressView(on superview: UIView) -> AdaptyActivityIndicatorView {
         let loadingView = AdaptyActivityIndicatorView(backgroundColor: .black.withAlphaComponent(0.6),
                                                       indicatorColor: .white)
@@ -41,7 +34,7 @@ struct AdaptyInterfaceBilder {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        
+
         superview.addSubview(imageView)
 
         let hConstraintMult = imageView.heightAnchor.constraint(equalTo: superview.heightAnchor, multiplier: 0.45)

@@ -26,6 +26,7 @@
 		7455E4E529881CB400F97FEF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7455E4E729881CB400F97FEF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7455E4EE29881CE800F97FEF /* adapty-ios-ui */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "adapty-ios-ui"; path = ..; sourceTree = "<group>"; };
+		74DDE46F2A4ADA790004D84A /* StorKitConfig.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = StorKitConfig.storekit; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +69,7 @@
 				7455E4E229881CB400F97FEF /* Assets.xcassets */,
 				7455E4E429881CB400F97FEF /* LaunchScreen.storyboard */,
 				7455E4E729881CB400F97FEF /* Info.plist */,
+				74DDE46F2A4ADA790004D84A /* StorKitConfig.storekit */,
 			);
 			path = AdaptyUIDemo;
 			sourceTree = "<group>";
@@ -324,7 +326,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.adapty.adaptydemoapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.adapty.adaptyuidemoapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -353,7 +355,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.adapty.adaptydemoapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.adapty.adaptyuidemoapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

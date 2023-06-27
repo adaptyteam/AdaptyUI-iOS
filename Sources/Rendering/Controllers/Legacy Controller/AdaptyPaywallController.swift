@@ -252,7 +252,9 @@ public class AdaptyPaywallController: UIViewController {
     private func buildTemplateInterface(reader: AdaptyTemplateReader) throws {
         view.backgroundColor = try reader.contentBackgroundColor().uiColor
 
-        let coverImageView = try AdaptyInterfaceBilder.buildCoverImageView(on: view, reader: reader)
+        let coverImageView = try AdaptyInterfaceBilder.buildCoverImageView(on: view,
+                                                                           reader: reader)
+        
         scrollViewDelegate.coverView = coverImageView
         let coverImageGradient = AdaptyInterfaceBilder.buildCoverImageGradient(on: view)
 

@@ -140,16 +140,16 @@ class AdaptyProductItemComponent: UIView {
 
         if let tagText = tagText {
             let tagLabel = AdaptyInsetLabel()
-
+            
             tagLabel.translatesAutoresizingMaskIntoConstraints = false
             tagLabel.text = tagText.value
             tagLabel.insets = UIEdgeInsets(top: 0.0, left: 8.0, bottom: 0.0, right: 8.0)
             tagLabel.layer.cornerRadius = 10.0
             tagLabel.layer.masksToBounds = true
 
-            tagLabel.font = tagText.font?.uiFont()
+            tagLabel.font = tagText.font?.uiFont
             tagLabel.backgroundColor = accentColor.uiColor
-            tagLabel.textColor = tagText.color?.uiColor
+            tagLabel.textColor = tagText.uiColor
 
             let attr = NSMutableAttributedString(string: tagText.value ?? "")
             attr.addAttributes([

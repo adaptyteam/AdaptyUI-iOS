@@ -46,9 +46,10 @@ class AdaptyTextRowComponent: UIStackView {
         textLabel.textAlignment = .left
         textLabel.font = .systemFont(ofSize: 14, weight: .medium)
         textLabel.textColor = textRow.color?.uiColor ?? .darkText
-        textLabel.font = textRows.font?.uiFont(overrideSize: textRow.size)
+//        textLabel.font = textRows.font?.uiFont(overrideSize: textRow.size)
+        textLabel.font = textRows.uiFont
         textLabel.numberOfLines = 0
-
+        
         let imageView = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.tintColor = imageColor

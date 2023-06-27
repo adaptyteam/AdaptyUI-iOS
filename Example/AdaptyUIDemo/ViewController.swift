@@ -25,10 +25,21 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         // TODO: remove
-        textField.text = "london"
+        textField.text = "volkswagen"
 
         spinner.isHidden = true
-        updatePaywallData()
+//        updatePaywallData()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+//        loadPaywallPressed(self)
+        
+        let vc = AdaptyShowcaseController()
+        vc.modalPresentationStyle = .overFullScreen
+        
+        present(vc, animated: false)
     }
 
     private var paywall: AdaptyPaywall?
@@ -102,19 +113,29 @@ class ViewController: UIViewController {
 
     @IBAction func presentPaywallPressed(_ sender: Any) {
         guard let paywall = paywall else { return }
+        
+        let vc = AdaptyUI.paywallControllerTest(
+            for: paywall,
+//            products: nil,
+//            viewConfiguration: viewConfiguration,
+            delegate: self
+//            productsTitlesResolver: { $0.vendorProductId }
+        )
 
-        setInProgress(true)
+        present(vc, animated: true)
 
-        AdaptyUI.getViewConfiguration(forPaywall: paywall) { [weak self] result in
-            self?.setInProgress(false)
-
-            switch result {
-            case let .success(viewConfiguration):
-                self?.presentPaywall(paywall, products: nil, viewConfiguration: viewConfiguration)
-            case let .failure(error):
-                self?.presentErrorAlert(error)
-            }
-        }
+//        setInProgress(true)
+//
+//        AdaptyUI.getViewConfiguration(forPaywall: paywall) { [weak self] result in
+//            self?.setInProgress(false)
+//
+//            switch result {
+//            case let .success(viewConfiguration):
+//                self?.presentPaywall(paywall, products: nil, viewConfiguration: viewConfiguration)
+//            case let .failure(error):
+//                self?.presentErrorAlert(error)
+//            }
+//        }
     }
 }
 
