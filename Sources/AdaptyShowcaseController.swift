@@ -8,100 +8,6 @@
 import Adapty
 import UIKit
 
-extension Mock.Text {
-    static func body(_ value: String, _ color: UIColor = .darkText) -> Mock.Text {
-        .init(value: value, uiFont: .systemFont(ofSize: 15.0), uiColor: color)
-    }
-    
-    static func mediumBody(_ value: String, _ color: UIColor = .darkText) -> Mock.Text {
-        .init(value: value, uiFont: .systemFont(ofSize: 20.0, weight: .bold), uiColor: color)
-    }
-}
-
-extension Mock.LinearGradient {
-    static var purple: Mock.LinearGradient {
-        .init(startPoint: (0.0, 0.5),
-              endPoint: (1.0, 0.5),
-              values: [
-                (0.0, .red),
-                (0.5, .purple),
-              ])
-    }
-    
-    static var orange: Mock.LinearGradient {
-        .init(startPoint: (0.0, 0.0),
-              endPoint: (1.0, 1.0),
-              values: [
-                (0.0, .yellow),
-                (1.0, .orange),
-              ])
-    }
-}
-
-extension Mock.Shape {
-    static var defaultRect: Mock.Shape {
-        .init(background: .color(Mock.Color(.lightGray)),
-              mask: .rect,
-              rectCornerRadius: 0.0)
-    }
-
-    static var roundedRect: Mock.Shape {
-        .init(background: .color(Mock.Color(.blue)),
-              mask: .rect,
-              rectCornerRadius: 16.0)
-    }
-
-    static var roundedRectGradient: Mock.Shape {
-        .init(background: .gradient(Mock.LinearGradient.purple),
-              mask: .rect,
-              rectCornerRadius: 16.0)
-    }
-
-    static var circle: Mock.Shape {
-        .init(background: .gradient(Mock.LinearGradient.orange),
-              mask: .circle,
-              rectCornerRadius: 0.0)
-    }
-
-    static var closeImage: Mock.Shape {
-        .init(background: .image(UIImage(systemName: "xmark.circle.fill")!),
-              mask: .circle,
-              rectCornerRadius: 0.0)
-    }
-}
-
-extension Mock.Button {
-    static var continueButton1: Mock.Button {
-        .init(shape: .defaultRect,
-              text: .body("Continue", .white),
-              align: .fill)
-    }
-
-    static var continueButton2: Mock.Button {
-        .init(shape: .roundedRect,
-              text: .body("Continue", .white),
-              align: .fill)
-    }
-    
-    static var continueButton3: Mock.Button {
-        .init(shape: .roundedRectGradient,
-              text: .body("Continue", .white),
-              align: .fill)
-    }
-
-    static var circleTextButton: Mock.Button {
-        .init(shape: .circle,
-              text: .mediumBody("Test", .white),
-              align: .center)
-    }
-
-    static var closeButton: Mock.Button {
-        .init(shape: .closeImage,
-              text: nil,
-              align: .leading)
-    }
-}
-
 public final class AdaptyShowcaseController: UIViewController {
     public init() {
         super.init(nibName: nil, bundle: nil)
@@ -117,20 +23,57 @@ public final class AdaptyShowcaseController: UIViewController {
         view.backgroundColor = .white
 
         buildInterface()
+
+//        experiment()
+    }
+
+    private weak var contentView: AdaptyBaseContentView!
+
+    override public func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        contentView.updateSafeArea(view.safeAreaInsets)
     }
 
     private func buildInterface() {
+        let image = UIImage(named: "background")
+        let imageView = UIImageView(image: image)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+
+        view.addSubview(imageView)
+        view.addConstraints([
+            imageView.topAnchor.constraint(equalTo: view.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
+
+        let scrollView = AdaptyBaseScrollView()
+        scrollView.backgroundColor = .clear
+
+        AdaptyInterfaceBilder.layoutScrollView(scrollView, on: view)
+
+        let contentView = AdaptyBaseContentView(
+//            layout: .basic(multiplier: 0.45),
+//            shape: Mock.Shape.roundedRectGradient
+//            layout: .transparent,
+//            shape: Mock.Shape.transparent
+            layout: .flat,
+            shape: Mock.Shape.defaultRect
+        )
+
+        AdaptyInterfaceBilder.layoutContentView(contentView, on: scrollView)
+
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = 8.0
+        stackView.spacing = 64.0
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        view.addSubview(stackView)
-        view.addConstraints([
-            stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 24.0),
-            stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24.0),
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-        ])
+        contentView.layoutContent(stackView, inset: UIEdgeInsets(top: 48,
+                                                                 left: 24,
+                                                                 bottom: 24,
+                                                                 right: 24))
 
         let button1 = AdaptyButtonComponentView(component: Mock.Button.continueButton1) {
             print("button pressed")
@@ -139,7 +82,7 @@ public final class AdaptyShowcaseController: UIViewController {
         let button2 = AdaptyButtonComponentView(component: Mock.Button.continueButton2) {
             print("button pressed")
         }
-        
+
         let button5 = AdaptyButtonComponentView(component: Mock.Button.continueButton3) {
             print("button pressed")
         }
@@ -165,6 +108,26 @@ public final class AdaptyShowcaseController: UIViewController {
         stackView.addConstraint(button3.widthAnchor.constraint(equalToConstant: 100.0))
         stackView.addConstraint(button4.heightAnchor.constraint(equalToConstant: 64.0))
         stackView.addConstraint(button4.widthAnchor.constraint(equalToConstant: 64.0))
+
+        self.contentView = contentView
+    }
+
+    private func layoutStackView(
+        _ stackView: UIStackView,
+        on superview: UIView
+    ) -> (NSLayoutConstraint, NSLayoutConstraint) {
+        let contentTopConstraint = stackView.topAnchor.constraint(equalTo: superview.topAnchor)
+        let contentBottomConstraint = stackView.bottomAnchor.constraint(equalTo: superview.bottomAnchor)
+
+        superview.addSubview(stackView)
+        superview.addConstraints([
+            stackView.leadingAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.leadingAnchor, constant: 24.0),
+            stackView.trailingAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.trailingAnchor, constant: -24.0),
+            contentTopConstraint,
+            contentBottomConstraint,
+        ])
+
+        return (contentTopConstraint, contentBottomConstraint)
     }
 }
 

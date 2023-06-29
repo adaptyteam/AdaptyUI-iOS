@@ -8,50 +8,6 @@
 import Adapty
 import UIKit
 
-extension CAShapeLayer {
-    static func circleLayer(in rect: CGRect) -> CAShapeLayer {
-        let layer = CAShapeLayer()
-        layer.backgroundColor = UIColor.clear.cgColor
-
-        let radius = min(rect.height, rect.width) / 2.0
-
-        layer.path = UIBezierPath(arcCenter: .init(x: rect.midX, y: rect.midY),
-                                  radius: radius,
-                                  startAngle: 0.0,
-                                  endAngle: .pi * 2.0,
-                                  clockwise: true).cgPath
-
-        return layer
-    }
-}
-
-extension CAGradientLayer {
-    static func create(_ asset: any LinarGradientAsset) -> CAGradientLayer {
-        let layer = CAGradientLayer()
-
-        layer.colors = asset.values.map { $0.1.cgColor }
-        layer.locations = asset.values.map { NSNumber(floatLiteral: $0.0) }
-        layer.startPoint = CGPoint(x: asset.startPoint.0, y: asset.startPoint.1)
-        layer.endPoint = CGPoint(x: asset.endPoint.0, y: asset.endPoint.1)
-
-        return layer
-    }
-}
-
-extension TextComponent {
-    var attributedString: NSAttributedString? {
-        let text = value ?? ""
-        let color = uiColor ?? .darkText
-        let font = uiFont ?? .systemFont(ofSize: 15)
-
-        return NSAttributedString(string: text,
-                                  attributes: [
-                                      NSAttributedString.Key.foregroundColor: color,
-                                      NSAttributedString.Key.font: font,
-                                  ])
-    }
-}
-
 final class AdaptyButtonComponentView: UIButton {
     private let component: any ButtonComponent
     private let onTap: () -> Void
