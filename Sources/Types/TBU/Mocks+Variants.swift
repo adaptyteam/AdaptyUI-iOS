@@ -7,12 +7,6 @@
 
 import UIKit
 
-extension Mock.Color {
-    static let blue = Mock.Color(.blue)
-    static let red = Mock.Color(.red)
-    static let white = Mock.Color(.white)
-}
-
 extension Mock.Text {
     static func body(_ value: String, _ color: UIColor = .darkText) -> Mock.Text {
         .init(value: value, uiFont: .systemFont(ofSize: 15.0), uiColor: color)
@@ -54,13 +48,13 @@ extension Mock.LinearGradient {
 
 extension Mock.Shape {
     static var defaultRect: Mock.Shape {
-        .init(background: .color(Mock.Color(.lightGray)),
+        .init(background: .color(UIColor.lightGray),
               mask: .rect,
               rectCornerRadius: 0.0)
     }
 
     static var roundedRect: Mock.Shape {
-        .init(background: .color(Mock.Color(.blue)),
+        .init(background: .color(UIColor.blue),
               mask: .rect,
               rectCornerRadius: 16.0)
     }
@@ -90,7 +84,7 @@ extension Mock.Shape {
     }
 
     static var curveDown: Mock.Shape {
-        .init(background: .color(Mock.Color.blue),
+        .init(background: .color(UIColor.blue),
               mask: .curveDown,
               rectCornerRadius: 0.0)
     }

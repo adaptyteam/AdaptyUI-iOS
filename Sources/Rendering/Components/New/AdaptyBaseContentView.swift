@@ -14,6 +14,8 @@ enum ContentLayout {
 }
 
 final class AdaptyBaseContentView: UIView {
+    static let curveHeight: CGFloat = 36.0
+    
     let layout: ContentLayout
     let shape: ShapeComponent
 
@@ -38,9 +40,9 @@ final class AdaptyBaseContentView: UIView {
             layer.cornerRadius = shape.rectCornerRadius ?? 0.0
             layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         case .curveUp:
-            layer.mask = CAShapeLayer.curveUpShapeLayer(in: bounds)
+            layer.mask = CAShapeLayer.curveUpShapeLayer(in: bounds, curveHeight: Self.curveHeight)
         case .curveDown:
-            layer.mask = CAShapeLayer.curveDownShapeLayer(in: bounds)
+            layer.mask = CAShapeLayer.curveDownShapeLayer(in: bounds, curveHeight: Self.curveHeight)
         case .circle:
             break
         }
@@ -107,64 +109,5 @@ final class AdaptyBaseContentView: UIView {
             contentTopConstraint,
             contentBottomConstraint,
         ])
-    }
-}
-
-extension AdaptyInterfaceBilder {
-    static func layoutContentView(
-        _ contentView: AdaptyBaseContentView,
-        on scrollView: UIScrollView) {
-//            contentView.translatesAutoresizingMaskIntoConstraints = false
-//            contentView.backgroundColor = .white
-        scrollView.addSubview(contentView)
-
-        switch contentView.layout {
-        case let .basic(multiplier):
-            let spacerView = UIView()
-            spacerView.translatesAutoresizingMaskIntoConstraints = false
-            spacerView.backgroundColor = .clear
-
-            scrollView.addSubview(spacerView)
-            scrollView.addConstraints([
-                spacerView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-                spacerView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-                spacerView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-                spacerView.heightAnchor.constraint(equalTo: scrollView.heightAnchor,
-                                                   multiplier: multiplier),
-            ])
-
-            scrollView.addConstraints([
-                contentView.topAnchor.constraint(equalTo: spacerView.bottomAnchor),
-
-                contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-                contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-                contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-
-                contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            ])
-        case .transparent:
-            scrollView.addConstraints([
-                contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-
-                contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-                contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-                contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-
-                contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-                contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
-            ])
-        case .flat:
-            scrollView.addConstraints([
-                contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-
-                contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-                contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-                contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-
-                contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-                contentView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor,
-                                                    multiplier: 1.0),
-            ])
-        }
     }
 }

@@ -7,19 +7,15 @@
 
 import UIKit
 
+extension UIColor: ColorAsset {
+    var uiColor: UIColor { self }
+}
+
 extension UIImage: ImageAsset {
     var uiImage: UIImage? { self }
 }
 
 struct Mock {
-    struct Color: ColorAsset {
-        let uiColor: UIColor
-
-        init(_ color: UIColor) {
-            uiColor = color
-        }
-    }
-    
     struct LinearGradient: LinarGradientAsset {
         let startPoint: Point
         let endPoint: Point

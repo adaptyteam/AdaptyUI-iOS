@@ -163,20 +163,4 @@ extension AdaptyUI {
             productsTitlesResolver: productsTitlesResolver
         )
     }
-    
-    public static func paywallControllerTest(
-        for paywall: AdaptyPaywall,
-//        products: [AdaptyPaywallProduct]? = nil,
-//        viewConfiguration: AdaptyUI.ViewConfiguration,
-        delegate: AdaptyPaywallControllerDelegate
-    ) -> UIViewController {
-        UIViewController()
-//        AdaptyPaywallController(
-//            paywall: paywall,
-//            products: products,
-//            viewConfiguration: viewConfiguration,
-//            delegate: delegate,
-//            productsTitlesResolver: productsTitlesResolver
-//        )
-    }
 }

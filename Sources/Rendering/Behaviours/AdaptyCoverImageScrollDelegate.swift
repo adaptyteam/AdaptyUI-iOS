@@ -15,6 +15,10 @@ class AdaptyCoverImageScrollDelegate: NSObject, UIScrollViewDelegate {
         if contentOffset.y < -maxOffset {
             return CGPoint(x: contentOffset.x, y: -maxOffset)
         }
+        
+        if contentOffset.y > maxOffset {
+            return CGPoint(x: contentOffset.x, y: maxOffset)
+        }
 
         return contentOffset
     }

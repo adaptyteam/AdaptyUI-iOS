@@ -23,19 +23,17 @@ extension CAShapeLayer {
         return layer
     }
 
-    static func curveUpShapeLayer(in rect: CGRect) -> CAShapeLayer {
+    static func curveUpShapeLayer(in rect: CGRect, curveHeight: CGFloat) -> CAShapeLayer {
         let layer = CAShapeLayer()
         layer.backgroundColor = UIColor.clear.cgColor
 
         let path = UIBezierPath()
         path.move(to: CGPoint(x: rect.minX, y: rect.maxY))
 
-        path.addLine(to: CGPoint(x: rect.minX, y: rect.minY + 36.0))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.minY + curveHeight))
 
-        path.addQuadCurve(to: CGPoint(x: rect.maxX, y: rect.minY + 36.0),
+        path.addQuadCurve(to: CGPoint(x: rect.maxX, y: rect.minY + curveHeight),
                           controlPoint: CGPoint(x: rect.midX, y: rect.minY))
-
-//        path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY + 36.0))
         
         path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
         path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
@@ -45,7 +43,7 @@ extension CAShapeLayer {
         return layer
     }
     
-    static func curveDownShapeLayer(in rect: CGRect) -> CAShapeLayer {
+    static func curveDownShapeLayer(in rect: CGRect, curveHeight: CGFloat) -> CAShapeLayer {
         let layer = CAShapeLayer()
         layer.backgroundColor = UIColor.clear.cgColor
 
@@ -55,7 +53,7 @@ extension CAShapeLayer {
         path.addLine(to: CGPoint(x: rect.minX, y: rect.minY))
 
         path.addQuadCurve(to: CGPoint(x: rect.maxX, y: rect.minY),
-                          controlPoint: CGPoint(x: rect.midX, y: rect.minY + 36.0))
+                          controlPoint: CGPoint(x: rect.midX, y: rect.minY + curveHeight))
         
         path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
         path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))

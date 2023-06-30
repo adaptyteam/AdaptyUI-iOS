@@ -9,25 +9,20 @@ import Adapty
 import UIKit
 
 final class AdaptyButtonComponentView: UIButton {
-    private let component: any ButtonComponent
-    private let onTap: () -> Void
+    let component: any ButtonComponent
+    
+    var onTap: (() -> Void)?
 
-    init(component: any ButtonComponent, onTap: @escaping () -> Void) {
+    init(component: any ButtonComponent) {
         self.component = component
-        self.onTap = onTap
 
         super.init(frame: .zero)
 
+        translatesAutoresizingMaskIntoConstraints = false
         layer.masksToBounds = true
 
         setAttributedTitle(component.text?.attributedString, for: .normal)
-
-//        setTitle(component.text?.value, for: .normal)
-//        setTitleColor(component.text?.uiColor, for: .normal)
-
         addTarget(self, action: #selector(buttonDidTouchUp), for: .touchUpInside)
-
-        translatesAutoresizingMaskIntoConstraints = false
 
         updateShapeBackground()
         updateShapeMask()
@@ -105,6 +100,6 @@ final class AdaptyButtonComponentView: UIButton {
 
     @objc
     private func buttonDidTouchUp() {
-        onTap()
+        onTap?()
     }
 }

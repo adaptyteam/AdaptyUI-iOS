@@ -18,6 +18,7 @@ final class AdaptyBaseScrollView: UIScrollView {
         delaysContentTouches = true
         showsVerticalScrollIndicator = false
         showsHorizontalScrollIndicator = false
+        backgroundColor = .clear
     }
 
     required init?(coder: NSCoder) {
