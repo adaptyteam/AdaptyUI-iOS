@@ -46,7 +46,7 @@ class AdaptyContinueButton: UIButton {
         setAttributedTitle(attr, for: .normal)
         setAttributedTitle(NSAttributedString(string: ""), for: .disabled)
 
-        if let color = text.color?.uiColor {
+        if let color = text.fill?.asColor?.uiColor {
             setTitleColor(color, for: .normal)
         }
 
@@ -56,7 +56,7 @@ class AdaptyContinueButton: UIButton {
 
         let progressView = UIActivityIndicatorView(style: .medium)
         progressView.translatesAutoresizingMaskIntoConstraints = false
-        progressView.color = text.color?.uiColor ?? .white
+        progressView.color = text.fill?.asColor?.uiColor ?? .white
         progressView.isHidden = true
         addSubview(progressView)
 

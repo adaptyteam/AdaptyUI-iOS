@@ -5,12 +5,13 @@
 //  Created by Alexey Goncharov on 30.6.23..
 //
 
+import Adapty
 import UIKit
 
-extension ShapeComponent {
+extension AdaptyUI.Shape {
     fileprivate var recommendedContentOverlap: CGFloat {
         switch mask {
-        case .rect: return rectCornerRadius ?? 0.0
+        case let .rectangle(cornerRadius): return cornerRadius.value ?? 0.0
         case .curveUp, .curveDown: return AdaptyBaseContentView.curveHeight
         case .circle: return 0.0
         }
@@ -18,21 +19,26 @@ extension ShapeComponent {
 }
 
 class TemplateLayoutBuilderBasic: LayoutBuilder {
-    private let coverImage: UIImage
+    private let coverImage: AdaptyUI.Image
     private let coverImageHeightMultilpyer: CGFloat
-    private let contentShape: ShapeComponent
+    private let contentShape: AdaptyUI.Shape
+    private let purchaseButton: AdaptyUI.Button
+    private let closeButton: AdaptyUI.Button?
 
     private let scrollViewDelegate = AdaptyCoverImageScrollDelegate()
-    private let content: TemplateContentProvider
 
-    init(content: TemplateContentProvider,
-         coverImage: UIImage,
-         coverImageHeightMultilpyer: CGFloat,
-         contentShape: ShapeComponent) {
-        self.content = content
+    init(
+        coverImage: AdaptyUI.Image,
+        coverImageHeightMultilpyer: CGFloat,
+        contentShape: AdaptyUI.Shape,
+        purchaseButton: AdaptyUI.Button,
+        closeButton: AdaptyUI.Button?
+    ) {
         self.coverImage = coverImage
         self.coverImageHeightMultilpyer = coverImageHeightMultilpyer
         self.contentShape = contentShape
+        self.purchaseButton = purchaseButton
+        self.closeButton = closeButton
     }
 
     private weak var contentViewComponentView: AdaptyBaseContentView?
@@ -43,10 +49,10 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     }
 
     func buildInterface(on view: UIView) {
-        let backgroundView = AdaptyBackgroundComponentView(background: .color(UIColor.white))
+        let backgroundView = AdaptyBackgroundComponentView(background: nil)
         layoutBackground(backgroundView, on: view)
 
-        let imageView = UIImageView(image: coverImage)
+        let imageView = UIImageView(image: coverImage.uiImage)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -81,7 +87,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
                                                                  bottom: 24,
                                                                  right: 24))
 
-        let continueButtonView = AdaptyButtonComponentView(component: content.purchaseButton)
+        let continueButtonView = AdaptyButtonComponentView(component: purchaseButton)
         stackView.addArrangedSubview(continueButtonView)
         stackView.addConstraint(
             continueButtonView.heightAnchor.constraint(equalToConstant: 58.0)
@@ -89,8 +95,9 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
 
         contentViewComponentView = contentView
 
-        if let component = content.closeButton {
+        if let component = closeButton {
             let closeButton = AdaptyButtonComponentView(component: component)
+
             layoutCloseButton(closeButton, on: view)
             closeButtonComponentView = closeButton
         }

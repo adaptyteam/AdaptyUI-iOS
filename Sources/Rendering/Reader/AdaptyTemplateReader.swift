@@ -17,7 +17,7 @@ class AdaptyTemplateReader {
 
     init(logId: String, configuration: AdaptyUI.LocalizedViewConfiguration) throws {
         self.logId = logId
-        
+
         guard configuration.templateId == templateId else {
             throw AdaptyUIError.unsupportedTemplate(configuration.templateId)
         }
@@ -34,23 +34,11 @@ class AdaptyTemplateReader {
     var showCloseButton: Bool { !configuration.isHard }
 
     func termsURL() -> URL? {
-        guard let termsUrlString = configuration.termsUrl,
-              let termsUrl = URL(string: termsUrlString) else {
-            AdaptyUI.writeLog(level: .warn, message: "#\(logId)# Unable to parse temsURL string!")
-            return nil
-        }
-
-        return termsUrl
+        nil
     }
 
     func privacyURL() -> URL? {
-        guard let privacyUrlString = configuration.privacyUrl,
-              let privacyUrl = URL(string: privacyUrlString) else {
-            AdaptyUI.writeLog(level: .warn, message: "#\(logId)# Unable to parse privacyURL string!")
-            return nil
-        }
-
-        return privacyUrl
+        nil
     }
 
     func colorMainAccent() throws -> AdaptyUI.Color {

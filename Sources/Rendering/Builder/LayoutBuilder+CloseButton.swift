@@ -19,21 +19,21 @@ extension LayoutBuilder {
             button.topAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.topAnchor, constant: 16.0),
         ])
 
-        switch button.component.align {
-        case .leading:
-            button.leadingAnchor.constraint(
-                equalTo: superview.leadingAnchor,
-                constant: 16.0
-            ).isActive = true
-        case .trailing:
-            button.trailingAnchor.constraint(
-                equalTo: superview.trailingAnchor,
-                constant: -16.0
-            ).isActive = true
-        default:
-            button.centerXAnchor.constraint(
-                equalTo: superview.centerXAnchor
-            ).isActive = true
-        }
+//        switch button.component.align {
+//        case .leading:
+//            button.leadingAnchor.constraint(
+//                equalTo: superview.leadingAnchor,
+//                constant: 16.0
+//            ).isActive = true
+//        case .trailing:
+//            button.trailingAnchor.constraint(
+//                equalTo: superview.trailingAnchor,
+//                constant: -16.0
+//            ).isActive = true
+//        default:
+//            button.centerXAnchor.constraint(
+//                equalTo: superview.centerXAnchor
+//            ).isActive = true
+//        }
     }
 }

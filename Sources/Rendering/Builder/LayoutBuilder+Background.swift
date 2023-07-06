@@ -5,12 +5,13 @@
 //  Created by Alexey Goncharov on 30.6.23..
 //
 
+import Adapty
 import UIKit
 
 final class AdaptyBackgroundComponentView: UIImageView {
-    private let background: BackgroundTBU
+    private let background: AdaptyUI.Filling?
 
-    init(background: BackgroundTBU) {
+    init(background: AdaptyUI.Filling?) {
         self.background = background
 
         super.init(frame: .zero)
@@ -29,13 +30,16 @@ final class AdaptyBackgroundComponentView: UIImageView {
 
     private func setupView() {
         switch background {
+        case .none:
+            backgroundColor = .white
+            image = nil
         case let .color(color):
             backgroundColor = color.uiColor
             image = nil
         case let .image(img):
             backgroundColor = nil
             image = img.uiImage
-        case let .gradient(gradient):
+        case let .colorLinearGradient(gradient):
             backgroundColor = nil
             image = nil
 

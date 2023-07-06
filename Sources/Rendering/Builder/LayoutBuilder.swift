@@ -14,8 +14,3 @@ protocol LayoutBuilder {
 
     func onCloseButtonPressed(_ callback: @escaping () -> Void)
 }
-
-protocol TemplateContentProvider {
-    var closeButton: (any ButtonComponent)? { get }
-    var purchaseButton: any ButtonComponent { get }
-}

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Adapty
 
 enum ContentLayout {
     case basic(multiplier: CGFloat)
@@ -17,9 +18,9 @@ final class AdaptyBaseContentView: UIView {
     static let curveHeight: CGFloat = 36.0
     
     let layout: ContentLayout
-    let shape: ShapeComponent
+    let shape: AdaptyUI.Shape
 
-    init(layout: ContentLayout, shape: ShapeComponent) {
+    init(layout: ContentLayout, shape: AdaptyUI.Shape) {
         self.layout = layout
         self.shape = shape
 
@@ -36,8 +37,9 @@ final class AdaptyBaseContentView: UIView {
 
     private func updateMask() {
         switch shape.mask {
-        case .rect:
-            layer.cornerRadius = shape.rectCornerRadius ?? 0.0
+        case let .rectangle(cornerRadius):
+            // TODO: support different corners
+            layer.cornerRadius = cornerRadius.value ?? 0.0
             layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         case .curveUp:
             layer.mask = CAShapeLayer.curveUpShapeLayer(in: bounds, curveHeight: Self.curveHeight)
@@ -56,7 +58,7 @@ final class AdaptyBaseContentView: UIView {
         switch shape.background {
         case let .color(color):
             backgroundColor = color.uiColor
-        case let .gradient(gradient):
+        case let .colorLinearGradient(gradient):
             backgroundColor = .clear
             if let gradientLayer {
                 gradientLayer.frame = bounds

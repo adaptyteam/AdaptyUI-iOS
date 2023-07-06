@@ -34,56 +34,56 @@ class ViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-//        loadPaywallPressed(self)
+        loadPaywallPressed(self)
     }
 
     @IBAction func presentBasicRoundedRect(_ sender: Any) {
-        presentTemplate(
-            .basicTemplateRoundedRect(coverImage: UIImage(named: "Cover3")!,
-                                      closeButtonImage: UIImage(named: "CloseButton")!)
-        )
+//        presentTemplate(
+//            .basicTemplateRoundedRect(coverImage: UIImage(named: "Cover3")!,
+//                                      closeButtonImage: UIImage(named: "CloseButton")!)
+//        )
     }
 
     @IBAction func presentBasicSmileUp(_ sender: Any) {
-        presentTemplate(
-            .basicTemplateSmileUp(coverImage: UIImage(named: "Cover2")!,
-                                  closeButtonImage: UIImage(named: "CloseButton")!)
-        )
+//        presentTemplate(
+//            .basicTemplateSmileUp(coverImage: UIImage(named: "Cover2")!,
+//                                  closeButtonImage: UIImage(named: "CloseButton")!)
+//        )
     }
 
     @IBAction func presentBasicSmileDown(_ sender: Any) {
-        presentTemplate(
-            .basicTemplateSmileDown(coverImage: UIImage(named: "Cover4")!,
-                                    closeButtonImage: UIImage(named: "CloseButton")!)
-        )
+//        presentTemplate(
+//            .basicTemplateSmileDown(coverImage: UIImage(named: "Cover4")!,
+//                                    closeButtonImage: UIImage(named: "CloseButton")!)
+//        )
     }
 
     @IBAction func presentFlatA(_ sender: Any) {
-        presentTemplate(
-            .flatTemplate(backgroundColor: .yellow,
-                          closeButtonImage: UIImage(named: "CloseButton")!)
-        )
+//        presentTemplate(
+//            .flatTemplate(backgroundColor: .yellow,
+//                          closeButtonImage: UIImage(named: "CloseButton")!)
+//        )
     }
 
     @IBAction func presentFlatB(_ sender: Any) {
-        presentTemplate(
-            .flatTemplate(backgroundColor: .black,
-                          closeButtonImage: UIImage(named: "CloseButton")!)
-        )
+//        presentTemplate(
+//            .flatTemplate(backgroundColor: .black,
+//                          closeButtonImage: UIImage(named: "CloseButton")!)
+//        )
     }
 
     @IBAction func presentTransparentA(_ sender: Any) {
-        presentTemplate(
-            .transparentTemplate(backgroundImage: UIImage(named: "Background2")!,
-                                 closeButtonImage: UIImage(named: "CloseButton")!)
-        )
+//        presentTemplate(
+//            .transparentTemplate(backgroundImage: UIImage(named: "Background2")!,
+//                                 closeButtonImage: UIImage(named: "CloseButton")!)
+//        )
     }
 
     @IBAction func presentTransparentB(_ sender: Any) {
-        presentTemplate(
-            .transparentTemplate(backgroundImage: UIImage(named: "Background1")!,
-                                 closeButtonImage: UIImage(named: "CloseButton")!)
-        )
+//        presentTemplate(
+//            .transparentTemplate(backgroundImage: UIImage(named: "Background1")!,
+//                                 closeButtonImage: UIImage(named: "CloseButton")!)
+//        )
     }
 
     private func presentTemplate(_ vc: AdaptyTemplateController) {
@@ -132,7 +132,7 @@ class ViewController: UIViewController {
     private func presentPaywall(_ paywall: AdaptyPaywall,
                                 products: [AdaptyPaywallProduct]?,
                                 viewConfiguration: AdaptyUI.ViewConfiguration) {
-        let vc = AdaptyUI.paywallController(
+        let vc = AdaptyUI.paywallControllerTest(
             for: paywall,
             products: products,
             viewConfiguration: viewConfiguration,

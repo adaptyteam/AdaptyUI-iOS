@@ -1,13 +1,14 @@
 //
-//  TextComponent+AttributedString.swift
+//  Text+AttributedString.swift
 //
 //
 //  Created by Alexey Goncharov on 29.6.23..
 //
 
+import Adapty
 import UIKit
 
-extension TextComponent {
+extension AdaptyUI.Text {
     var attributedString: NSAttributedString? {
         let text = value ?? ""
         let color = uiColor ?? .darkText

@@ -163,4 +163,27 @@ extension AdaptyUI {
             productsTitlesResolver: productsTitlesResolver
         )
     }
+
+    public static func paywallControllerTest(
+        for paywall: AdaptyPaywall,
+        products: [AdaptyPaywallProduct]? = nil,
+        viewConfiguration: AdaptyUI.ViewConfiguration,
+        delegate: AdaptyPaywallControllerDelegate,
+        productsTitlesResolver: ((AdaptyProduct) -> String)? = nil
+    ) -> UIViewController {
+        do {
+            return try AdaptyTemplateController.template(viewConfiguration)
+        } catch {
+            print("error = \(error)")
+            return UIViewController()
+        }
+
+//        AdaptyPaywallController(
+//            paywall: paywall,
+//            products: products,
+//            viewConfiguration: viewConfiguration,
+//            delegate: delegate,
+//            productsTitlesResolver: productsTitlesResolver
+//        )
+    }
 }

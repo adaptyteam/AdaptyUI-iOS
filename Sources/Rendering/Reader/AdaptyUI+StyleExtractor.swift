@@ -10,19 +10,11 @@ import Foundation
 
 extension AdaptyUI.LocalizedViewStyle {
     func extractCommonComponent(_ id: String) throws -> AdaptyUI.LocalizedViewItem {
-        guard let component = common?[id] else {
-            throw AdaptyUIError.componentNotFound(id)
-        }
-
-        return component
+        throw AdaptyUIError.componentNotFound(id)
     }
 
     private func extractCustomComponent(_ id: String) throws -> AdaptyUI.LocalizedViewItem {
-        guard let component = custom?[id] else {
-            throw AdaptyUIError.componentNotFound(id)
-        }
-
-        return component
+        throw AdaptyUIError.componentNotFound(id)
     }
 
     func commonImage(id: String) throws -> AdaptyUI.Image {

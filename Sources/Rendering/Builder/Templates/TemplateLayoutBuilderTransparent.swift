@@ -6,18 +6,22 @@
 //
 
 import UIKit
+import Adapty
 
 class TemplateLayoutBuilderTransparent: LayoutBuilder {
-    private let background: BackgroundTBU
-    private let contentShape: ShapeComponent
-    private let content: TemplateContentProvider
-
-    init(content: TemplateContentProvider,
-         background: BackgroundTBU,
-         contentShape: ShapeComponent) {
-        self.content = content
+    private let background: AdaptyUI.Filling
+    private let contentShape: AdaptyUI.Shape
+    private let purchaseButton: AdaptyUI.Button
+    private let closeButton: AdaptyUI.Button?
+    
+    init(background: AdaptyUI.Filling,
+         contentShape: AdaptyUI.Shape,
+         purchaseButton: AdaptyUI.Button,
+         closeButton: AdaptyUI.Button?) {
         self.background = background
         self.contentShape = contentShape
+        self.purchaseButton = purchaseButton
+        self.closeButton = closeButton
     }
 
     private weak var contentViewComponentView: AdaptyBaseContentView?
@@ -51,7 +55,7 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
                                                                  bottom: 24,
                                                                  right: 24))
 
-        let continueButtonView = AdaptyButtonComponentView(component: content.purchaseButton)
+        let continueButtonView = AdaptyButtonComponentView(component: purchaseButton)
         stackView.addArrangedSubview(continueButtonView)
         stackView.addConstraint(
             continueButtonView.heightAnchor.constraint(equalToConstant: 58.0)
@@ -59,7 +63,7 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
 
         contentViewComponentView = contentView
 
-        if let component = content.closeButton {
+        if let component = closeButton {
             let closeButton = AdaptyButtonComponentView(component: component)
             layoutCloseButton(closeButton, on: view)
             closeButtonComponentView = closeButton

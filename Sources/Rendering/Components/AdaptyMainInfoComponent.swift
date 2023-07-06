@@ -45,7 +45,7 @@ class AdaptyMainInfoComponent: UIStackView {
         titleLabel.adjustsFontSizeToFitWidth = true
         titleLabel.minimumScaleFactor = 0.5
         titleLabel.font = title.uiFont
-        titleLabel.textColor = title.color?.uiColor ?? .darkText
+        titleLabel.textColor = title.fill?.asColor?.uiColor ?? .darkText
 
         let featuresList = AdaptyTextRowsComponent(textRows: textRows, imageColor: imageColor)
 

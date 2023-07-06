@@ -45,8 +45,7 @@ class AdaptyTextRowComponent: UIStackView {
         textLabel.backgroundColor = .clear
         textLabel.textAlignment = .left
         textLabel.font = .systemFont(ofSize: 14, weight: .medium)
-        textLabel.textColor = textRow.color?.uiColor ?? .darkText
-//        textLabel.font = textRows.font?.uiFont(overrideSize: textRow.size)
+        textLabel.textColor = textRow.fill?.asColor?.uiColor ?? .darkText
         textLabel.font = textRows.uiFont
         textLabel.numberOfLines = 0
         

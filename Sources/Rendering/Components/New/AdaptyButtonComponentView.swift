@@ -9,11 +9,11 @@ import Adapty
 import UIKit
 
 final class AdaptyButtonComponentView: UIButton {
-    let component: any ButtonComponent
-    
+    let component: AdaptyUI.Button
+
     var onTap: (() -> Void)?
 
-    init(component: any ButtonComponent) {
+    init(component: AdaptyUI.Button) {
         self.component = component
 
         super.init(frame: .zero)
@@ -21,7 +21,7 @@ final class AdaptyButtonComponentView: UIButton {
         translatesAutoresizingMaskIntoConstraints = false
         layer.masksToBounds = true
 
-        setAttributedTitle(component.text?.attributedString, for: .normal)
+        setAttributedTitle(component.title?.attributedString, for: .normal)
         addTarget(self, action: #selector(buttonDidTouchUp), for: .touchUpInside)
 
         updateShapeBackground()
@@ -64,9 +64,11 @@ final class AdaptyButtonComponentView: UIButton {
         case let .color(color):
             backgroundColor = color.uiColor
         case let .image(image):
-            setBackgroundImage(image.uiImage, for: .normal)
+            if currentBackgroundImage == nil {
+                setBackgroundImage(image.uiImage, for: .normal)
+            }
             backgroundColor = .clear
-        case let .gradient(gradient):
+        case let .colorLinearGradient(gradient):
             if let gradientLayer = gradientLayer {
                 gradientLayer.frame = bounds
             } else {
@@ -87,8 +89,9 @@ final class AdaptyButtonComponentView: UIButton {
         }
 
         switch mask {
-        case .rect:
-            layer.cornerRadius = component.shape?.rectCornerRadius ?? 0.0
+        case let .rectangle(cornerRadius):
+            // TODO: support corners
+            layer.cornerRadius = cornerRadius.value ?? 0.0
         case .circle:
             layer.mask = CAShapeLayer.circleLayer(in: bounds)
             layer.mask?.backgroundColor = UIColor.red.cgColor
