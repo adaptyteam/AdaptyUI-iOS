@@ -36,6 +36,10 @@ extension AdaptyUI.LocalizedViewStyle {
             return result
         }
     }
+    
+    var titleRows: AdaptyUI.TextItems? {
+        items["title_rows"]?.asTextItems
+    }
 
     var purchaseButton: AdaptyUI.Button {
         get throws {
@@ -67,6 +71,8 @@ extension AdaptyTemplateController {
         return .init(coverImage: try style.coverImage,
                      coverImageHeightMultilpyer: coverImageHeightMultilpyer,
                      contentShape: try style.contentShape,
+                     titleRows: style.titleRows,
+                     featuresBlock: style.featureBlock,
                      purchaseButton: try style.purchaseButton,
                      closeButton: try style.closeButton)
     }

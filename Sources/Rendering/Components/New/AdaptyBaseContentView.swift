@@ -5,8 +5,8 @@
 //  Created by Alexey Goncharov on 29.6.23..
 //
 
-import UIKit
 import Adapty
+import UIKit
 
 enum ContentLayout {
     case basic(multiplier: CGFloat)
@@ -16,7 +16,7 @@ enum ContentLayout {
 
 final class AdaptyBaseContentView: UIView {
     static let curveHeight: CGFloat = 36.0
-    
+
     let layout: ContentLayout
     let shape: AdaptyUI.Shape
 
@@ -101,9 +101,11 @@ final class AdaptyBaseContentView: UIView {
 
         contentTopConstraint = view.topAnchor.constraint(equalTo: topAnchor,
                                                          constant: inset.top)
-        contentBottomConstraint = view.bottomAnchor.constraint(equalTo: bottomAnchor,
-                                                               constant: -inset.bottom)
-
+        contentBottomConstraint =
+//            view.bottomAnchor.constraint(equalTo: bottomAnchor,
+//                                         constant: -inset.bottom)
+            view.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor,
+                                         constant: -inset.bottom)
         addSubview(view)
         addConstraints([
             view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: inset.left),

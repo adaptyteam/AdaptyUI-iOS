@@ -22,6 +22,8 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     private let coverImage: AdaptyUI.Image
     private let coverImageHeightMultilpyer: CGFloat
     private let contentShape: AdaptyUI.Shape
+    private let titleRows: AdaptyUI.TextItems?
+    private let featuresBlock: AdaptyUI.FeaturesBlock?
     private let purchaseButton: AdaptyUI.Button
     private let closeButton: AdaptyUI.Button?
 
@@ -31,12 +33,16 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         coverImage: AdaptyUI.Image,
         coverImageHeightMultilpyer: CGFloat,
         contentShape: AdaptyUI.Shape,
+        titleRows: AdaptyUI.TextItems?,
+        featuresBlock: AdaptyUI.FeaturesBlock?,
         purchaseButton: AdaptyUI.Button,
         closeButton: AdaptyUI.Button?
     ) {
         self.coverImage = coverImage
         self.coverImageHeightMultilpyer = coverImageHeightMultilpyer
         self.contentShape = contentShape
+        self.titleRows = titleRows
+        self.featuresBlock = featuresBlock
         self.purchaseButton = purchaseButton
         self.closeButton = closeButton
     }
@@ -79,14 +85,34 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
 
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = 64.0
+        stackView.spacing = 24.0
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        contentView.layoutContent(stackView, inset: UIEdgeInsets(top: 48,
+        contentView.layoutContent(stackView, inset: UIEdgeInsets(top: contentShape.recommendedContentOverlap,
                                                                  left: 24,
                                                                  bottom: 24,
                                                                  right: 24))
 
+        if let titleRows {
+            let titleRowsView = AdaptyTextItemsComponentView(textItems: titleRows)
+            stackView.addArrangedSubview(titleRowsView)
+        }
+        
+        if let featuresBlock {
+            switch featuresBlock.type {
+            case .list:
+                guard let items = featuresBlock.items["list"]?.asTextItems else {
+                    // TODO: throw an error
+                    break
+                }
+                
+                let featuresListView = AdaptyTextItemsComponentView(textItems: items)
+                stackView.addArrangedSubview(featuresListView)
+            case .timeline:
+                break
+            }
+        }
+        
         let continueButtonView = AdaptyButtonComponentView(component: purchaseButton)
         stackView.addArrangedSubview(continueButtonView)
         stackView.addConstraint(

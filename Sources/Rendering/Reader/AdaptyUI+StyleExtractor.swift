@@ -53,9 +53,9 @@ extension AdaptyUI.LocalizedViewStyle {
         }
     }
 
-    func customTextRows(id: String) throws -> AdaptyUI.TextRows {
+    func customTextRows(id: String) throws -> AdaptyUI.TextItems {
         let comp = try extractCustomComponent(id)
-        if let value = comp.asTextRows {
+        if let value = comp.asTextItems {
             return value
         } else {
             throw AdaptyUIError.wrongComponentType(id)

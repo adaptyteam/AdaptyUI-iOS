@@ -10,10 +10,10 @@ import UIKit
 
 class AdaptyMainInfoComponent: UIStackView {
     private let title: AdaptyUI.Text
-    private let textRows: AdaptyUI.TextRows
+    private let textRows: AdaptyUI.TextItems
     private let imageColor: UIColor
 
-    init(title: AdaptyUI.Text, textRows: AdaptyUI.TextRows, imageColor: UIColor) {
+    init(title: AdaptyUI.Text, textRows: AdaptyUI.TextItems, imageColor: UIColor) {
         self.title = title
         self.textRows = textRows
         self.imageColor = imageColor
@@ -28,7 +28,7 @@ class AdaptyMainInfoComponent: UIStackView {
     }
 
     private weak var titleLabel: UILabel!
-    private weak var featuresList: AdaptyTextRowsComponent!
+    private weak var featuresList: AdaptyTextItemsComponentView!
 
     private func setupView() {
         translatesAutoresizingMaskIntoConstraints = false
@@ -47,7 +47,7 @@ class AdaptyMainInfoComponent: UIStackView {
         titleLabel.font = title.uiFont
         titleLabel.textColor = title.fill?.asColor?.uiColor ?? .darkText
 
-        let featuresList = AdaptyTextRowsComponent(textRows: textRows, imageColor: imageColor)
+        let featuresList = AdaptyTextItemsComponentView(textItems: textRows)
 
         self.titleLabel = titleLabel
         self.featuresList = featuresList
