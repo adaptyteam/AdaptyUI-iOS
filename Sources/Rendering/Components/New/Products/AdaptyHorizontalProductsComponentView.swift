@@ -32,6 +32,42 @@ extension AdaptyUI.ProductsBlock {
     var mainProductTagText: AdaptyUI.Text? {
         items["main_product_tag_text"]?.asText
     }
+
+    var productTitle: AdaptyUI.Text {
+        get throws {
+            guard let result = items["product_title"]?.asText else {
+                throw AdaptyUIError.componentNotFound("product_title")
+            }
+            return result
+        }
+    }
+
+    var productOffer: AdaptyUI.Text {
+        get throws {
+            guard let result = items["product_offer"]?.asText else {
+                throw AdaptyUIError.componentNotFound("product_offer")
+            }
+            return result
+        }
+    }
+
+    var productPrice: AdaptyUI.Text {
+        get throws {
+            guard let result = items["product_price"]?.asText else {
+                throw AdaptyUIError.componentNotFound("product_price")
+            }
+            return result
+        }
+    }
+
+    var productPriceCalculated: AdaptyUI.Text {
+        get throws {
+            guard let result = items["product_price_calculated"]?.asText else {
+                throw AdaptyUIError.componentNotFound("product_price_calculated")
+            }
+            return result
+        }
+    }
 }
 
 final class AdaptyHorizontalProductsComponentView: UIStackView {
@@ -56,15 +92,12 @@ final class AdaptyHorizontalProductsComponentView: UIStackView {
         translatesAutoresizingMaskIntoConstraints = false
 
         for i in 0 ..< 3 {
-            let productInfoView = AdaptyHorizontalProductInfoView(
+            let productInfoView = try AdaptyHorizontalProductInfoView(
                 title: "1 year",
                 subtitle: "7 days free trial",
                 price: "$99.99",
                 priceSubtitle: "$9 / week",
-                titleColor: .white,
-                subtitleColor: .white,
-                priceColor: .white,
-                priceSubtitleColor: .white
+                productsBlock: productsBlock
             )
 
             let button = AdaptyButtonComponentView(

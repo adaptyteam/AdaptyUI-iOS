@@ -112,7 +112,13 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
                 let featuresListView = AdaptyTextItemsComponentView(textItems: items)
                 stackView.addArrangedSubview(featuresListView)
             case .timeline:
-                break
+                guard let items = featuresBlock.items["timeline"]?.asTextItems else {
+                    // TODO: throw an error
+                    break
+                }
+                
+                let featuresListView = AdaptyTextItemsComponentView(textItems: items)
+                stackView.addArrangedSubview(featuresListView)
             }
         }
         

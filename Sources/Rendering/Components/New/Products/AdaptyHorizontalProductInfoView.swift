@@ -5,6 +5,7 @@
 //  Created by Alexey Goncharov on 11.7.23..
 //
 
+import Adapty
 import UIKit
 
 final class AdaptyHorizontalProductInfoView: UIStackView {
@@ -13,47 +14,43 @@ final class AdaptyHorizontalProductInfoView: UIStackView {
     let price: String?
     let priceSubtitle: String?
 
-    let titleColor: UIColor
-    let subtitleColor: UIColor
-    let priceColor: UIColor
-    let priceSubtitleColor: UIColor
+    let productsBlock: AdaptyUI.ProductsBlock
 
     init(title: String?,
          subtitle: String?,
          price: String?,
          priceSubtitle: String?,
-         titleColor: UIColor,
-         subtitleColor: UIColor,
-         priceColor: UIColor,
-         priceSubtitleColor: UIColor) {
+         productsBlock: AdaptyUI.ProductsBlock) throws {
         self.title = title
         self.subtitle = subtitle
         self.price = price
         self.priceSubtitle = priceSubtitle
-        self.titleColor = titleColor
-        self.subtitleColor = subtitleColor
-        self.priceColor = priceColor
-        self.priceSubtitleColor = priceSubtitleColor
-
+        self.productsBlock = productsBlock
+        
         super.init(frame: .zero)
 
-        setupView()
+        try setupView()
     }
 
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func setupView() {
+    private func setupView() throws {
+        let productTitle = try productsBlock.productTitle
+        let productOffer = try productsBlock.productOffer
+        let productPrice = try productsBlock.productPrice
+        let productPriceCalculated = try productsBlock.productPriceCalculated
+
         let titleLabel = UILabel()
-        titleLabel.font = .systemFont(ofSize: 18.0, weight: .medium)
-        titleLabel.textColor = titleColor
+        titleLabel.font = productTitle.uiFont
+        titleLabel.textColor = productTitle.uiColor
         titleLabel.text = title
 
         let priceTitleLabel = UILabel()
-        priceTitleLabel.font = .systemFont(ofSize: 18.0, weight: .medium)
         priceTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        priceTitleLabel.textColor = priceColor
+        priceTitleLabel.font = productPrice.uiFont
+        priceTitleLabel.textColor = productPrice.uiColor
         priceTitleLabel.textAlignment = .right
         priceTitleLabel.text = price
 
@@ -62,17 +59,17 @@ final class AdaptyHorizontalProductInfoView: UIStackView {
         titleStack.axis = .horizontal
 
         let subtitleLabel = UILabel()
-        subtitleLabel.font = .systemFont(ofSize: 14.0)
-        subtitleLabel.textColor = subtitleColor
+        subtitleLabel.font = productOffer.uiFont
+        subtitleLabel.textColor = productOffer.uiColor
         subtitleLabel.minimumScaleFactor = 0.5
         subtitleLabel.adjustsFontSizeToFitWidth = true
         subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         subtitleLabel.text = subtitle
 
         let priceSubtitleLabel = UILabel()
-        priceSubtitleLabel.font = .systemFont(ofSize: 14.0)
         priceSubtitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        priceSubtitleLabel.textColor = priceSubtitleColor
+        priceSubtitleLabel.font = productPriceCalculated.uiFont
+        priceSubtitleLabel.textColor = productPriceCalculated.uiColor
         priceSubtitleLabel.textAlignment = .right
         priceSubtitleLabel.text = priceSubtitle
 
