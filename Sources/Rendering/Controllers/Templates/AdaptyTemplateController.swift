@@ -117,7 +117,13 @@ public final class AdaptyTemplateController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        layoutBuilder.buildInterface(on: view)
+        do {
+            try layoutBuilder.buildInterface(on: view)
+        } catch {
+            // TODO: move out
+            print("rendering error \(error)")
+        }
+        
         layoutBuilder.onAction { [weak self] action in
             switch action {
             case .close:

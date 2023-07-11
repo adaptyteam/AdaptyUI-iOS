@@ -54,14 +54,14 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     }
 
     private weak var contentViewComponentView: AdaptyBaseContentView?
-    
+
     private var onActionCallback: ((AdaptyUI.ButtonAction) -> Void)?
-    
+
     func onAction(_ callback: @escaping (AdaptyUI.ButtonAction) -> Void) {
         onActionCallback = callback
     }
 
-    func buildInterface(on view: UIView) {
+    func buildInterface(on view: UIView) throws {
         let backgroundView = AdaptyBackgroundComponentView(background: nil)
         layoutBackground(backgroundView, on: view)
 
@@ -109,16 +109,14 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
             switch featuresBlock.type {
             case .list:
                 guard let items = featuresBlock.items["list"]?.asTextItems else {
-                    // TODO: throw an error
-                    break
+                    throw AdaptyUIError.componentNotFound("list")
                 }
 
                 let featuresListView = AdaptyTextItemsComponentView(textItems: items)
                 stackView.addArrangedSubview(featuresListView)
             case .timeline:
                 guard let items = featuresBlock.items["timeline"]?.asTextItems else {
-                    // TODO: throw an error
-                    break
+                    throw AdaptyUIError.componentNotFound("timeline")
                 }
 
                 let featuresListView = AdaptyTextItemsComponentView(textItems: items)
@@ -126,16 +124,13 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
             }
         }
 
-        if let productsView = try? AdaptyHorizontalProductsComponentView(productsBlock: productsBlock) {
-            stackView.addArrangedSubview(productsView)
+        let productsView = try AdaptyHorizontalProductsComponentView(productsBlock: productsBlock)
+        stackView.addArrangedSubview(productsView)
 
-            // TODO: throw rendering error
-        }
-        
         let continueButtonPlaceholder = UIView()
         continueButtonPlaceholder.translatesAutoresizingMaskIntoConstraints = false
         continueButtonPlaceholder.backgroundColor = .clear
-        
+
         stackView.addArrangedSubview(continueButtonPlaceholder)
         stackView.addConstraint(
             continueButtonPlaceholder.heightAnchor.constraint(equalToConstant: 58.0)
@@ -148,10 +143,9 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
 
         contentViewComponentView = contentView
 
-        if let footerBlock,
-           let footerView = try? AdaptyFooterComponentView(footerBlock: footerBlock) {
+        if let footerBlock {
+            let footerView = try AdaptyFooterComponentView(footerBlock: footerBlock)
             stackView.addArrangedSubview(footerView)
-            // TODO: throw rendering error
         }
 
         if let closeButton {
@@ -159,7 +153,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
             closeButtonView.onTap = { [weak self] _ in
                 self?.onActionCallback?(.close)
             }
-            
+
             layoutCloseButton(closeButtonView, on: view)
         }
     }

@@ -9,9 +9,7 @@ import Adapty
 import UIKit
 
 protocol LayoutBuilder {
-    func buildInterface(on view: UIView)
-
+    func buildInterface(on view: UIView) throws
     func viewDidLayoutSubviews(_ view: UIView)
-
     func onAction(_ callback: @escaping (AdaptyUI.ButtonAction) -> Void)
 }
