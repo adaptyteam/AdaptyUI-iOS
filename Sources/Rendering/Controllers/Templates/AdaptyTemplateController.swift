@@ -18,6 +18,7 @@ extension AdaptyUI.LocalizedViewConfiguration {
 }
 
 // Basic
+// TODO: Move this out
 extension AdaptyUI.LocalizedViewStyle {
     var coverImage: AdaptyUI.Image {
         get throws {
@@ -73,6 +74,7 @@ extension AdaptyTemplateController {
                      contentShape: try style.contentShape,
                      titleRows: style.titleRows,
                      featuresBlock: style.featureBlock,
+                     productsBlock: style.productBlock,
                      purchaseButton: try style.purchaseButton,
                      closeButton: try style.closeButton)
     }

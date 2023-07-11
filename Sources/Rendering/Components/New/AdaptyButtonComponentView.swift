@@ -8,12 +8,27 @@
 import Adapty
 import UIKit
 
+extension AdaptyUI.Button {
+    func getStateShape(_ isSelected: Bool) -> AdaptyUI.Shape? {
+        if isSelected, let selected {
+            return selected.shape
+        } else {
+            return normal?.shape
+        }
+    }
+}
+
 final class AdaptyButtonComponentView: UIButton {
     let component: AdaptyUI.Button
 
     var onTap: (() -> Void)?
 
-    init(component: AdaptyUI.Button) {
+    private var gradientLayer: CAGradientLayer?
+    private var contentView: UIView?
+
+    init(component: AdaptyUI.Button,
+         contentView: UIView? = nil,
+         contentViewMargins: UIEdgeInsets? = nil) {
         self.component = component
 
         super.init(frame: .zero)
@@ -21,11 +36,48 @@ final class AdaptyButtonComponentView: UIButton {
         translatesAutoresizingMaskIntoConstraints = false
         layer.masksToBounds = true
 
-        setAttributedTitle(component.title?.attributedString, for: .normal)
+        if let contentView {
+            setupContentView(contentView, contentViewMargins)
+        } else if let title = component.normal?.title?.asText?.attributedString {
+            setAttributedTitle(title, for: .normal)
+        }
+
         addTarget(self, action: #selector(buttonDidTouchUp), for: .touchUpInside)
 
-        updateShapeBackground()
-        updateShapeMask()
+        let shape = component.getStateShape(false)
+
+        updateShapeMask(shape?.type)
+        updateShapeBackground(shape?.background)
+        updateShapeBorder(shape?.border)
+    }
+
+    private func setupContentView(_ view: UIView, _ margins: UIEdgeInsets?) {
+        if let contentView {
+            contentView.removeFromSuperview()
+        }
+        
+        view.isUserInteractionEnabled = false
+
+        addSubview(view)
+        addConstraints([
+            view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: margins?.left ?? 0.0),
+            view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -(margins?.right ?? 0.0)),
+            view.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -(margins?.bottom ?? 0.0)),
+            view.topAnchor.constraint(equalTo: topAnchor, constant: margins?.top ?? 0.0),
+        ])
+
+        contentView = view
+    }
+
+    func updateContent(_ textItems: AdaptyUI.TextItems?) {
+        contentView?.removeFromSuperview()
+        contentView = nil
+
+        setAttributedTitle(textItems?.asText?.attributedString, for: .normal)
+    }
+
+    func updateContent(_ view: UIView, margins: UIEdgeInsets?) {
+        setupContentView(view, margins)
     }
 
     required init?(coder: NSCoder) {
@@ -48,19 +100,20 @@ final class AdaptyButtonComponentView: UIButton {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        updateShapeMask()
-        updateShapeBackground()
+        let shape = component.getStateShape(isSelected)
+
+        updateShapeMask(shape?.type)
+        updateShapeBackground(shape?.background)
+        updateShapeBorder(shape?.border)
     }
 
-    private var gradientLayer: CAGradientLayer?
-
-    private func updateShapeBackground() {
-        guard let background = component.shape?.background else {
+    private func updateShapeBackground(_ filling: AdaptyUI.Filling?) {
+        guard let filling else {
             backgroundColor = .clear
             return
         }
 
-        switch background {
+        switch filling {
         case let .color(color):
             backgroundColor = color.uiColor
         case let .image(image):
@@ -81,14 +134,19 @@ final class AdaptyButtonComponentView: UIButton {
         }
     }
 
-    private func updateShapeMask() {
-        guard let mask = component.shape?.mask else {
+    private func updateShapeBorder(_ border: AdaptyUI.Shape.Border?) {
+        layer.borderColor = border?.filling.asColor?.uiColor.cgColor
+        layer.borderWidth = border?.thickness ?? 0.0
+    }
+
+    private func updateShapeMask(_ type: AdaptyUI.ShapeType?) {
+        guard let type else {
             backgroundColor = .clear
             layer.mask = nil
             return
         }
 
-        switch mask {
+        switch type {
         case let .rectangle(cornerRadius):
             // TODO: support corners
             layer.cornerRadius = cornerRadius.value ?? 0.0

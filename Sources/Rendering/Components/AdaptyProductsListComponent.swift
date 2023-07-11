@@ -11,7 +11,7 @@ import UIKit
 class AdaptyProductsListComponent: UIStackView {
     private var selectedProductId: String?
 
-    private let paywall: AdaptyPaywall
+    private let productsCount: Int
     private var products: [AdaptyPaywallProduct]?
     private let productsTitlesResolver: (AdaptyProduct) -> String
     private var introductoryOffersEligibilities: [String: AdaptyEligibility]?
@@ -26,7 +26,7 @@ class AdaptyProductsListComponent: UIStackView {
 
     private let onProductSelected: ((String) -> Void)?
 
-    init(paywall: AdaptyPaywall,
+    init(productsCount: Int,
          products: [AdaptyPaywallProduct]?,
          productsTitlesResolver: @escaping (AdaptyProduct) -> String,
          introductoryOffersEligibilities: [String: AdaptyEligibility]?,
@@ -39,7 +39,7 @@ class AdaptyProductsListComponent: UIStackView {
          tagText: AdaptyUI.Text?,
          useHaptic: Bool,
          onProductSelected: @escaping (String) -> Void) {
-        self.paywall = paywall
+        self.productsCount = productsCount
         self.products = products
         self.productsTitlesResolver = productsTitlesResolver
         self.introductoryOffersEligibilities = introductoryOffersEligibilities
@@ -122,7 +122,7 @@ class AdaptyProductsListComponent: UIStackView {
         } else {
             var placeholderViews = [AdaptyProductPlaceholderComponent]()
 
-            for _ in 0 ..< paywall.vendorProductIds.count {
+            for _ in 0 ..< productsCount {
                 let placeholder = AdaptyProductPlaceholderComponent(color: underlayColor)
                 addArrangedSubview(placeholder)
 

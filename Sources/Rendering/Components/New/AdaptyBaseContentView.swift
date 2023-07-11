@@ -36,7 +36,7 @@ final class AdaptyBaseContentView: UIView {
     // MARK: - Mask & Background
 
     private func updateMask() {
-        switch shape.mask {
+        switch shape.type {
         case let .rectangle(cornerRadius):
             // TODO: support different corners
             layer.cornerRadius = cornerRadius.value ?? 0.0

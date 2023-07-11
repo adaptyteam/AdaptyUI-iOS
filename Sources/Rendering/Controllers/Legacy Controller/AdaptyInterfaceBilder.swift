@@ -206,7 +206,7 @@ extension AdaptyInterfaceBilder {
         onProductSelected: @escaping (String) -> Void
     ) throws -> AdaptyProductsListComponent {
         let productsList = AdaptyProductsListComponent(
-            paywall: paywall,
+            productsCount: paywall.vendorProductIds.count,
             products: products,
             productsTitlesResolver: productsTitlesResolver,
             introductoryOffersEligibilities: introductoryOffersEligibilities,

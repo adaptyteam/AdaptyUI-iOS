@@ -139,7 +139,8 @@ class ViewController: UIViewController {
             delegate: self,
             productsTitlesResolver: { $0.vendorProductId }
         )
-
+        vc.modalPresentationStyle = .overFullScreen
+        
         present(vc, animated: true)
     }
 

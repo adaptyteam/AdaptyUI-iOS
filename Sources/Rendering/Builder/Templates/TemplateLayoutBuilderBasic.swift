@@ -10,7 +10,7 @@ import UIKit
 
 extension AdaptyUI.Shape {
     fileprivate var recommendedContentOverlap: CGFloat {
-        switch mask {
+        switch type {
         case let .rectangle(cornerRadius): return cornerRadius.value ?? 0.0
         case .curveUp, .curveDown: return AdaptyBaseContentView.curveHeight
         case .circle: return 0.0
@@ -24,6 +24,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     private let contentShape: AdaptyUI.Shape
     private let titleRows: AdaptyUI.TextItems?
     private let featuresBlock: AdaptyUI.FeaturesBlock?
+    private let productsBlock: AdaptyUI.ProductsBlock
     private let purchaseButton: AdaptyUI.Button
     private let closeButton: AdaptyUI.Button?
 
@@ -35,6 +36,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         contentShape: AdaptyUI.Shape,
         titleRows: AdaptyUI.TextItems?,
         featuresBlock: AdaptyUI.FeaturesBlock?,
+        productsBlock: AdaptyUI.ProductsBlock,
         purchaseButton: AdaptyUI.Button,
         closeButton: AdaptyUI.Button?
     ) {
@@ -43,6 +45,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         self.contentShape = contentShape
         self.titleRows = titleRows
         self.featuresBlock = featuresBlock
+        self.productsBlock = productsBlock
         self.purchaseButton = purchaseButton
         self.closeButton = closeButton
     }
@@ -111,6 +114,12 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
             case .timeline:
                 break
             }
+        }
+        
+        if let productsView = try? AdaptyHorizontalProductsComponentView(productsBlock: productsBlock) {
+            stackView.addArrangedSubview(productsView)
+            
+            // TODO: throw rendering error
         }
         
         let continueButtonView = AdaptyButtonComponentView(component: purchaseButton)

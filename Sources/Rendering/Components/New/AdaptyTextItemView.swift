@@ -46,21 +46,23 @@ class AdaptyTextItemView: UIStackView {
         let textLabel = UILabel()
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         textLabel.backgroundColor = .clear
-        textLabel.text = text.value
-        textLabel.textAlignment = text.horizontalAlign.textAlignment
-        textLabel.textColor = text.fill?.asColor?.uiColor ?? .darkText
-        textLabel.font = text.font?.uiFont ?? .systemFont(ofSize: 14.0)
+        
+        textLabel.attributedText = text.attributedString
+//        textLabel.text = text.value
+//        textLabel.textAlignment = text.horizontalAlign.textAlignment
+//        textLabel.textColor = text.fill?.asColor?.uiColor ?? .darkText
+//        textLabel.font = text.font?.uiFont ?? .systemFont(ofSize: 14.0)
         textLabel.numberOfLines = 0
 //        textLabel.backgroundColor = .red
 
-        if let bullet = text.bullet {
-            let imageView = UIImageView(image: bullet.uiImage)
-            imageView.translatesAutoresizingMaskIntoConstraints = false
-
-            addArrangedSubview(imageView)
-
-            self.imageView = imageView
-        }
+//        if let bullet = text.bullet {
+//            let imageView = UIImageView(image: bullet.uiImage)
+//            imageView.translatesAutoresizingMaskIntoConstraints = false
+//
+//            addArrangedSubview(imageView)
+//
+//            self.imageView = imageView
+//        }
 
         addArrangedSubview(textLabel)
 
