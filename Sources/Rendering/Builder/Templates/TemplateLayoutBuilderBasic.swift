@@ -27,6 +27,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     private let productsBlock: AdaptyUI.ProductsBlock
     private let purchaseButton: AdaptyUI.Button
     private let closeButton: AdaptyUI.Button?
+    private let footerBlock: AdaptyUI.FooterBlock?
 
     private let scrollViewDelegate = AdaptyCoverImageScrollDelegate()
 
@@ -38,6 +39,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         featuresBlock: AdaptyUI.FeaturesBlock?,
         productsBlock: AdaptyUI.ProductsBlock,
         purchaseButton: AdaptyUI.Button,
+        footerBlock: AdaptyUI.FooterBlock?,
         closeButton: AdaptyUI.Button?
     ) {
         self.coverImage = coverImage
@@ -47,14 +49,16 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         self.featuresBlock = featuresBlock
         self.productsBlock = productsBlock
         self.purchaseButton = purchaseButton
+        self.footerBlock = footerBlock
         self.closeButton = closeButton
     }
 
     private weak var contentViewComponentView: AdaptyBaseContentView?
-    private weak var closeButtonComponentView: AdaptyButtonComponentView?
-
-    func onCloseButtonPressed(_ callback: @escaping () -> Void) {
-        closeButtonComponentView?.onTap = callback
+    
+    private var onActionCallback: ((AdaptyUI.ButtonAction) -> Void)?
+    
+    func onAction(_ callback: @escaping (AdaptyUI.ButtonAction) -> Void) {
+        onActionCallback = callback
     }
 
     func buildInterface(on view: UIView) {
@@ -100,7 +104,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
             let titleRowsView = AdaptyTextItemsComponentView(textItems: titleRows)
             stackView.addArrangedSubview(titleRowsView)
         }
-        
+
         if let featuresBlock {
             switch featuresBlock.type {
             case .list:
@@ -108,7 +112,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
                     // TODO: throw an error
                     break
                 }
-                
+
                 let featuresListView = AdaptyTextItemsComponentView(textItems: items)
                 stackView.addArrangedSubview(featuresListView)
             case .timeline:
@@ -116,31 +120,47 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
                     // TODO: throw an error
                     break
                 }
-                
+
                 let featuresListView = AdaptyTextItemsComponentView(textItems: items)
                 stackView.addArrangedSubview(featuresListView)
             }
         }
-        
+
         if let productsView = try? AdaptyHorizontalProductsComponentView(productsBlock: productsBlock) {
             stackView.addArrangedSubview(productsView)
-            
+
             // TODO: throw rendering error
         }
         
-        let continueButtonView = AdaptyButtonComponentView(component: purchaseButton)
-        stackView.addArrangedSubview(continueButtonView)
+        let continueButtonPlaceholder = UIView()
+        continueButtonPlaceholder.translatesAutoresizingMaskIntoConstraints = false
+        continueButtonPlaceholder.backgroundColor = .clear
+        
+        stackView.addArrangedSubview(continueButtonPlaceholder)
         stackView.addConstraint(
-            continueButtonView.heightAnchor.constraint(equalToConstant: 58.0)
+            continueButtonPlaceholder.heightAnchor.constraint(equalToConstant: 58.0)
         )
+
+        let continueButtonView = AdaptyButtonComponentView(component: purchaseButton)
+        layoutContinueButton(continueButtonView,
+                             placeholder: continueButtonPlaceholder,
+                             on: view)
 
         contentViewComponentView = contentView
 
-        if let component = closeButton {
-            let closeButton = AdaptyButtonComponentView(component: component)
+        if let footerBlock,
+           let footerView = try? AdaptyFooterComponentView(footerBlock: footerBlock) {
+            stackView.addArrangedSubview(footerView)
+            // TODO: throw rendering error
+        }
 
-            layoutCloseButton(closeButton, on: view)
-            closeButtonComponentView = closeButton
+        if let closeButton {
+            let closeButtonView = AdaptyButtonComponentView(component: closeButton)
+            closeButtonView.onTap = { [weak self] _ in
+                self?.onActionCallback?(.close)
+            }
+            
+            layoutCloseButton(closeButtonView, on: view)
         }
     }
 

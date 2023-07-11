@@ -106,7 +106,7 @@ final class AdaptyHorizontalProductsComponentView: UIStackView {
                 contentViewMargins: .init(top: 12, left: 20, bottom: 12, right: 20)
             )
             button.isSelected = i == productsBlock.mainProductIndex
-            button.onTap = {
+            button.onTap = { _ in
                 button.isSelected.toggle()
             }
 

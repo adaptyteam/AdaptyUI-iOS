@@ -5,6 +5,7 @@
 //  Created by Alexey Goncharov on 30.6.23..
 //
 
+import Adapty
 import UIKit
 
 protocol LayoutBuilder {
@@ -12,5 +13,5 @@ protocol LayoutBuilder {
 
     func viewDidLayoutSubviews(_ view: UIView)
 
-    func onCloseButtonPressed(_ callback: @escaping () -> Void)
+    func onAction(_ callback: @escaping (AdaptyUI.ButtonAction) -> Void)
 }

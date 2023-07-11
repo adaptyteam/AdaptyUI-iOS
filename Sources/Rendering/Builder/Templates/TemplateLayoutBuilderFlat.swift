@@ -25,10 +25,11 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
     }
 
     private weak var contentViewComponentView: AdaptyBaseContentView?
-    private weak var closeButtonComponentView: AdaptyButtonComponentView?
 
-    func onCloseButtonPressed(_ callback: @escaping () -> Void) {
-        closeButtonComponentView?.onTap = callback
+    private var onActionCallback: ((AdaptyUI.ButtonAction) -> Void)?
+    
+    func onAction(_ callback: @escaping (AdaptyUI.ButtonAction) -> Void) {
+        onActionCallback = callback
     }
 
     func buildInterface(on view: UIView) {
@@ -63,10 +64,13 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
 
         contentViewComponentView = contentView
         
-        if let component = closeButton {
-            let closeButton = AdaptyButtonComponentView(component: component)
-            layoutCloseButton(closeButton, on: view)
-            closeButtonComponentView = closeButton
+        if let closeButton {
+            let closeButtonView = AdaptyButtonComponentView(component: closeButton)
+            closeButtonView.onTap = { [weak self] _ in
+                self?.onActionCallback?(.close)
+            }
+            
+            layoutCloseButton(closeButtonView, on: view)
         }
     }
 

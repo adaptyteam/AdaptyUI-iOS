@@ -21,7 +21,7 @@ extension AdaptyUI.Button {
 final class AdaptyButtonComponentView: UIButton {
     let component: AdaptyUI.Button
 
-    var onTap: (() -> Void)?
+    var onTap: ((AdaptyUI.ButtonAction?) -> Void)?
 
     private var gradientLayer: CAGradientLayer?
     private var contentView: UIView?
@@ -161,6 +161,6 @@ final class AdaptyButtonComponentView: UIButton {
 
     @objc
     private func buttonDidTouchUp() {
-        onTap?()
+        onTap?(component.action)
     }
 }

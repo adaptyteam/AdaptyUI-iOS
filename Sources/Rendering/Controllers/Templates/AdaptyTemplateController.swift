@@ -76,6 +76,7 @@ extension AdaptyTemplateController {
                      featuresBlock: style.featureBlock,
                      productsBlock: style.productBlock,
                      purchaseButton: try style.purchaseButton,
+                     footerBlock: style.footerBlock,
                      closeButton: try style.closeButton)
     }
 
@@ -117,8 +118,13 @@ public final class AdaptyTemplateController: UIViewController {
         super.viewDidLoad()
 
         layoutBuilder.buildInterface(on: view)
-        layoutBuilder.onCloseButtonPressed { [weak self] in
-            self?.dismiss(animated: true)
+        layoutBuilder.onAction { [weak self] action in
+            switch action {
+            case .close:
+                self?.dismiss(animated: true)
+            default:
+                break
+            }
         }
     }
 
