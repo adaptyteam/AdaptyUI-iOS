@@ -28,7 +28,7 @@ final class AdaptyFooterComponentView: UIStackView {
         axis = .horizontal
         distribution = .fillEqually
         
-        for (_, item) in footerBlock.items {
+        for (_, item) in footerBlock.orderedItems {
             guard case let .button(button) = item else {
                 return
             }

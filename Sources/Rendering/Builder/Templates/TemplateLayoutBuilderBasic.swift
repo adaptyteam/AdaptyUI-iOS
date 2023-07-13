@@ -62,7 +62,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     }
 
     func buildInterface(on view: UIView) throws {
-        let backgroundView = AdaptyBackgroundComponentView(background: nil)
+        let backgroundView = AdaptyBackgroundComponentView(background: contentShape.background)
         layoutBackground(backgroundView, on: view)
 
         let imageView = UIImageView(image: coverImage.uiImage)
@@ -70,7 +70,11 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
 
-        layoutCoverImageView(imageView, on: view, multiplier: coverImageHeightMultilpyer, minHeight: 300.0)
+        layoutCoverImageView(imageView,
+                             on: view,
+                             multiplier: coverImageHeightMultilpyer,
+                             minHeight: 300.0)
+        
         scrollViewDelegate.coverView = imageView
 
         let scrollView = AdaptyBaseScrollView()
