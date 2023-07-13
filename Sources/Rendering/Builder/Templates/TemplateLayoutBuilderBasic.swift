@@ -12,7 +12,7 @@ extension AdaptyUI.Shape {
     fileprivate var recommendedContentOverlap: CGFloat {
         switch type {
         case let .rectangle(cornerRadius): return cornerRadius.value ?? 0.0
-        case .curveUp, .curveDown: return AdaptyBaseContentView.curveHeight
+        case .curveUp, .curveDown: return 1.5 * AdaptyBaseContentView.curveHeight
         case .circle: return 0.0
         }
     }
