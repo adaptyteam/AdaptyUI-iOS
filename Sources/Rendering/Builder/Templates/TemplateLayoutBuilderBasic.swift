@@ -115,12 +115,8 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
                 let featuresListView = AdaptyTextItemsComponentView(textItems: items)
                 stackView.addArrangedSubview(featuresListView)
             case .timeline:
-                guard let items = featuresBlock.items["timeline"]?.asTextItems else {
-                    throw AdaptyUIError.componentNotFound("timeline")
-                }
-
-                let featuresListView = AdaptyTextItemsComponentView(textItems: items)
-                stackView.addArrangedSubview(featuresListView)
+                let featuresTimelineView = try AdaptyTimelineComponentView(block: featuresBlock)
+                stackView.addArrangedSubview(featuresTimelineView)
             }
         }
 

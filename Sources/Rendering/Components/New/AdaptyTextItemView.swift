@@ -47,7 +47,7 @@ class AdaptyTextItemView: UIStackView {
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         textLabel.backgroundColor = .clear
         
-        textLabel.attributedText = text.attributedString
+        textLabel.attributedText = text.attributedString()
 //        textLabel.text = text.value
 //        textLabel.textAlignment = text.horizontalAlign.textAlignment
 //        textLabel.textColor = text.fill?.asColor?.uiColor ?? .darkText

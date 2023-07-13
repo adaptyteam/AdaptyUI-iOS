@@ -9,8 +9,9 @@ import Adapty
 import UIKit
 
 extension AdaptyUI.Text {
-    var attributedString: NSAttributedString? {
-        let text = value ?? ""
+    func attributedString(appendingNewLine: Bool = false) -> NSAttributedString {
+        let text = (value ?? "") + (appendingNewLine ? "\n" : "")
+        
         let color = uiColor ?? .darkText
         let font = uiFont ?? .systemFont(ofSize: 15)
 
@@ -62,5 +63,13 @@ extension AdaptyUI.Text {
 }
 
 extension AdaptyUI.TextItems {
-    
+    func attributedString() -> NSAttributedString {
+        let result = NSMutableAttributedString()
+        
+        for i in 0 ..< items.count {
+            result.append(items[i].attributedString(appendingNewLine: i < items.count - 1))
+        }
+        
+        return result
+    }
 }
