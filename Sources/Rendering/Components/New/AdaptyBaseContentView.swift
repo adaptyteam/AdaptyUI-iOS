@@ -96,16 +96,31 @@ final class AdaptyBaseContentView: UIView {
         }
     }
 
-    func layoutContent(_ view: UIView, inset: UIEdgeInsets) {
+    enum Layout {
+        case topToBottom
+        case bottomToTop
+    }
+
+    func layoutContent(_ view: UIView, inset: UIEdgeInsets, layout: Layout = .topToBottom) {
         contentInset = inset
 
-        contentTopConstraint = view.topAnchor.constraint(equalTo: topAnchor,
-                                                         constant: inset.top)
-        contentBottomConstraint =
-//            view.bottomAnchor.constraint(equalTo: bottomAnchor,
-//                                         constant: -inset.bottom)
-            view.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor,
-                                         constant: -inset.bottom)
+        switch layout {
+        case .topToBottom:
+            contentTopConstraint =
+                view.topAnchor.constraint(equalTo: topAnchor,
+                                          constant: inset.top)
+            contentBottomConstraint =
+                view.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor,
+                                             constant: -inset.bottom)
+        case .bottomToTop:
+            contentTopConstraint =
+                view.topAnchor.constraint(greaterThanOrEqualTo: topAnchor,
+                                          constant: inset.top)
+            contentBottomConstraint =
+                view.bottomAnchor.constraint(equalTo: bottomAnchor,
+                                             constant: -inset.bottom)
+        }
+
         addSubview(view)
         addConstraints([
             view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: inset.left),

@@ -20,6 +20,15 @@ extension AdaptyUI.LocalizedViewConfiguration {
 // Basic
 // TODO: Move this out
 extension AdaptyUI.LocalizedViewStyle {
+    var backgroundImage: AdaptyUI.Image {
+        get throws {
+            guard let result = items["background_image"]?.asImage else {
+                throw AdaptyUIError.componentNotFound("background_image")
+            }
+            return result
+        }
+    }
+
     var coverImage: AdaptyUI.Image {
         get throws {
             guard let result = items["cover_image"]?.asImage else {
@@ -37,7 +46,7 @@ extension AdaptyUI.LocalizedViewStyle {
             return result
         }
     }
-    
+
     var titleRows: AdaptyUI.TextItems? {
         items["title_rows"]?.asTextItems
     }
@@ -80,11 +89,26 @@ extension AdaptyTemplateController {
                      closeButton: try style.closeButton)
     }
 
+    static func createTransparent(config: AdaptyUI.LocalizedViewConfiguration) throws -> TemplateLayoutBuilderTransparent {
+        let style = try config.extractStyle("default")
+
+        return .init(background: .image(try style.backgroundImage),
+                     contentShape: try style.contentShape,
+                     titleRows: style.titleRows,
+                     featuresBlock: style.featureBlock,
+                     productsBlock: style.productBlock,
+                     purchaseButton: try style.purchaseButton,
+                     footerBlock: style.footerBlock,
+                     closeButton: try style.closeButton)
+    }
+
     static func createLayoutFromConfiguration(_ viewConfiguration: AdaptyUI.ViewConfiguration,
                                               locale: String) throws -> LayoutBuilder {
         switch viewConfiguration.templateId {
         case "basic":
             return try createBasic(config: viewConfiguration.extractLocale(locale))
+        case "transparent":
+            return try createTransparent(config: viewConfiguration.extractLocale(locale))
         default:
             throw AdaptyUIError.unsupportedTemplate(viewConfiguration.templateId)
         }
@@ -123,7 +147,7 @@ public final class AdaptyTemplateController: UIViewController {
             // TODO: move out
             print("rendering error \(error)")
         }
-        
+
         layoutBuilder.onAction { [weak self] action in
             switch action {
             case .close:
