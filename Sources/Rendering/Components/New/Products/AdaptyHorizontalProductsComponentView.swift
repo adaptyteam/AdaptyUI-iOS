@@ -91,7 +91,7 @@ final class AdaptyHorizontalProductsComponentView: UIStackView {
         spacing = 8.0
         translatesAutoresizingMaskIntoConstraints = false
 
-        for i in 0 ..< 3 {
+        for i in 0 ..< 2 {
             let productInfoView = try AdaptyHorizontalProductInfoView(
                 title: "1 year",
                 subtitle: "7 days free trial",

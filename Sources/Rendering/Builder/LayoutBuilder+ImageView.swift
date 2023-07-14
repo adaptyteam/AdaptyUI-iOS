@@ -32,6 +32,19 @@ extension LayoutBuilder {
         ])
     }
 
+    func layoutTitleImageView(
+        _ imageView: UIImageView,
+        on stackView: UIStackView,
+        superView: UIView,
+        multiplier: CGFloat
+    ) {
+        stackView.addArrangedSubview(imageView)
+
+        superView.addConstraints([
+            imageView.heightAnchor.constraint(equalTo: superView.heightAnchor, multiplier: multiplier),
+        ])
+    }
+
     func layoutBackgroundImageView(
         _ imageView: UIImageView,
         on superview: UIView

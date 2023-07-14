@@ -5,34 +5,52 @@
 //  Created by Alexey Goncharov on 30.6.23..
 //
 
-import UIKit
 import Adapty
+import UIKit
 
 class TemplateLayoutBuilderFlat: LayoutBuilder {
     private let background: AdaptyUI.Filling
     private let contentShape: AdaptyUI.Shape
+    private let coverImage: AdaptyUI.Shape
+    private let coverImageHeightMultilpyer: CGFloat
+    private let titleRows: AdaptyUI.TextItems?
+    private let featuresBlock: AdaptyUI.FeaturesBlock?
+    private let productsBlock: AdaptyUI.ProductsBlock
     private let purchaseButton: AdaptyUI.Button
+    private let footerBlock: AdaptyUI.FooterBlock?
     private let closeButton: AdaptyUI.Button?
-    
+
     init(background: AdaptyUI.Filling,
          contentShape: AdaptyUI.Shape,
+         coverImage: AdaptyUI.Shape,
+         coverImageHeightMultilpyer: CGFloat,
+         titleRows: AdaptyUI.TextItems?,
+         featuresBlock: AdaptyUI.FeaturesBlock?,
+         productsBlock: AdaptyUI.ProductsBlock,
          purchaseButton: AdaptyUI.Button,
+         footerBlock: AdaptyUI.FooterBlock?,
          closeButton: AdaptyUI.Button?) {
         self.background = background
         self.contentShape = contentShape
+        self.coverImage = coverImage
+        self.coverImageHeightMultilpyer = coverImageHeightMultilpyer
+        self.titleRows = titleRows
+        self.featuresBlock = featuresBlock
+        self.productsBlock = productsBlock
         self.purchaseButton = purchaseButton
+        self.footerBlock = footerBlock
         self.closeButton = closeButton
     }
 
     private weak var contentViewComponentView: AdaptyBaseContentView?
 
     private var onActionCallback: ((AdaptyUI.ButtonAction) -> Void)?
-    
+
     func onAction(_ callback: @escaping (AdaptyUI.ButtonAction) -> Void) {
         onActionCallback = callback
     }
 
-    func buildInterface(on view: UIView) {
+    func buildInterface(on view: UIView) throws {
         let backgroundView = AdaptyBackgroundComponentView(background: background)
         layoutBackground(backgroundView, on: view)
 
@@ -48,7 +66,7 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
 
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = 64.0
+        stackView.spacing = 16
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         contentView.layoutContent(stackView, inset: UIEdgeInsets(top: 48,
@@ -56,20 +74,63 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
                                                                  bottom: 24,
                                                                  right: 24))
 
-        let continueButtonView = AdaptyButtonComponentView(component: purchaseButton)
-        stackView.addArrangedSubview(continueButtonView)
+        let imageView = AdaptyTitleImageComponentView(shape: coverImage)
+
+        layoutTitleImageView(imageView,
+                             on: stackView,
+                             superView: view,
+                             multiplier: coverImageHeightMultilpyer)
+
+        if let titleRows {
+            let titleRowsView = AdaptyTextItemsComponentView(textItems: titleRows)
+            stackView.addArrangedSubview(titleRowsView)
+        }
+
+        if let featuresBlock {
+            switch featuresBlock.type {
+            case .list:
+                guard let items = featuresBlock.items["list"]?.asTextItems else {
+                    throw AdaptyUIError.componentNotFound("list")
+                }
+
+                let featuresListView = AdaptyTextItemsComponentView(textItems: items)
+                stackView.addArrangedSubview(featuresListView)
+            case .timeline:
+                let featuresTimelineView = try AdaptyTimelineComponentView(block: featuresBlock)
+                stackView.addArrangedSubview(featuresTimelineView)
+            }
+        }
+
+        let productsView = try AdaptyHorizontalProductsComponentView(productsBlock: productsBlock)
+        stackView.addArrangedSubview(productsView)
+
+        let continueButtonPlaceholder = UIView()
+        continueButtonPlaceholder.translatesAutoresizingMaskIntoConstraints = false
+        continueButtonPlaceholder.backgroundColor = .clear
+
+        stackView.addArrangedSubview(continueButtonPlaceholder)
         stackView.addConstraint(
-            continueButtonView.heightAnchor.constraint(equalToConstant: 58.0)
+            continueButtonPlaceholder.heightAnchor.constraint(equalToConstant: 58.0)
         )
 
+        let continueButtonView = AdaptyButtonComponentView(component: purchaseButton)
+        layoutContinueButton(continueButtonView,
+                             placeholder: continueButtonPlaceholder,
+                             on: view)
+
         contentViewComponentView = contentView
-        
+
+        if let footerBlock {
+            let footerView = try AdaptyFooterComponentView(footerBlock: footerBlock)
+            stackView.addArrangedSubview(footerView)
+        }
+
         if let closeButton {
             let closeButtonView = AdaptyButtonComponentView(component: closeButton)
             closeButtonView.onTap = { [weak self] _ in
                 self?.onActionCallback?(.close)
             }
-            
+
             layoutCloseButton(closeButtonView, on: view)
         }
     }

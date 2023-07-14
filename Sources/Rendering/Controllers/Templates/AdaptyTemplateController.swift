@@ -17,8 +17,29 @@ extension AdaptyUI.LocalizedViewConfiguration {
     }
 }
 
-// Basic
 // TODO: Move this out
+// Flat
+extension AdaptyUI.LocalizedViewStyle {
+    var background: AdaptyUI.Filling {
+        get throws {
+            guard let result = items["background"]?.asFilling else {
+                throw AdaptyUIError.componentNotFound("background")
+            }
+            return result
+        }
+    }
+
+    var coverImageShape: AdaptyUI.Shape {
+        get throws {
+            guard let result = items["cover_image"]?.asShape else {
+                throw AdaptyUIError.componentNotFound("cover_image")
+            }
+            return result
+        }
+    }
+}
+
+// Basic
 extension AdaptyUI.LocalizedViewStyle {
     var backgroundImage: AdaptyUI.Image {
         get throws {
@@ -102,6 +123,25 @@ extension AdaptyTemplateController {
                      closeButton: try style.closeButton)
     }
 
+    static func createFlat(config: AdaptyUI.LocalizedViewConfiguration) throws -> TemplateLayoutBuilderFlat {
+        guard let coverImageHeightMultilpyer = config.mainImageRelativeHeight else {
+            throw AdaptyUIError.componentNotFound("main_image_relative_height")
+        }
+
+        let style = try config.extractStyle("default")
+
+        return .init(background: try style.background,
+                     contentShape: try style.contentShape,
+                     coverImage: try style.coverImageShape,
+                     coverImageHeightMultilpyer: coverImageHeightMultilpyer,
+                     titleRows: style.titleRows,
+                     featuresBlock: style.featureBlock,
+                     productsBlock: style.productBlock,
+                     purchaseButton: try style.purchaseButton,
+                     footerBlock: style.footerBlock,
+                     closeButton: try style.closeButton)
+    }
+
     static func createLayoutFromConfiguration(_ viewConfiguration: AdaptyUI.ViewConfiguration,
                                               locale: String) throws -> LayoutBuilder {
         switch viewConfiguration.templateId {
@@ -109,6 +149,8 @@ extension AdaptyTemplateController {
             return try createBasic(config: viewConfiguration.extractLocale(locale))
         case "transparent":
             return try createTransparent(config: viewConfiguration.extractLocale(locale))
+        case "flat":
+            return try createFlat(config: viewConfiguration.extractLocale(locale))
         default:
             throw AdaptyUIError.unsupportedTemplate(viewConfiguration.templateId)
         }

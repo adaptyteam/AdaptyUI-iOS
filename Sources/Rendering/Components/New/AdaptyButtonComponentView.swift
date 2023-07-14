@@ -152,7 +152,7 @@ final class AdaptyButtonComponentView: UIButton {
             layer.cornerRadius = cornerRadius.value ?? 0.0
         case .circle:
             layer.mask = CAShapeLayer.circleLayer(in: bounds)
-            layer.mask?.backgroundColor = UIColor.red.cgColor
+            layer.mask?.backgroundColor = UIColor.clear.cgColor
             break
         default:
             break
