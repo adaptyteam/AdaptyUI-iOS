@@ -48,15 +48,15 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
         let backgroundView = AdaptyBackgroundComponentView(background: background)
         layoutBackground(backgroundView, on: view)
 
-//        let scrollView = AdaptyBaseScrollView()
-//        AdaptyInterfaceBilder.layoutScrollView(scrollView, on: view)
+        let scrollView = AdaptyBaseScrollView()
+        AdaptyInterfaceBilder.layoutScrollView(scrollView, on: view)
 
         let contentView = AdaptyBaseContentView(
             layout: .transparent,
             shape: contentShape
         )
 
-        layoutContentView(contentView, on: view)
+        layoutContentView(contentView, on: scrollView)
 
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -124,31 +124,19 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
     // MARK: - Layout
 
     private func layoutContentView(_ contentView: AdaptyBaseContentView,
-                                   on view: UIView) {
-        view.addSubview(contentView)
+                                   on scrollView: UIScrollView) {
+        scrollView.addSubview(contentView)
 
-        view.addConstraints([
-            contentView.topAnchor.constraint(equalTo: view.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        scrollView.addConstraints([
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor,
+                                                multiplier: 1.0),
         ])
     }
-
-//    private func layoutContentView(_ contentView: AdaptyBaseContentView,
-//                                   on scrollView: UIScrollView) {
-//        scrollView.addSubview(contentView)
-//
-//        scrollView.addConstraints([
-//            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-//
-//            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-//            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-//            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-//
-//            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-//            contentView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor,
-//                                                multiplier: 1.0),
-//        ])
-//    }
 }
