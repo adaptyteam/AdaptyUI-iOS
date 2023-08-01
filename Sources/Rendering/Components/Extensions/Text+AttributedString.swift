@@ -9,8 +9,11 @@ import Adapty
 import UIKit
 
 extension AdaptyUI.Text {
-    func attributedString(appendingNewLine: Bool = false) -> NSAttributedString {
-        let text = (value ?? "") + (appendingNewLine ? "\n" : "")
+    func attributedString(
+        overridingValue: String? = nil,
+        appendingNewLine: Bool = false
+    ) -> NSAttributedString {
+        let text = (overridingValue ?? value ?? "") + (appendingNewLine ? "\n" : "")
         
         let color = uiColor ?? .darkText
         let font = uiFont ?? .systemFont(ofSize: 15)

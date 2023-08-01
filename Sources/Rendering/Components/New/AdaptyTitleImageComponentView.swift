@@ -33,7 +33,7 @@ final class AdaptyTitleImageComponentView: UIImageView {
             image = img.uiImage
         case .color(let color):
             backgroundColor = color.uiColor
-        case .colorLinearGradient(let gradient):
+        case .colorGradient(let gradient):
             backgroundColor = gradient.items.first?.color.uiColor
         case .none:
             backgroundColor = .clear

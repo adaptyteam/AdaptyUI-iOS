@@ -39,7 +39,7 @@ final class AdaptyBackgroundComponentView: UIImageView {
         case let .image(img):
             backgroundColor = nil
             image = img.uiImage
-        case let .colorLinearGradient(gradient):
+        case let .colorGradient(gradient):
             backgroundColor = nil
             image = nil
 

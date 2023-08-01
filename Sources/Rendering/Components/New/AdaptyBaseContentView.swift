@@ -58,7 +58,7 @@ final class AdaptyBaseContentView: UIView {
         switch shape.background {
         case let .color(color):
             backgroundColor = color.uiColor
-        case let .colorLinearGradient(gradient):
+        case let .colorGradient(gradient):
             backgroundColor = .clear
             if let gradientLayer {
                 gradientLayer.frame = bounds

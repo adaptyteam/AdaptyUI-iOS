@@ -90,7 +90,7 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
             }
         }
 
-        let productsView = try AdaptyHorizontalProductsComponentView(productsBlock: productsBlock)
+        let productsView = try AdaptyProductsComponentView(productsBlock: productsBlock)
         stackView.addArrangedSubview(productsView)
 
         let continueButtonView = AdaptyButtonComponentView(component: purchaseButton)
