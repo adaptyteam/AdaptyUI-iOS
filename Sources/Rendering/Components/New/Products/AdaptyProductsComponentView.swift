@@ -68,15 +68,6 @@ extension AdaptyUI.ProductsBlock {
             return result
         }
     }
-
-    var productDesciption: AdaptyUI.TextItems {
-        get throws {
-            guard let result = items["product_description"]?.asTextItems else {
-                throw AdaptyUIError.componentNotFound("product_description")
-            }
-            return result
-        }
-    }
 }
 
 struct MockProductInfo: ProductInfo {
@@ -115,7 +106,7 @@ final class AdaptyProductsComponentView: UIStackView {
         spacing = 8.0
 
         let products = (0 ..< 3).map { i in
-            MockProductInfo(title: "1 year",
+            MockProductInfo(title: " / 1 year",
                             subtitle: "7 days free trial",
                             price: "$\(i).99",
                             priceSubtitle: "$9 / week")
@@ -141,8 +132,22 @@ final class AdaptyProductsComponentView: UIStackView {
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        if let price = product.price, let title = product.title {
-            titleLabel.attributedText = try productsBlock.productPrice.attributedString(overridingValue: "\(price) / \(title)")
+        let titleAttributedString = NSMutableAttributedString()
+        
+        if let price = product.price {
+            let priceAttrString = try productsBlock.productPrice.attributedString(overridingValue: price)
+            titleAttributedString.append(priceAttrString)
+        }
+        
+        if let title = product.title {
+            let titleAttrString = try productsBlock.productTitle.attributedString(overridingValue: title)
+            titleAttributedString.append(titleAttrString)
+        }
+        
+        if titleAttributedString.length > 0 {
+            titleLabel.attributedText = titleAttributedString
+        } else {
+            titleLabel.isHidden = true
         }
 
         let subtitleLabel = UILabel()
@@ -151,7 +156,11 @@ final class AdaptyProductsComponentView: UIStackView {
 
         let descriptionLabel = UILabel()
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionLabel.attributedText = try productsBlock.productDesciption.attributedString()
+        if let text = productsBlock.mainProductTagText {
+            descriptionLabel.attributedText = text.attributedString()
+        } else {
+            descriptionLabel.isHidden = true
+        }
 
         let bottomStackView = UIStackView(arrangedSubviews: [subtitleLabel, descriptionLabel])
         bottomStackView.translatesAutoresizingMaskIntoConstraints = false
