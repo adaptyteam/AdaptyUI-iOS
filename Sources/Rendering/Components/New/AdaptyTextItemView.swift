@@ -19,9 +19,9 @@ extension AdaptyUI.HorizontalAlign {
 }
 
 class AdaptyTextItemView: UIStackView {
-    private let text: AdaptyUI.Text
+    private let text: AdaptyUI.СompoundText
 
-    init(text: AdaptyUI.Text) {
+    init(text: AdaptyUI.СompoundText) {
         self.text = text
 
         super.init(frame: .zero)

@@ -11,7 +11,7 @@ import UIKit
 class TemplateLayoutBuilderTransparent: LayoutBuilder {
     private let background: AdaptyUI.Filling
     private let contentShape: AdaptyUI.Shape
-    private let titleRows: AdaptyUI.TextItems?
+    private let titleRows: AdaptyUI.СompoundText?
     private let featuresBlock: AdaptyUI.FeaturesBlock?
     private let productsBlock: AdaptyUI.ProductsBlock
     private let purchaseButton: AdaptyUI.Button
@@ -20,7 +20,7 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
 
     init(background: AdaptyUI.Filling,
          contentShape: AdaptyUI.Shape,
-         titleRows: AdaptyUI.TextItems?,
+         titleRows: AdaptyUI.СompoundText?,
          featuresBlock: AdaptyUI.FeaturesBlock?,
          productsBlock: AdaptyUI.ProductsBlock,
          purchaseButton: AdaptyUI.Button,
@@ -78,11 +78,11 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
         if let featuresBlock {
             switch featuresBlock.type {
             case .list:
-                guard let items = featuresBlock.items["list"]?.asTextItems else {
+                guard let text = featuresBlock.items["list"]?.asText else {
                     throw AdaptyUIError.componentNotFound("list")
                 }
 
-                let featuresListView = AdaptyTextItemsComponentView(textItems: items)
+                let featuresListView = AdaptyTextItemsComponentView(textItems: text)
                 stackView.addArrangedSubview(featuresListView)
             case .timeline:
                 let featuresTimelineView = try AdaptyTimelineComponentView(block: featuresBlock)

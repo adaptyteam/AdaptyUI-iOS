@@ -77,7 +77,7 @@ class AdaptyTemplateReader {
         try style.commonText(id: "title")
     }
 
-    func featuresRows() throws -> AdaptyUI.TextItems {
+    func featuresRows() throws -> AdaptyUI.СompoundText {
         try style.customTextRows(id: "features")
     }
 

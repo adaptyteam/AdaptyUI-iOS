@@ -9,9 +9,9 @@ import Adapty
 import UIKit
 
 class AdaptyTextItemsComponentView: UIStackView {
-    private let textItems: AdaptyUI.TextItems
+    private let textItems: AdaptyUI.СompoundText
 
-    init(textItems: AdaptyUI.TextItems) {
+    init(textItems: AdaptyUI.СompoundText) {
         self.textItems = textItems
 
         super.init(frame: .zero)
@@ -33,11 +33,11 @@ class AdaptyTextItemsComponentView: UIStackView {
     private func setupView() {
         var items = [AdaptyTextItemView]()
 
-        for i in 0 ..< textItems.items.count {
-            let item = AdaptyTextItemView(text: textItems.items[i])
-            addArrangedSubview(item)
-            items.append(item)
-        }
+//        for i in 0 ..< textItems.items.count {
+//            let item = AdaptyTextItemView(text: textItems.items[i])
+//            addArrangedSubview(item)
+//            items.append(item)
+//        }
 
         self.items = items
     }

@@ -35,27 +35,29 @@ extension AdaptyUI.LocalizedViewStyle {
         }
     }
 
+    // TODO: remove
     func commonText(id: String) throws -> AdaptyUI.Text {
-        let comp = try extractCommonComponent(id)
-        if let value = comp.asText {
-            return value
-        } else {
-            throw AdaptyUIError.wrongComponentType(id)
-        }
-    }
-    
-    func customText(id: String) throws -> AdaptyUI.Text {
-        let comp = try extractCustomComponent(id)
-        if let value = comp.asText {
-            return value
-        } else {
-            throw AdaptyUIError.wrongComponentType(id)
-        }
+//        let comp = try extractCommonComponent(id)
+//        if let value = comp.asText {
+//            return value
+//        } else {
+        throw AdaptyUIError.wrongComponentType(id)
+//        }
     }
 
-    func customTextRows(id: String) throws -> AdaptyUI.TextItems {
+    // TODO: remove
+    func customText(id: String) throws -> AdaptyUI.Text {
+//        let comp = try extractCustomComponent(id)
+//        if let value = comp.asText {
+//            return value
+//        } else {
+        throw AdaptyUIError.wrongComponentType(id)
+//        }
+    }
+
+    func customTextRows(id: String) throws -> AdaptyUI.СompoundText {
         let comp = try extractCustomComponent(id)
-        if let value = comp.asTextItems {
+        if let value = comp.asText {
             return value
         } else {
             throw AdaptyUIError.wrongComponentType(id)

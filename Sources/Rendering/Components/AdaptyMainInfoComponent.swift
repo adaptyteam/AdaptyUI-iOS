@@ -10,10 +10,10 @@ import UIKit
 
 class AdaptyMainInfoComponent: UIStackView {
     private let title: AdaptyUI.Text
-    private let textRows: AdaptyUI.TextItems
+    private let textRows: AdaptyUI.СompoundText
     private let imageColor: UIColor
 
-    init(title: AdaptyUI.Text, textRows: AdaptyUI.TextItems, imageColor: UIColor) {
+    init(title: AdaptyUI.Text, textRows: AdaptyUI.СompoundText, imageColor: UIColor) {
         self.title = title
         self.textRows = textRows
         self.imageColor = imageColor

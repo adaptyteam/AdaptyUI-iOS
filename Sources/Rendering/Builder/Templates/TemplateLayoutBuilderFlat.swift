@@ -13,7 +13,7 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
     private let contentShape: AdaptyUI.Shape
     private let coverImage: AdaptyUI.Shape
     private let coverImageHeightMultilpyer: CGFloat
-    private let titleRows: AdaptyUI.TextItems?
+    private let titleRows: AdaptyUI.СompoundText?
     private let featuresBlock: AdaptyUI.FeaturesBlock?
     private let productsBlock: AdaptyUI.ProductsBlock
     private let purchaseButton: AdaptyUI.Button
@@ -24,7 +24,7 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
          contentShape: AdaptyUI.Shape,
          coverImage: AdaptyUI.Shape,
          coverImageHeightMultilpyer: CGFloat,
-         titleRows: AdaptyUI.TextItems?,
+         titleRows: AdaptyUI.СompoundText?,
          featuresBlock: AdaptyUI.FeaturesBlock?,
          productsBlock: AdaptyUI.ProductsBlock,
          purchaseButton: AdaptyUI.Button,
@@ -89,11 +89,11 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
         if let featuresBlock {
             switch featuresBlock.type {
             case .list:
-                guard let items = featuresBlock.items["list"]?.asTextItems else {
+                guard let text = featuresBlock.items["list"]?.asText else {
                     throw AdaptyUIError.componentNotFound("list")
                 }
 
-                let featuresListView = AdaptyTextItemsComponentView(textItems: items)
+                let featuresListView = AdaptyTextItemsComponentView(textItems: text)
                 stackView.addArrangedSubview(featuresListView)
             case .timeline:
                 let featuresTimelineView = try AdaptyTimelineComponentView(block: featuresBlock)

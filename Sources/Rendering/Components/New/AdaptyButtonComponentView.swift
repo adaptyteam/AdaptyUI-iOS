@@ -38,7 +38,7 @@ final class AdaptyButtonComponentView: UIButton {
 
         if let contentView {
             setupContentView(contentView, contentViewMargins)
-        } else if let title = component.normal?.title?.asText?.attributedString() {
+        } else if let title = component.normal?.title?.attributedString() {
             setAttributedTitle(title, for: .normal)
         }
 
@@ -69,11 +69,11 @@ final class AdaptyButtonComponentView: UIButton {
         contentView = view
     }
 
-    func updateContent(_ textItems: AdaptyUI.TextItems?) {
+    func updateContent(_ text: AdaptyUI.СompoundText?) {
         contentView?.removeFromSuperview()
         contentView = nil
 
-        setAttributedTitle(textItems?.asText?.attributedString(), for: .normal)
+        setAttributedTitle(text?.attributedString(), for: .normal)
     }
 
     func updateContent(_ view: UIView, margins: UIEdgeInsets?) {

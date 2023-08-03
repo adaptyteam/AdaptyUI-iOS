@@ -16,8 +16,8 @@ extension AdaptyUI.FeaturesBlock {
         return value
     }
     
-    func getText(_ key: String) throws -> AdaptyUI.TextItems {
-        guard let value = items[key]?.asTextItems else {
+    func getText(_ key: String) throws -> AdaptyUI.СompoundText {
+        guard let value = items[key]?.asText else {
             throw AdaptyUIError.componentNotFound(key)
         }
         return value
@@ -42,7 +42,7 @@ final class AdaptyTimelineComponentView: UIStackView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func createItemView(icon: AdaptyUI.Image, texts: AdaptyUI.TextItems) -> UIView {
+    private func createItemView(icon: AdaptyUI.Image, texts: AdaptyUI.СompoundText) -> UIView {
         let stack = UIStackView()
         stack.axis = .horizontal
         stack.spacing = 4.0

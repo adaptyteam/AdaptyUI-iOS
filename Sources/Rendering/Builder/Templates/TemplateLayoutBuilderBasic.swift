@@ -22,7 +22,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     private let coverImage: AdaptyUI.Image
     private let coverImageHeightMultilpyer: CGFloat
     private let contentShape: AdaptyUI.Shape
-    private let titleRows: AdaptyUI.TextItems?
+    private let titleRows: AdaptyUI.СompoundText?
     private let featuresBlock: AdaptyUI.FeaturesBlock?
     private let productsBlock: AdaptyUI.ProductsBlock
     private let purchaseButton: AdaptyUI.Button
@@ -35,7 +35,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         coverImage: AdaptyUI.Image,
         coverImageHeightMultilpyer: CGFloat,
         contentShape: AdaptyUI.Shape,
-        titleRows: AdaptyUI.TextItems?,
+        titleRows: AdaptyUI.СompoundText?,
         featuresBlock: AdaptyUI.FeaturesBlock?,
         productsBlock: AdaptyUI.ProductsBlock,
         purchaseButton: AdaptyUI.Button,
@@ -105,19 +105,31 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
                                                                  right: 24))
 
         if let titleRows {
-            let titleRowsView = AdaptyTextItemsComponentView(textItems: titleRows)
-            stackView.addArrangedSubview(titleRowsView)
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.attributedText = titleRows.attributedString()
+            label.numberOfLines = 0
+            
+//            let titleRowsView = AdaptyTextItemsComponentView(textItems: titleRows)
+//            stackView.addArrangedSubview(titleRowsView)
+            stackView.addArrangedSubview(label)
         }
 
         if let featuresBlock {
             switch featuresBlock.type {
             case .list:
-                guard let items = featuresBlock.items["list"]?.asTextItems else {
+                guard let text = featuresBlock.items["list"]?.asText else {
                     throw AdaptyUIError.componentNotFound("list")
                 }
 
-                let featuresListView = AdaptyTextItemsComponentView(textItems: items)
-                stackView.addArrangedSubview(featuresListView)
+                let label = UILabel()
+                label.translatesAutoresizingMaskIntoConstraints = false
+                label.attributedText = text.attributedString()
+                label.numberOfLines = 0
+                
+//                let featuresListView = AdaptyTextItemsComponentView(textItems: text)
+//                stackView.addArrangedSubview(featuresListView)
+                stackView.addArrangedSubview(label)
             case .timeline:
                 let featuresTimelineView = try AdaptyTimelineComponentView(block: featuresBlock)
                 stackView.addArrangedSubview(featuresTimelineView)

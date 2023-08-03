@@ -29,11 +29,11 @@ extension AdaptyUI.ProductsBlock {
         items["main_product_tag_background"]?.asColor
     }
 
-    var mainProductTagText: AdaptyUI.Text? {
+    var mainProductTagText: AdaptyUI.СompoundText? {
         items["main_product_tag_text"]?.asText
     }
 
-    var productTitle: AdaptyUI.Text {
+    var productTitle: AdaptyUI.СompoundText {
         get throws {
             guard let result = items["product_title"]?.asText else {
                 throw AdaptyUIError.componentNotFound("product_title")
@@ -42,7 +42,7 @@ extension AdaptyUI.ProductsBlock {
         }
     }
 
-    var productOffer: AdaptyUI.Text {
+    var productOffer: AdaptyUI.СompoundText {
         get throws {
             guard let result = items["product_offer"]?.asText else {
                 throw AdaptyUIError.componentNotFound("product_offer")
@@ -51,7 +51,7 @@ extension AdaptyUI.ProductsBlock {
         }
     }
 
-    var productPrice: AdaptyUI.Text {
+    var productPrice: AdaptyUI.СompoundText {
         get throws {
             guard let result = items["product_price"]?.asText else {
                 throw AdaptyUIError.componentNotFound("product_price")
@@ -60,7 +60,7 @@ extension AdaptyUI.ProductsBlock {
         }
     }
 
-    var productPriceCalculated: AdaptyUI.Text {
+    var productPriceCalculated: AdaptyUI.СompoundText {
         get throws {
             guard let result = items["product_price_calculated"]?.asText else {
                 throw AdaptyUIError.componentNotFound("product_price_calculated")
@@ -216,21 +216,21 @@ final class AdaptyProductsComponentView: UIStackView {
             let tagLabel = AdaptyInsetLabel()
 
             tagLabel.translatesAutoresizingMaskIntoConstraints = false
-            tagLabel.text = tagText.value
+//            tagLabel.text = tagText.value
             tagLabel.insets = UIEdgeInsets(top: 0.0, left: 8.0, bottom: 0.0, right: 8.0)
             tagLabel.layer.cornerRadius = 10.0
             tagLabel.layer.masksToBounds = true
 
-            tagLabel.font = tagText.font?.uiFont
+//            tagLabel.font = tagText.font?.uiFont
             tagLabel.backgroundColor = productsBlock.mainProductTagBackground?.uiColor
-            tagLabel.textColor = tagText.uiColor
+//            tagLabel.textColor = tagText.uiColor
 
-            let attr = NSMutableAttributedString(string: tagText.value ?? "")
-            attr.addAttributes([
-                NSAttributedString.Key.kern: 0.2,
-            ], range: NSRange(location: 0, length: attr.length))
+//            let attr = NSMutableAttributedString(string: tagText.value ?? "")
+//            attr.addAttributes([
+//                NSAttributedString.Key.kern: 0.2,
+//            ], range: NSRange(location: 0, length: attr.length))
 
-            tagLabel.attributedText = attr
+            tagLabel.attributedText = tagText.attributedString()
 
             addSubview(tagLabel)
 

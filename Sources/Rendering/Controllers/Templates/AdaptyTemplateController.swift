@@ -68,8 +68,8 @@ extension AdaptyUI.LocalizedViewStyle {
         }
     }
 
-    var titleRows: AdaptyUI.TextItems? {
-        items["title_rows"]?.asTextItems
+    var titleRows: AdaptyUI.СompoundText? {
+        items["title_rows"]?.asText
     }
 
     var purchaseButton: AdaptyUI.Button {

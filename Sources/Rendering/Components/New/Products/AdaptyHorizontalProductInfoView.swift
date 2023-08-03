@@ -33,35 +33,35 @@ final class AdaptyHorizontalProductInfoView: UIStackView, ProductInfoView {
         let productPriceCalculated = try productsBlock.productPriceCalculated
 
         let titleLabel = UILabel()
-        titleLabel.font = productTitle.uiFont
-        titleLabel.textColor = productTitle.uiColor
-        titleLabel.text = info.title
+//        titleLabel.font = productTitle.uiFont
+//        titleLabel.textColor = productTitle.uiColor
+        titleLabel.attributedText = productTitle.attributedString(overridingValue: info.title)
 
         let priceTitleLabel = UILabel()
         priceTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        priceTitleLabel.font = productPrice.uiFont
-        priceTitleLabel.textColor = productPrice.uiColor
-        priceTitleLabel.textAlignment = .right
-        priceTitleLabel.text = info.price
+//        priceTitleLabel.font = productPrice.uiFont
+//        priceTitleLabel.textColor = productPrice.uiColor
+//        priceTitleLabel.textAlignment = .right
+        priceTitleLabel.attributedText = productPrice.attributedString(overridingValue: info.price)
 
         let titleStack = UIStackView(arrangedSubviews: [titleLabel, priceTitleLabel])
         titleStack.translatesAutoresizingMaskIntoConstraints = false
         titleStack.axis = .horizontal
 
         let subtitleLabel = UILabel()
-        subtitleLabel.font = productOffer.uiFont
-        subtitleLabel.textColor = productOffer.uiColor
+//        subtitleLabel.font = productOffer.uiFont
+//        subtitleLabel.textColor = productOffer.uiColor
         subtitleLabel.minimumScaleFactor = 0.5
         subtitleLabel.adjustsFontSizeToFitWidth = true
         subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        subtitleLabel.text = info.subtitle
+        subtitleLabel.attributedText = productOffer.attributedString(overridingValue: info.subtitle)
 
         let priceSubtitleLabel = UILabel()
         priceSubtitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        priceSubtitleLabel.font = productPriceCalculated.uiFont
-        priceSubtitleLabel.textColor = productPriceCalculated.uiColor
-        priceSubtitleLabel.textAlignment = .right
-        priceSubtitleLabel.text = info.priceSubtitle
+//        priceSubtitleLabel.font = productPriceCalculated.uiFont
+//        priceSubtitleLabel.textColor = productPriceCalculated.uiColor
+//        priceSubtitleLabel.textAlignment = .right
+        priceSubtitleLabel.attributedText = productPriceCalculated.attributedString(overridingValue: info.priceSubtitle)
 
         let subtitleStack = UIStackView(arrangedSubviews: [subtitleLabel, priceSubtitleLabel])
         subtitleStack.translatesAutoresizingMaskIntoConstraints = false
