@@ -63,17 +63,35 @@ extension AdaptyUI.Text.ParagraphStyle {
 }
 
 extension AdaptyUI.Text {
-    func attributedString(paragraph: AdaptyUI.Text.ParagraphStyle) -> NSAttributedString? {
+    func calculatedWidth() -> CGFloat {
+        value?.size(withAttributes: [
+            NSAttributedString.Key.foregroundColor: uiColor ?? .darkText,
+            NSAttributedString.Key.font: uiFont ?? .systemFont(ofSize: 15),
+        ]).width ?? 0.0
+    }
+
+    func attributedString(paragraph: AdaptyUI.Text.ParagraphStyle,
+                          trailingPadding: CGFloat?) -> NSAttributedString? {
         guard let value = value else { return nil }
 
-        return NSAttributedString(string: value,
-                                  attributes: [
-                                      NSAttributedString.Key.paragraphStyle: paragraph
-                                          .copyWith(alignment: horizontalAlign.textAlignment)
-                                          .toParagraphStyle(),
-                                      NSAttributedString.Key.foregroundColor: uiColor ?? .darkText,
-                                      NSAttributedString.Key.font: uiFont ?? .systemFont(ofSize: 15),
-                                  ])
+        let result = NSMutableAttributedString()
+        result.append(NSAttributedString(string: value))
+
+        if let trailingPadding, trailingPadding > 0.0 {
+            let padding = NSTextAttachment()
+            padding.bounds = CGRect(x: 0, y: 0, width: trailingPadding, height: 0)
+            result.append(NSAttributedString(attachment: padding))
+        }
+
+        result.addAttributes([
+            NSAttributedString.Key.paragraphStyle: paragraph
+                .copyWith(alignment: horizontalAlign.textAlignment)
+                .toParagraphStyle(),
+            NSAttributedString.Key.foregroundColor: uiColor ?? .darkText,
+            NSAttributedString.Key.font: uiFont ?? .systemFont(ofSize: 15),
+        ], range: NSRange(location: 0, length: result.length))
+
+        return result
     }
 }
 
@@ -149,9 +167,16 @@ extension AdaptyUI.Text.Item {
         paragraph: AdaptyUI.Text.ParagraphStyle
     ) -> NSAttributedString? {
         switch self {
-        case let .text(text),
-             let .textBullet(text):
-            return text.attributedString(paragraph: paragraph)
+        case let .text(text):
+            return text.attributedString(
+                paragraph: paragraph,
+                trailingPadding: nil
+            )
+        case let .textBullet(text):
+            return text.attributedString(
+                paragraph: paragraph,
+                trailingPadding: (bulletSpace ?? 0.0) - text.calculatedWidth()
+            )
         case .newline:
             return NSAttributedString(string: "\n")
         case let .image(image):
