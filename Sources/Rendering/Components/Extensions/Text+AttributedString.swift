@@ -17,7 +17,7 @@ extension AdaptyUI.Text {
         let headIndent: CGFloat
 
         init(
-            alignment: NSTextAlignment = .center,
+            alignment: NSTextAlignment = .left,
             lineSpacing: CGFloat = 0.0,
             paragraphSpacing: CGFloat = 0.0,
             firstLineHeadIndent: CGFloat = 0.0,
