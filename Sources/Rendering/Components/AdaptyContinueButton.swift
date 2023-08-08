@@ -8,6 +8,7 @@
 import Adapty
 import UIKit
 
+@available(*, deprecated)
 class AdaptyContinueButton: UIButton {
     private let text: AdaptyUI.Text
     private let color: AdaptyUI.Color

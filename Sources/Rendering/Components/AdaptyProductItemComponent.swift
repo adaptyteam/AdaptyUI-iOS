@@ -8,6 +8,7 @@
 import Adapty
 import UIKit
 
+@available(*, deprecated)
 class AdaptyProductItemComponent: UIView {
     var selected: Bool = false {
         didSet {

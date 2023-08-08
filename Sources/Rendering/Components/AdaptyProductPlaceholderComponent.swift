@@ -8,6 +8,7 @@
 import Adapty
 import UIKit
 
+@available(*, deprecated)
 class AdaptyProductPlaceholderComponent: UIView {
     private let color: AdaptyUI.Color
 

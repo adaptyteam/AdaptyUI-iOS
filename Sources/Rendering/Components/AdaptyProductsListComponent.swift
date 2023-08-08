@@ -8,6 +8,7 @@
 import Adapty
 import UIKit
 
+@available(*, deprecated)
 class AdaptyProductsListComponent: UIStackView {
     private var selectedProductId: String?
 

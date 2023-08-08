@@ -8,6 +8,7 @@
 import Adapty
 import UIKit
 
+@available(*, deprecated)
 class AdaptyMainInfoComponent: UIStackView {
     private let title: AdaptyUI.Text
     private let textRows: AdaptyUI.СompoundText

@@ -8,6 +8,7 @@
 import Adapty
 import UIKit
 
+@available(*, deprecated)
 class AdaptyServiceButtonsComponent: UIStackView {
     private let termsText: AdaptyUI.Text
     private let privacyText: AdaptyUI.Text

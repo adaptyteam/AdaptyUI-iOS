@@ -136,6 +136,8 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
             stackView.addArrangedSubview(footerView)
         }
 
+        layoutTopGradientView(AdaptyGradientViewComponent(), on: view)
+
         if let closeButton {
             let closeButtonView = AdaptyButtonComponentView(component: closeButton,
                                                             contentViewMargins: .closeButtonDefaultMargin)
@@ -185,6 +187,18 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
             contentView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor,
                                                 multiplier: 1.0 - multiplier,
                                                 constant: overlap + 32.0),
+        ])
+    }
+}
+
+extension LayoutBuilder {
+    func layoutTopGradientView(_ gradientView: UIView, on view: UIView) {
+        view.addSubview(gradientView)
+        view.addConstraints([
+            gradientView.topAnchor.constraint(equalTo: view.topAnchor),
+            gradientView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20.0),
+            gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            gradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
     }
 }

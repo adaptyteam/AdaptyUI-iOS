@@ -8,6 +8,7 @@
 import Adapty
 import UIKit
 
+@available(*, deprecated)
 class AdaptyCloseButton: UIView {
     private let onTap: () -> Void
 
