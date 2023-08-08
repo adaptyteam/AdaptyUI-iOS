@@ -71,23 +71,11 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
                                   layout: .bottomToTop)
 
         if let titleRows {
-            let titleRowsView = AdaptyTextItemsComponentView(textItems: titleRows)
-            stackView.addArrangedSubview(titleRowsView)
+            try layoutText(titleRows, in: stackView)
         }
 
         if let featuresBlock {
-            switch featuresBlock.type {
-            case .list:
-                guard let text = featuresBlock.items["list"]?.asText else {
-                    throw AdaptyUIError.componentNotFound("list")
-                }
-
-                let featuresListView = AdaptyTextItemsComponentView(textItems: text)
-                stackView.addArrangedSubview(featuresListView)
-            case .timeline:
-                let featuresTimelineView = try AdaptyTimelineComponentView(block: featuresBlock)
-                stackView.addArrangedSubview(featuresTimelineView)
-            }
+            try layoutFeaturesBlock(featuresBlock, in: stackView)
         }
 
         let productsView = try AdaptyProductsComponentView(productsBlock: productsBlock)

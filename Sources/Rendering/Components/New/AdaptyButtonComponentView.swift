@@ -18,6 +18,10 @@ extension AdaptyUI.Button {
     }
 }
 
+extension UIEdgeInsets {
+    static let closeButtonDefaultMargin: UIEdgeInsets = .init(top: 0, left: 16, bottom: 0, right: 16)
+}
+
 final class AdaptyButtonComponentView: UIButton {
     let component: AdaptyUI.Button
 
@@ -40,6 +44,8 @@ final class AdaptyButtonComponentView: UIButton {
             setupContentView(contentView, contentViewMargins)
         } else if let title = component.normal?.title?.attributedString() {
             setAttributedTitle(title, for: .normal)
+            contentEdgeInsets = contentViewMargins ?? .zero
+            titleLabel?.numberOfLines = 0
         }
 
         addTarget(self, action: #selector(buttonDidTouchUp), for: .touchUpInside)
@@ -55,7 +61,7 @@ final class AdaptyButtonComponentView: UIButton {
         if let contentView {
             contentView.removeFromSuperview()
         }
-        
+
         view.isUserInteractionEnabled = false
 
         addSubview(view)
@@ -74,6 +80,17 @@ final class AdaptyButtonComponentView: UIButton {
         contentView = nil
 
         setAttributedTitle(text?.attributedString(), for: .normal)
+
+        if #available(iOS 15.0, *) {
+            var configuration: UIButton.Configuration = .borderless()
+            configuration = .bordered()
+            configuration.contentInsets = .init(top: 12, leading: 16, bottom: 12, trailing: 16)
+
+            self.configuration = configuration
+        } else {
+            contentEdgeInsets = .init(top: 12, left: 16, bottom: 12, right: 16)
+            titleEdgeInsets = .init(top: 12, left: 16, bottom: 12, right: 16)
+        }
     }
 
     func updateContent(_ view: UIView, margins: UIEdgeInsets?) {

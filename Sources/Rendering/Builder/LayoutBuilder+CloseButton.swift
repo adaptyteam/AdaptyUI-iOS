@@ -14,10 +14,21 @@ extension LayoutBuilder {
     ) {
         superview.addSubview(button)
         superview.addConstraints([
-            button.widthAnchor.constraint(equalToConstant: 40.0),
             button.heightAnchor.constraint(equalToConstant: 40.0),
             button.topAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.topAnchor, constant: 16.0),
         ])
+        
+        if let image = button.backgroundImage(for: .normal) {
+            superview.addConstraint(
+                NSLayoutConstraint(item: button,
+                                   attribute: .width,
+                                   relatedBy: .equal,
+                                   toItem: button,
+                                   attribute: .height,
+                                   multiplier: image.size.width / image.size.height,
+                                   constant: 0.0)
+            )
+        }
 
         switch button.component.align {
         case .leading:

@@ -74,7 +74,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
                              on: view,
                              multiplier: coverImageHeightMultilpyer,
                              minHeight: 300.0)
-        
+
         scrollViewDelegate.coverView = imageView
 
         let scrollView = AdaptyBaseScrollView()
@@ -105,35 +105,11 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
                                                                  right: 24))
 
         if let titleRows {
-            let label = UILabel()
-            label.translatesAutoresizingMaskIntoConstraints = false
-            label.attributedText = titleRows.attributedString()
-            label.numberOfLines = 0
-            
-//            let titleRowsView = AdaptyTextItemsComponentView(textItems: titleRows)
-//            stackView.addArrangedSubview(titleRowsView)
-            stackView.addArrangedSubview(label)
+            try layoutText(titleRows, in: stackView)
         }
 
         if let featuresBlock {
-            switch featuresBlock.type {
-            case .list:
-                guard let text = featuresBlock.items["list"]?.asText else {
-                    throw AdaptyUIError.componentNotFound("list")
-                }
-
-                let label = UILabel()
-                label.translatesAutoresizingMaskIntoConstraints = false
-                label.attributedText = text.attributedString()
-                label.numberOfLines = 0
-                
-//                let featuresListView = AdaptyTextItemsComponentView(textItems: text)
-//                stackView.addArrangedSubview(featuresListView)
-                stackView.addArrangedSubview(label)
-            case .timeline:
-                let featuresTimelineView = try AdaptyTimelineComponentView(block: featuresBlock)
-                stackView.addArrangedSubview(featuresTimelineView)
-            }
+            try layoutFeaturesBlock(featuresBlock, in: stackView)
         }
 
         let productsView = try AdaptyProductsComponentView(productsBlock: productsBlock)
@@ -161,7 +137,8 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         }
 
         if let closeButton {
-            let closeButtonView = AdaptyButtonComponentView(component: closeButton)
+            let closeButtonView = AdaptyButtonComponentView(component: closeButton,
+                                                            contentViewMargins: .closeButtonDefaultMargin)
             closeButtonView.onTap = { [weak self] _ in
                 self?.onActionCallback?(.close)
             }

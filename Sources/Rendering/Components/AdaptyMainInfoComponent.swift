@@ -28,7 +28,7 @@ class AdaptyMainInfoComponent: UIStackView {
     }
 
     private weak var titleLabel: UILabel!
-    private weak var featuresList: AdaptyTextItemsComponentView!
+//    private weak var featuresList: AdaptyTextItemsComponentView!
 
     private func setupView() {
         translatesAutoresizingMaskIntoConstraints = false
@@ -47,12 +47,12 @@ class AdaptyMainInfoComponent: UIStackView {
         titleLabel.font = title.uiFont
         titleLabel.textColor = title.fill?.asColor?.uiColor ?? .darkText
 
-        let featuresList = AdaptyTextItemsComponentView(textItems: textRows)
+//        let featuresList = AdaptyTextItemsComponentView(textItems: textRows)
 
         self.titleLabel = titleLabel
-        self.featuresList = featuresList
+//        self.featuresList = featuresList
 
         addArrangedSubview(titleLabel)
-        addArrangedSubview(featuresList)
+//        addArrangedSubview(featuresList)
     }
 }
