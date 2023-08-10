@@ -180,4 +180,16 @@ final class AdaptyButtonComponentView: UIButton {
     private func buttonDidTouchUp() {
         onTap?(component.action)
     }
+    
+    func updateInProgress(_ inProgress: Bool) {
+        // TODO:
+//        progressView.isHidden = !inProgress
+//        isEnabled = !inProgress
+//
+//        if inProgress {
+//            progressView.startAnimating()
+//        } else {
+//            progressView.stopAnimating()
+//        }
+    }
 }

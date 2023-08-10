@@ -8,6 +8,7 @@
 import Adapty
 import UIKit
 
+// TODO: Move out
 final class AdaptyBackgroundComponentView: UIImageView {
     private let background: AdaptyUI.Filling?
 

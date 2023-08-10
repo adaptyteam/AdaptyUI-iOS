@@ -8,6 +8,7 @@
 import Adapty
 import Foundation
 
+@available(*, deprecated)
 class AdaptyTemplateReader {
     private let logId: String
     private let templateId = "template_1"

@@ -25,7 +25,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         // TODO: remove
-        textField.text = "volkswagen"
+        textField.text = "example_ab_test"
 
         spinner.isHidden = true
         updatePaywallData()
@@ -35,61 +35,6 @@ class ViewController: UIViewController {
         super.viewDidAppear(animated)
 
         loadPaywallPressed(self)
-    }
-
-    @IBAction func presentBasicRoundedRect(_ sender: Any) {
-//        presentTemplate(
-//            .basicTemplateRoundedRect(coverImage: UIImage(named: "Cover3")!,
-//                                      closeButtonImage: UIImage(named: "CloseButton")!)
-//        )
-    }
-
-    @IBAction func presentBasicSmileUp(_ sender: Any) {
-//        presentTemplate(
-//            .basicTemplateSmileUp(coverImage: UIImage(named: "Cover2")!,
-//                                  closeButtonImage: UIImage(named: "CloseButton")!)
-//        )
-    }
-
-    @IBAction func presentBasicSmileDown(_ sender: Any) {
-//        presentTemplate(
-//            .basicTemplateSmileDown(coverImage: UIImage(named: "Cover4")!,
-//                                    closeButtonImage: UIImage(named: "CloseButton")!)
-//        )
-    }
-
-    @IBAction func presentFlatA(_ sender: Any) {
-//        presentTemplate(
-//            .flatTemplate(backgroundColor: .yellow,
-//                          closeButtonImage: UIImage(named: "CloseButton")!)
-//        )
-    }
-
-    @IBAction func presentFlatB(_ sender: Any) {
-//        presentTemplate(
-//            .flatTemplate(backgroundColor: .black,
-//                          closeButtonImage: UIImage(named: "CloseButton")!)
-//        )
-    }
-
-    @IBAction func presentTransparentA(_ sender: Any) {
-//        presentTemplate(
-//            .transparentTemplate(backgroundImage: UIImage(named: "Background2")!,
-//                                 closeButtonImage: UIImage(named: "CloseButton")!)
-//        )
-    }
-
-    @IBAction func presentTransparentB(_ sender: Any) {
-//        presentTemplate(
-//            .transparentTemplate(backgroundImage: UIImage(named: "Background1")!,
-//                                 closeButtonImage: UIImage(named: "CloseButton")!)
-//        )
-    }
-
-    private func presentTemplate(_ vc: AdaptyTemplateController) {
-        vc.modalPresentationStyle = .overCurrentContext
-
-        present(vc, animated: true)
     }
 
     private var paywall: AdaptyPaywall?
@@ -115,7 +60,7 @@ class ViewController: UIViewController {
         variationLabel.text = paywall.variationId
         revisionLabel.text = "\(paywall.revision)"
         localeLabel.text = paywall.locale
-        presentButton.isEnabled = paywall.hasViewConfiguration
+        presentButton.isEnabled = true // paywall.hasViewConfiguration
         paywallInfoContainer.isHidden = false
     }
 
@@ -132,7 +77,7 @@ class ViewController: UIViewController {
     private func presentPaywall(_ paywall: AdaptyPaywall,
                                 products: [AdaptyPaywallProduct]?,
                                 viewConfiguration: AdaptyUI.ViewConfiguration) {
-        let vc = AdaptyUI.paywallControllerTest(
+        let vc = AdaptyUI.paywallController(
             for: paywall,
             products: products,
             viewConfiguration: viewConfiguration,
@@ -140,7 +85,7 @@ class ViewController: UIViewController {
             productsTitlesResolver: { $0.vendorProductId }
         )
         vc.modalPresentationStyle = .overCurrentContext
-        
+
         present(vc, animated: true)
     }
 

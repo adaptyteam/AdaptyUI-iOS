@@ -11,7 +11,8 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        Adapty.activate("public_live_QzY2YBrm.j0U3MNaKe2HAgeK4XV13")
+        Adapty.logLevel = .verbose
+        Adapty.activate("public_live_iNuUlSsN.83zcTTR8D5Y8FI9cGUI6")
         return true
     }
 }

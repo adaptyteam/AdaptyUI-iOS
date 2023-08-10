@@ -22,12 +22,31 @@ class AdaptyPaywallPresenter {
     weak var delegate: AdaptyPaywallPresenterDelegate?
 
     @Published var viewConfiguration: AdaptyUI.LocalizedViewConfiguration
-    @Published var products: [AdaptyPaywallProduct]?
-    @Published var introductoryOffersEligibilities: [String : AdaptyEligibility]?
-    @Published var selectedProduct: AdaptyPaywallProduct?
+    @Published var products: [ProductInfo]
+    @Published var selectedProductId: String?
     @Published var productsFetchingInProgress: Bool = false
     @Published var purchaseInProgress: Bool = false
     @Published var restoreInProgress: Bool = false
+
+    var selectedAdaptyProduct: AdaptyPaywallProduct? {
+        guard let selectedProductId = selectedProductId else { return nil }
+        return adaptyProducts?.first(where: { $0.vendorProductId == selectedProductId })
+    }
+
+    var adaptyProducts: [AdaptyPaywallProduct]? {
+        didSet {
+            products = Self.generateProductsInfos(paywall: paywall,
+                                                  products: adaptyProducts,
+                                                  eligibilities: introductoryOffersEligibilities)
+        }
+    }
+    var introductoryOffersEligibilities: [String: AdaptyEligibility]? {
+        didSet {
+            products = Self.generateProductsInfos(paywall: paywall,
+                                                  products: adaptyProducts,
+                                                  eligibilities: introductoryOffersEligibilities)
+        }
+    }
 
     private var cancellable = Set<AnyCancellable>()
 
@@ -38,19 +57,46 @@ class AdaptyPaywallPresenter {
         logId: String,
         paywall: AdaptyPaywall,
         products: [AdaptyPaywallProduct]?,
+        selectedProductIndex: Int,
         viewConfiguration: AdaptyUI.LocalizedViewConfiguration
     ) {
         self.logId = logId
         self.paywall = paywall
-        self.products = products
         self.viewConfiguration = viewConfiguration
 
-        selectedProduct = products?.first
+        // TODO: pass overridenTitle
+        self.products = Self.generateProductsInfos(paywall: paywall,
+                                                   products: products,
+                                                   eligibilities: nil)
+
+        selectedProductId = self.products[selectedProductIndex].id
+    }
+
+    private static func generateProductsInfos(
+        paywall: AdaptyPaywall,
+        products: [AdaptyPaywallProduct]?,
+        eligibilities: [String: AdaptyEligibility]?
+    ) -> [ProductInfo] {
+        guard let products = products else {
+            return paywall.vendorProductIds.map { id in
+                MockProductInfo(id: id,
+                                title: nil,
+                                subtitle: nil,
+                                price: nil,
+                                priceSubtitle: nil)
+            }
+        }
+
+        return products.map {
+            MockProductInfo.build(product: $0,
+                                  introEligibility: eligibilities?[$0.vendorProductId] ?? .ineligible,
+                                  overridenTitle: nil)
+        }
     }
 
     func selectProduct(id: String) {
         log(.verbose, "select product: \(id)")
-        selectedProduct = products?.first(where: { $0.vendorProductId == id })
+        selectedProductId = id
     }
 
     func logShowPaywall() {
@@ -67,7 +113,7 @@ class AdaptyPaywallPresenter {
     }
 
     func makePurchase() {
-        guard let selectedProduct = selectedProduct else { return }
+        guard let selectedProduct = selectedAdaptyProduct else { return }
 
         log(.verbose, "makePurchase begin")
 
@@ -107,7 +153,7 @@ class AdaptyPaywallPresenter {
     func loadProductsIfNeeded() {
         guard !productsLoadingInProgress else { return }
 
-        guard products != nil, introductoryOffersEligibilities == nil else {
+        guard adaptyProducts != nil, introductoryOffersEligibilities == nil else {
             loadProducts()
             return
         }
@@ -130,10 +176,10 @@ class AdaptyPaywallPresenter {
                 case let .success(products):
                     self?.log(.verbose, "loadProducts success")
 
-                    self?.products = products
+                    self?.adaptyProducts = products
 
-                    if self?.selectedProduct == nil {
-                        self?.selectedProduct = products.first
+                    if self?.selectedProductId == nil {
+                        self?.selectedProductId = products.first?.vendorProductId
                     }
 
                     self?.productsLoadingInProgress = false
@@ -151,10 +197,10 @@ class AdaptyPaywallPresenter {
             }
         }
     }
-    
+
     private func loadProductsIntroductoryEligibilities() {
-        guard let products = products else { return  }
-        
+        guard let products = adaptyProducts else { return }
+
         Adapty.getProductsIntroductoryOfferEligibility(products: products) { [weak self] result in
             self?.introductoryOffersEligibilities = try? result.get()
         }

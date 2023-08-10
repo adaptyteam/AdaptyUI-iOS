@@ -33,14 +33,14 @@ final class AdaptyVerticalProductInfoView: UIStackView, ProductInfoView {
         let productPriceCalculated = try productsBlock.productPriceCalculated
 
         let titleLabel = UILabel()
-        titleLabel.attributedText = productTitle.attributedString(overridingValue: info.title)
+        titleLabel.attributedText = info.title?.attributedString(using: productTitle)
 
         let subtitleLabel = UILabel()
         subtitleLabel.numberOfLines = 2
         subtitleLabel.minimumScaleFactor = 0.5
         subtitleLabel.adjustsFontSizeToFitWidth = true
         subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
-        subtitleLabel.attributedText = productOffer.attributedString(overridingValue: info.subtitle)
+        subtitleLabel.attributedText = info.subtitle?.attributedString(using: productOffer)
 
         let topStack = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
         topStack.translatesAutoresizingMaskIntoConstraints = false
@@ -50,11 +50,11 @@ final class AdaptyVerticalProductInfoView: UIStackView, ProductInfoView {
 
         let priceTitleLabel = UILabel()
         priceTitleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        priceTitleLabel.attributedText = productPrice.attributedString(overridingValue: info.price)
+        priceTitleLabel.attributedText = info.price?.attributedString(using: productPrice)
 
         let priceSubtitleLabel = UILabel()
         priceSubtitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
-        priceSubtitleLabel.attributedText = productPriceCalculated.attributedString(overridingValue: info.priceSubtitle)
+        priceSubtitleLabel.attributedText = info.priceSubtitle?.attributedString(using: productPriceCalculated)
 
         let bottomStack = UIStackView(arrangedSubviews: [priceTitleLabel, priceSubtitleLabel])
         bottomStack.translatesAutoresizingMaskIntoConstraints = false

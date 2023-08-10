@@ -26,22 +26,6 @@ extension AdaptyInterfaceBilder {
         return loadingView
     }
     
-    // TODO: remove
-    static func buildCloseButton(
-        on superview: UIView,
-        onTap: @escaping () -> Void
-    ) -> AdaptyCloseButton {
-        let button = AdaptyCloseButton(onTap: onTap)
-
-        superview.addSubview(button)
-        superview.addConstraints([
-            button.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: 24.0),
-            button.topAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.topAnchor, constant: 16.0),
-        ])
-
-        return button
-    }
-
     static func buildCoverImageView(on superview: UIView, reader: AdaptyTemplateReader) throws -> UIImageView {
         let imageView = UIImageView(image: try reader.coverImage().uiImage)
         imageView.translatesAutoresizingMaskIntoConstraints = false

@@ -33,35 +33,25 @@ final class AdaptyHorizontalProductInfoView: UIStackView, ProductInfoView {
         let productPriceCalculated = try productsBlock.productPriceCalculated
 
         let titleLabel = UILabel()
-//        titleLabel.font = productTitle.uiFont
-//        titleLabel.textColor = productTitle.uiColor
-        titleLabel.attributedText = productTitle.attributedString(overridingValue: info.title)
+        titleLabel.attributedText = info.title?.attributedString(using: productTitle)
 
         let priceTitleLabel = UILabel()
         priceTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-//        priceTitleLabel.font = productPrice.uiFont
-//        priceTitleLabel.textColor = productPrice.uiColor
-//        priceTitleLabel.textAlignment = .right
-        priceTitleLabel.attributedText = productPrice.attributedString(overridingValue: info.price)
+        priceTitleLabel.attributedText = info.price?.attributedString(using: productPrice)
 
         let titleStack = UIStackView(arrangedSubviews: [titleLabel, priceTitleLabel])
         titleStack.translatesAutoresizingMaskIntoConstraints = false
         titleStack.axis = .horizontal
 
         let subtitleLabel = UILabel()
-//        subtitleLabel.font = productOffer.uiFont
-//        subtitleLabel.textColor = productOffer.uiColor
         subtitleLabel.minimumScaleFactor = 0.5
         subtitleLabel.adjustsFontSizeToFitWidth = true
         subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        subtitleLabel.attributedText = productOffer.attributedString(overridingValue: info.subtitle)
+        subtitleLabel.attributedText = info.subtitle?.attributedString(using: productOffer)
 
         let priceSubtitleLabel = UILabel()
         priceSubtitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-//        priceSubtitleLabel.font = productPriceCalculated.uiFont
-//        priceSubtitleLabel.textColor = productPriceCalculated.uiColor
-//        priceSubtitleLabel.textAlignment = .right
-        priceSubtitleLabel.attributedText = productPriceCalculated.attributedString(overridingValue: info.priceSubtitle)
+        priceSubtitleLabel.attributedText = info.priceSubtitle?.attributedString(using: productPriceCalculated)
 
         let subtitleStack = UIStackView(arrangedSubviews: [subtitleLabel, priceSubtitleLabel])
         subtitleStack.translatesAutoresizingMaskIntoConstraints = false

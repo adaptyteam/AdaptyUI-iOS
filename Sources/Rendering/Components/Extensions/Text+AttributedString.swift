@@ -80,28 +80,11 @@ extension AdaptyUI.Text {
         ]).width ?? 0.0
     }
 
-    func attributedString(paragraph: AdaptyUI.Text.ParagraphStyle,
-                          trailingPadding: CGFloat?) -> NSAttributedString? {
-        guard let value = value else { return nil }
-
-        let result = NSMutableAttributedString()
-        result.append(NSAttributedString(string: value))
-
-        if let trailingPadding, trailingPadding > 0.0 {
-            let padding = NSTextAttachment()
-            padding.bounds = CGRect(x: 0, y: 0, width: trailingPadding, height: 0)
-            result.append(NSAttributedString(attachment: padding))
-        }
-
-        result.addAttributes([
-            NSAttributedString.Key.paragraphStyle: paragraph
-                .copyWith(alignment: horizontalAlign.textAlignment)
-                .toParagraphStyle(),
-            NSAttributedString.Key.foregroundColor: uiColor ?? .darkText,
-            NSAttributedString.Key.font: uiFont ?? .systemFont(ofSize: 15),
-        ], range: NSRange(location: 0, length: result.length))
-
-        return result
+    func attributedString(
+        paragraph: AdaptyUI.Text.ParagraphStyle,
+        trailingPadding: CGFloat?
+    ) -> NSAttributedString? {
+        value?.attributedString(using: self, paragraph: paragraph, trailingPadding: trailingPadding)
     }
 }
 
@@ -209,12 +192,47 @@ extension AdaptyUI.Text.Item {
     }
 }
 
+extension String {
+    func attributedString(using text: AdaptyUI.СompoundText,
+                          paragraph: AdaptyUI.Text.ParagraphStyle = .init()) -> NSAttributedString {
+        guard case let .text(text) = text.items.first else { return NSAttributedString(string: self) }
+        return attributedString(using: text, paragraph: paragraph, trailingPadding: nil)
+    }
+
+    func attributedString(
+        using text: AdaptyUI.Text,
+        paragraph: AdaptyUI.Text.ParagraphStyle,
+        trailingPadding: CGFloat?
+    ) -> NSAttributedString {
+        let result = NSMutableAttributedString()
+        result.append(NSAttributedString(string: self))
+
+        if let trailingPadding, trailingPadding > 0.0 {
+            let padding = NSTextAttachment()
+            padding.bounds = CGRect(x: 0, y: 0, width: trailingPadding, height: 0)
+            result.append(NSAttributedString(attachment: padding))
+        }
+
+        result.addAttributes([
+            NSAttributedString.Key.paragraphStyle: paragraph
+                .copyWith(alignment: text.horizontalAlign.textAlignment)
+                .toParagraphStyle(),
+            NSAttributedString.Key.foregroundColor: text.uiColor ?? .darkText,
+            NSAttributedString.Key.font: text.uiFont ?? .systemFont(ofSize: 15),
+        ], range: NSRange(location: 0, length: result.length))
+
+        return result
+    }
+}
+
 extension AdaptyUI.СompoundText {
     func attributedString(
-        overridingValue: String? = nil,
-        appendingNewLine: Bool = false,
+        kern: CGFloat? = nil,
         paragraph: AdaptyUI.Text.ParagraphStyle = .init()
     ) -> NSAttributedString {
+        // TODO: implement Kern
+//        NSAttributedString.Key.kern: 0.2,
+        
         let result = NSMutableAttributedString()
 
         for i in 0 ..< items.count {

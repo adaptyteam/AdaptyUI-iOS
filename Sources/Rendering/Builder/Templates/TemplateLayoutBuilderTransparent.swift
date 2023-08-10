@@ -17,15 +17,19 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
     private let purchaseButton: AdaptyUI.Button
     private let footerBlock: AdaptyUI.FooterBlock?
     private let closeButton: AdaptyUI.Button?
+    private let initialProducts: [ProductInfo]
 
-    init(background: AdaptyUI.Filling,
-         contentShape: AdaptyUI.Shape,
-         titleRows: AdaptyUI.СompoundText?,
-         featuresBlock: AdaptyUI.FeaturesBlock?,
-         productsBlock: AdaptyUI.ProductsBlock,
-         purchaseButton: AdaptyUI.Button,
-         footerBlock: AdaptyUI.FooterBlock?,
-         closeButton: AdaptyUI.Button?) {
+    init(
+        background: AdaptyUI.Filling,
+        contentShape: AdaptyUI.Shape,
+        titleRows: AdaptyUI.СompoundText?,
+        featuresBlock: AdaptyUI.FeaturesBlock?,
+        productsBlock: AdaptyUI.ProductsBlock,
+        purchaseButton: AdaptyUI.Button,
+        footerBlock: AdaptyUI.FooterBlock?,
+        closeButton: AdaptyUI.Button?,
+        initialProducts: [ProductInfo]
+    ) {
         self.background = background
         self.contentShape = contentShape
         self.titleRows = titleRows
@@ -34,11 +38,17 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
         self.purchaseButton = purchaseButton
         self.footerBlock = footerBlock
         self.closeButton = closeButton
+        self.initialProducts = initialProducts
     }
 
     private weak var contentViewComponentView: AdaptyBaseContentView?
+    private weak var productsComponentView: ProductsComponentView?
+    private weak var continueButtonComponentView: AdaptyButtonComponentView?
 
     private var onActionCallback: ((AdaptyUI.ButtonAction) -> Void)?
+
+    var productsView: ProductsComponentView? { productsComponentView }
+    var continueButton: AdaptyButtonComponentView? { continueButtonComponentView }
 
     func onAction(_ callback: @escaping (AdaptyUI.ButtonAction) -> Void) {
         onActionCallback = callback
@@ -78,8 +88,9 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
             try layoutFeaturesBlock(featuresBlock, in: stackView)
         }
 
-        let productsView = try AdaptyProductsComponentView(productsBlock: productsBlock)
-        stackView.addArrangedSubview(productsView)
+        productsComponentView = try layoutProductsBlock(productsBlock,
+                                                        initialProducts: initialProducts,
+                                                        in: stackView)
 
         let continueButtonView = AdaptyButtonComponentView(component: purchaseButton)
 
@@ -88,6 +99,7 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
             continueButtonView.heightAnchor.constraint(equalToConstant: 58.0)
         )
 
+        continueButtonComponentView = continueButtonView
         contentViewComponentView = contentView
 
         if let footerBlock {

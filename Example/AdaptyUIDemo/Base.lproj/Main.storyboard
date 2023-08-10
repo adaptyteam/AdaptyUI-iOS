@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="J3E-XU-xzL">
-                                <rect key="frame" x="32" y="83" width="329" height="656.33333333333337"/>
+                                <rect key="frame" x="32" y="83" width="329" height="344"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to AdaptyUI!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f2g-L5-7rl">
                                         <rect key="frame" x="0.0" y="0.0" width="329" height="33.666666666666664"/>
@@ -26,90 +26,8 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="wfj-QH-UWa">
-                                        <rect key="frame" x="0.0" y="57.666666666666657" width="329" height="288.33333333333337"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vJ0-cB-STL">
-                                                <rect key="frame" x="0.0" y="0.0" width="329" height="34.333333333333336"/>
-                                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="Basic Rounded Rect (Woman)">
-                                                    <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </buttonConfiguration>
-                                                <connections>
-                                                    <action selector="presentBasicRoundedRect:" destination="RVy-4J-UvV" eventType="touchUpInside" id="CM1-Bb-tWb"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yJj-F4-2NC">
-                                                <rect key="frame" x="0.0" y="42.333333333333343" width="329" height="34.333333333333343"/>
-                                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="Basic Smile Up (Mint Moon)">
-                                                    <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </buttonConfiguration>
-                                                <connections>
-                                                    <action selector="presentBasicSmileUp:" destination="RVy-4J-UvV" eventType="touchUpInside" id="iMh-xT-OUM"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mGh-0A-RGe">
-                                                <rect key="frame" x="0.0" y="84.666666666666686" width="329" height="34.333333333333343"/>
-                                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="Basic Smile Down (Desserts)">
-                                                    <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </buttonConfiguration>
-                                                <connections>
-                                                    <action selector="presentBasicSmileDown:" destination="RVy-4J-UvV" eventType="touchUpInside" id="DQW-4e-dVV"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NJq-G9-7B5">
-                                                <rect key="frame" x="0.0" y="127.00000000000001" width="329" height="34.333333333333329"/>
-                                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="Flat A (Kitty)">
-                                                    <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </buttonConfiguration>
-                                                <connections>
-                                                    <action selector="presentFlatA:" destination="RVy-4J-UvV" eventType="touchUpInside" id="ZdV-u9-kop"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rpl-xK-5xS">
-                                                <rect key="frame" x="0.0" y="169.33333333333334" width="329" height="34.333333333333343"/>
-                                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="Flat B (Abstract)">
-                                                    <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </buttonConfiguration>
-                                                <connections>
-                                                    <action selector="presentFlatB:" destination="RVy-4J-UvV" eventType="touchUpInside" id="qRk-WL-dH3"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Et4-Rw-wHO">
-                                                <rect key="frame" x="0.0" y="211.66666666666666" width="329" height="34.333333333333343"/>
-                                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="Transparent A (Green Lines)">
-                                                    <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </buttonConfiguration>
-                                                <connections>
-                                                    <action selector="presentTransparentA:" destination="RVy-4J-UvV" eventType="touchUpInside" id="Ksc-Id-Cdn"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eaF-vc-wyk">
-                                                <rect key="frame" x="0.0" y="254.00000000000003" width="329" height="34.333333333333343"/>
-                                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="Transparent B (Miky Way)">
-                                                    <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </buttonConfiguration>
-                                                <connections>
-                                                    <action selector="presentTransparentB:" destination="RVy-4J-UvV" eventType="touchUpInside" id="j3D-TK-osK"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                    </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="znT-HZ-pyj">
-                                        <rect key="frame" x="0.0" y="370" width="329" height="34.333333333333314"/>
+                                        <rect key="frame" x="0.0" y="57.666666666666629" width="329" height="34.333333333333371"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter paywall id" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="7sx-uv-qTk">
                                                 <rect key="frame" x="0.0" y="0.0" width="243.33333333333334" height="34.333333333333336"/>
@@ -130,7 +48,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="REQ-qC-nQA">
-                                        <rect key="frame" x="0.0" y="428.33333333333331" width="329" height="166.99999999999994"/>
+                                        <rect key="frame" x="0.0" y="116" width="329" height="167"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="GnQ-xW-hxM">
                                                 <rect key="frame" x="0.0" y="0.0" width="329" height="20.333333333333332"/>
@@ -148,7 +66,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="ajP-m3-2TA">
-                                                <rect key="frame" x="0.0" y="28.333333333333311" width="329" height="39.666666666666657"/>
+                                                <rect key="frame" x="0.0" y="28.333333333333339" width="329" height="39.666666666666657"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Variation" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UQZ-5a-DxN">
                                                         <rect key="frame" x="0.0" y="0.0" width="66.666666666666671" height="20.333333333333332"/>
@@ -165,7 +83,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="11c-QR-MYH">
-                                                <rect key="frame" x="0.0" y="76.000000000000057" width="329" height="20.333333333333329"/>
+                                                <rect key="frame" x="0.0" y="76" width="329" height="20.333333333333329"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Revision" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LAt-37-VpK">
                                                         <rect key="frame" x="0.0" y="0.0" width="63.666666666666664" height="20.333333333333332"/>
@@ -212,7 +130,7 @@
                                         </subviews>
                                     </stackView>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="yZf-fr-bzu">
-                                        <rect key="frame" x="0.0" y="619.33333333333337" width="329" height="37"/>
+                                        <rect key="frame" x="0.0" y="307" width="329" height="37"/>
                                     </activityIndicatorView>
                                 </subviews>
                             </stackView>

@@ -20,6 +20,7 @@ public class AdaptyPaywallController: UIViewController {
 
     private let productsTitlesResolver: (AdaptyProduct) -> String
     private let scrollViewDelegate = AdaptyCoverImageScrollDelegate()
+    private var layoutBuilder: LayoutBuilder!
     private let presenter: AdaptyPaywallPresenter
     private var cancellable = Set<AnyCancellable>()
 
@@ -39,10 +40,19 @@ public class AdaptyPaywallController: UIViewController {
         self.productsTitlesResolver = productsTitlesResolver ?? { $0.localizedTitle }
 
         let localizedConfig = viewConfiguration.extractLocale(paywall.locale)
+        let selectedProductIndex: Int
+
+        if let style = try? localizedConfig.extractDefaultStyle() {
+            selectedProductIndex = style.productBlock.mainProductIndex
+        } else {
+            // TODO: warn
+            selectedProductIndex = 0
+        }
 
         presenter = AdaptyPaywallPresenter(logId: logId,
                                            paywall: paywall,
                                            products: products,
+                                           selectedProductIndex: selectedProductIndex,
                                            viewConfiguration: localizedConfig)
 
         super.init(nibName: nil, bundle: nil)
@@ -74,8 +84,22 @@ public class AdaptyPaywallController: UIViewController {
         subscribeForEvents()
 
         do {
-            let reader = try AdaptyTemplateReader(logId: logId, configuration: presenter.viewConfiguration)
-            try buildTemplateInterface(reader: reader)
+            layoutBuilder = try Self.createLayoutFromConfiguration(
+                presenter.viewConfiguration,
+                products: presenter.products
+            )
+
+            try layoutBuilder.buildInterface(on: view)
+
+            layoutBuilder.continueButton?.onTap = { [weak self] _ in
+                guard let self = self else { return }
+
+                self.presenter.makePurchase()
+
+                if let delegate = self.delegate, let product = self.presenter.selectedAdaptyProduct {
+                    delegate.paywallController(self, didStartPurchase: product)
+                }
+            }
         } catch {
             if let error = error as? AdaptyUIError {
                 log(.error, "Rendering Error = \(error)")
@@ -85,6 +109,13 @@ public class AdaptyPaywallController: UIViewController {
                 let adaptyError = AdaptyError(AdaptyUIError.rendering(error))
                 delegate?.paywallController(self, didFailRenderingWith: adaptyError)
             }
+        }
+
+        layoutBuilder.productsView?.onProductSelected = { [weak self] product in
+            self?.presenter.selectProduct(id: product.id)
+        }
+        layoutBuilder.onAction { [weak self] action in
+            self?.handleAction(action)
         }
 
         presenter.logShowPaywall()
@@ -103,34 +134,44 @@ public class AdaptyPaywallController: UIViewController {
         log(.verbose, "viewDidDisappear")
     }
 
+    private func handleAction(_ action: AdaptyUI.ButtonAction) {
+        switch action {
+        case .close:
+            log(.verbose, "close tap")
+            delegate?.paywallControllerDidPressCloseButton(self)
+        case let .openUrl(urlString):
+            log(.verbose, "openUrl tap")
+            guard let urlString, let url = URL(string: urlString) else { return }
+            delegate?.paywallController(self, openURL: url)
+        case .restore:
+            log(.verbose, "restore tap")
+            presenter.restorePurchases()
+        case let .custom(id):
+            log(.verbose, "custom (\(id ?? "null") tap")
+            // TODO: implement custom action logic
+            break
+        }
+    }
+
     private func subscribeForDataChange() {
         presenter.$products
             .receive(on: RunLoop.main)
             .sink { [weak self] value in
-                let selectedProductId = self?.presenter.selectedProduct?.vendorProductId
-                self?.productsList?.updateProducts(value, selectedProductId: selectedProductId)
-            }
-            .store(in: &cancellable)
-        
-        presenter.$introductoryOffersEligibilities
-            .receive(on: RunLoop.main)
-            .sink { [weak self] value in
-                self?.productsList?.updateIntroEligibilities(value)
+                guard let self = self else { return }
+
+                self.layoutBuilder.productsView?.updateProducts(value, selectedProductId: self.presenter.selectedProductId)
             }
             .store(in: &cancellable)
 
-        presenter.$selectedProduct
-            .receive(on: RunLoop.main)
-            .sink { [weak self] value in
-                self?.updateSelectedProductId(value)
-            }
-            .store(in: &cancellable)
-
-        presenter.$selectedProduct
+        presenter.$selectedProductId
             .receive(on: RunLoop.main)
             .dropFirst()
             .sink { [weak self] value in
-                guard let self = self, let delegate = self.delegate, let product = value else {
+                self?.updateSelectedProductId(value)
+
+                guard let self = self,
+                      let delegate = self.delegate,
+                      let product = self.presenter.adaptyProducts?.first(where: { $0.vendorProductId == value }) else {
                     return
                 }
 
@@ -222,13 +263,13 @@ public class AdaptyPaywallController: UIViewController {
         }
     }
 
-    private func updateSelectedProductId(_ product: AdaptyPaywallProduct?) {
-        productsList?.updateSelectedState(product?.vendorProductId)
+    private func updateSelectedProductId(_ productId: String?) {
+        layoutBuilder.productsView?.updateSelectedState(productId)
     }
 
     private func updatePurchaseInProgress(_ inProgress: Bool) {
-        productsList?.isUserInteractionEnabled = !inProgress
-        continueButton?.updateInProgress(inProgress)
+        layoutBuilder.productsView?.isUserInteractionEnabled = !inProgress
+        layoutBuilder.continueButton?.updateInProgress(inProgress)
     }
 
     private func updateGlobalLoadingIndicator(restoreInProgress: Bool, animated: Bool) {
@@ -242,21 +283,20 @@ public class AdaptyPaywallController: UIViewController {
     // MARK: - Building
 
     private var loadingView: AdaptyActivityIndicatorView?
-    private var coverImageGradient: AdaptyGradientViewComponent?
-    private var closeButton: AdaptyCloseButton?
-    private var baseStack: UIStackView?
-    private var productsList: AdaptyProductsListComponent?
-    private var continueButton: AdaptyContinueButton?
-    private var serviceButtons: AdaptyServiceButtonsComponent?
+//    private var coverImageGradient: AdaptyGradientViewComponent?
+//    private var closeButton: AdaptyCloseButton?
+//    private var baseStack: UIStackView?
+//    private var productsList: AdaptyProductsListComponent?
+//    private var continueButton: AdaptyContinueButton?
+//    private var serviceButtons: AdaptyServiceButtonsComponent?
 
     private func buildTemplateInterface(reader: AdaptyTemplateReader) throws {
         view.backgroundColor = try reader.contentBackgroundColor().uiColor
 
         let coverImageView = try AdaptyInterfaceBilder.buildCoverImageView(on: view,
                                                                            reader: reader)
-        
+
         scrollViewDelegate.coverView = coverImageView
-        let coverImageGradient = AdaptyInterfaceBilder.buildCoverImageGradient(on: view)
 
         let scrollView = AdaptyInterfaceBilder.buildScrollView(on: view, delegate: scrollViewDelegate)
         let spacerView = AdaptyInterfaceBilder.buildCoverSpacerView(on: scrollView, superview: view)
@@ -265,67 +305,65 @@ public class AdaptyPaywallController: UIViewController {
 
         try AdaptyInterfaceBilder.buildMainInfoBlock(on: baseStack, reader: reader)
 
-        let productsList = try AdaptyInterfaceBilder.buildProductsBlock(
-            paywall,
-            presenter.products,
-            presenter.introductoryOffersEligibilities,
-            on: baseStack,
-            useHaptic: true,
-            selectedProductId: presenter.selectedProduct?.vendorProductId,
-            reader: reader,
-            productsTitlesResolver: productsTitlesResolver,
-            onProductSelected: { [weak self] productId in
-                self?.presenter.selectProduct(id: productId)
-            }
-        )
+//        let productsList = try AdaptyInterfaceBilder.buildProductsBlock(
+//            paywall,
+//            presenter.products,
+//            presenter.introductoryOffersEligibilities,
+//            on: baseStack,
+//            useHaptic: true,
+//            selectedProductId: presenter.selectedProduct?.vendorProductId,
+//            reader: reader,
+//            productsTitlesResolver: productsTitlesResolver,
+//            onProductSelected: { [weak self] productId in
+//                self?.presenter.selectProduct(id: productId)
+//            }
+//        )
 
-        let continueButton = try AdaptyInterfaceBilder.buildContinueButton(
-            on: baseStack,
-            reader: reader,
-            onTap: { [weak self] in
-                guard let self = self else { return }
+//        let continueButton = try AdaptyInterfaceBilder.buildContinueButton(
+//            on: baseStack,
+//            reader: reader,
+//            onTap: { [weak self] in
+//                guard let self = self else { return }
+//
+//                self.presenter.makePurchase()
+//
+//                if let delegate = self.delegate, let product = self.presenter.selectedProduct {
+//                    delegate.paywallController(self, didStartPurchase: product)
+//                }
+//            }
+//        )
 
-                self.presenter.makePurchase()
-
-                if let delegate = self.delegate, let product = self.presenter.selectedProduct {
-                    delegate.paywallController(self, didStartPurchase: product)
-                }
-            }
-        )
-
-        let serviceButtons = try AdaptyInterfaceBilder.buildServiceButtons(
-            on: baseStack,
-            reader: reader,
-            onTerms: { [weak self] in
-                self?.log(.verbose, "onTerms tap")
-                guard let url = reader.termsURL(), let self = self else { return }
-                self.delegate?.paywallController(self, openURL: url)
-            },
-            onPrivacy: { [weak self] in
-                self?.log(.verbose, "onPrivacy tap")
-                guard let url = reader.privacyURL(), let self = self else { return }
-                self.delegate?.paywallController(self, openURL: url)
-            },
-            onRestore: { [weak self] in self?.presenter.restorePurchases() }
-        )
+//        let serviceButtons = try AdaptyInterfaceBilder.buildServiceButtons(
+//            on: baseStack,
+//            reader: reader,
+//            onTerms: { [weak self] in
+//                self?.log(.verbose, "onTerms tap")
+//                guard let url = reader.termsURL(), let self = self else { return }
+//                self.delegate?.paywallController(self, openURL: url)
+//            },
+//            onPrivacy: { [weak self] in
+//                self?.log(.verbose, "onPrivacy tap")
+//                guard let url = reader.privacyURL(), let self = self else { return }
+//                self.delegate?.paywallController(self, openURL: url)
+//            },
+//            onRestore: { [weak self] in self?.presenter.restorePurchases() }
+//        )
 
         let loadingView = AdaptyInterfaceBilder.buildInProgressView(on: view)
 
-        self.coverImageGradient = coverImageGradient
-        self.baseStack = baseStack
-        self.productsList = productsList
-        self.continueButton = continueButton
-        self.serviceButtons = serviceButtons
+//        self.productsList = productsList
+//        self.continueButton = continueButton
+//        self.serviceButtons = serviceButtons
         self.loadingView = loadingView
 
-        if reader.showCloseButton {
-            closeButton = AdaptyInterfaceBilder.buildCloseButton(on: view) { [weak self] in
-                self?.log(.verbose, "onClose tap")
-
-                guard let self = self else { return }
-                self.delegate?.paywallControllerDidPressCloseButton(self)
-            }
-        }
+//        if reader.showCloseButton {
+//            closeButton = AdaptyInterfaceBilder.buildCloseButton(on: view) { [weak self] in
+//                self?.log(.verbose, "onClose tap")
+//
+//                guard let self = self else { return }
+//                self.delegate?.paywallControllerDidPressCloseButton(self)
+//            }
+//        }
     }
 }
 

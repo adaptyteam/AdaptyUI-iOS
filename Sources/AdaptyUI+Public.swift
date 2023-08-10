@@ -171,19 +171,19 @@ extension AdaptyUI {
         delegate: AdaptyPaywallControllerDelegate,
         productsTitlesResolver: ((AdaptyProduct) -> String)? = nil
     ) -> UIViewController {
-        do {
-            return try AdaptyTemplateController.template(viewConfiguration)
-        } catch {
-            print("error = \(error)")
-            return UIViewController()
-        }
+//        do {
+//            return try AdaptyTemplateController.template(viewConfiguration)
+//        } catch {
+//            print("error = \(error)")
+//            return UIViewController()
+//        }
 
-//        AdaptyPaywallController(
-//            paywall: paywall,
-//            products: products,
-//            viewConfiguration: viewConfiguration,
-//            delegate: delegate,
-//            productsTitlesResolver: productsTitlesResolver
-//        )
+        AdaptyPaywallController(
+            paywall: paywall,
+            products: products,
+            viewConfiguration: viewConfiguration,
+            delegate: delegate,
+            productsTitlesResolver: productsTitlesResolver
+        )
     }
 }

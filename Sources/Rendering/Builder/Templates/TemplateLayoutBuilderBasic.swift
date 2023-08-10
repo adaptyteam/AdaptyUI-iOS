@@ -28,6 +28,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     private let purchaseButton: AdaptyUI.Button
     private let closeButton: AdaptyUI.Button?
     private let footerBlock: AdaptyUI.FooterBlock?
+    private let initialProducts: [ProductInfo]
 
     private let scrollViewDelegate = AdaptyCoverImageScrollDelegate()
 
@@ -40,7 +41,8 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         productsBlock: AdaptyUI.ProductsBlock,
         purchaseButton: AdaptyUI.Button,
         footerBlock: AdaptyUI.FooterBlock?,
-        closeButton: AdaptyUI.Button?
+        closeButton: AdaptyUI.Button?,
+        initialProducts: [ProductInfo]
     ) {
         self.coverImage = coverImage
         self.coverImageHeightMultilpyer = coverImageHeightMultilpyer
@@ -51,11 +53,17 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         self.purchaseButton = purchaseButton
         self.footerBlock = footerBlock
         self.closeButton = closeButton
+        self.initialProducts = initialProducts
     }
 
     private weak var contentViewComponentView: AdaptyBaseContentView?
+    private weak var productsComponentView: ProductsComponentView?
+    private weak var continueButtonComponentView: AdaptyButtonComponentView?
 
     private var onActionCallback: ((AdaptyUI.ButtonAction) -> Void)?
+
+    var productsView: ProductsComponentView? { productsComponentView }
+    var continueButton: AdaptyButtonComponentView? { continueButtonComponentView }
 
     func onAction(_ callback: @escaping (AdaptyUI.ButtonAction) -> Void) {
         onActionCallback = callback
@@ -112,8 +120,9 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
             try layoutFeaturesBlock(featuresBlock, in: stackView)
         }
 
-        let productsView = try AdaptyProductsComponentView(productsBlock: productsBlock)
-        stackView.addArrangedSubview(productsView)
+        productsComponentView = try layoutProductsBlock(productsBlock,
+                                                        initialProducts: initialProducts,
+                                                        in: stackView)
 
         let continueButtonPlaceholder = UIView()
         continueButtonPlaceholder.translatesAutoresizingMaskIntoConstraints = false
@@ -129,6 +138,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
                              placeholder: continueButtonPlaceholder,
                              on: view)
 
+        continueButtonComponentView = continueButtonView
         contentViewComponentView = contentView
 
         if let footerBlock {
@@ -147,6 +157,10 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
 
             layoutCloseButton(closeButtonView, on: view)
         }
+        
+        let progressView = AdaptyActivityIndicatorView(backgroundColor: .black.withAlphaComponent(0.6),
+                                                      indicatorColor: .white)
+        layoutProgressView(progressView, on: view)
     }
 
     func viewDidLayoutSubviews(_ view: UIView) {
@@ -191,6 +205,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     }
 }
 
+// TODO: Move out
 extension LayoutBuilder {
     func layoutTopGradientView(_ gradientView: UIView, on view: UIView) {
         view.addSubview(gradientView)
@@ -200,5 +215,37 @@ extension LayoutBuilder {
             gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             gradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
+    }
+}
+
+// TODO: Move out
+extension LayoutBuilder {
+    func layoutProductsBlock(_ productsBlock: AdaptyUI.ProductsBlock,
+                             initialProducts: [ProductInfo],
+                             in stackView: UIStackView) throws -> ProductsComponentView {
+        guard !initialProducts.isEmpty else {
+            // TODO: change the error
+            throw AdaptyUIError.unsupportedTemplate("test")
+        }
+
+        let productsView: ProductsComponentView
+
+        switch productsBlock.type {
+        case .horizontal:
+            productsView = try AdaptyMultipleProductsComponentView(axis: .horizontal,
+                                                                   products: initialProducts,
+                                                                   productsBlock: productsBlock)
+        case .vertical:
+            productsView = try AdaptyMultipleProductsComponentView(axis: .vertical,
+                                                                   products: initialProducts,
+                                                                   productsBlock: productsBlock)
+        case .single:
+            productsView = try AdaptySingleProductComponentView(product: initialProducts[0],
+                                                                productsBlock: productsBlock)
+        }
+
+        stackView.addArrangedSubview(productsView)
+        
+        return productsView
     }
 }
