@@ -28,7 +28,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     private let purchaseButton: AdaptyUI.Button
     private let closeButton: AdaptyUI.Button?
     private let footerBlock: AdaptyUI.FooterBlock?
-    private let initialProducts: [ProductInfo]
+    private let initialProducts: [ProductInfoModel]
 
     private let scrollViewDelegate = AdaptyCoverImageScrollDelegate()
 
@@ -42,7 +42,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         purchaseButton: AdaptyUI.Button,
         footerBlock: AdaptyUI.FooterBlock?,
         closeButton: AdaptyUI.Button?,
-        initialProducts: [ProductInfo]
+        initialProducts: [ProductInfoModel]
     ) {
         self.coverImage = coverImage
         self.coverImageHeightMultilpyer = coverImageHeightMultilpyer
@@ -56,12 +56,12 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         self.initialProducts = initialProducts
     }
 
-    private weak var activityIndicatorComponentView: AdaptyActivityIndicatorComponentView?
+    private weak var activityIndicatorComponentView: AdaptyActivityIndicatorView?
     private weak var contentViewComponentView: AdaptyBaseContentView?
     private weak var productsComponentView: ProductsComponentView?
     private weak var continueButtonComponentView: AdaptyButtonComponentView?
 
-    var activityIndicator: AdaptyActivityIndicatorComponentView? { activityIndicatorComponentView }
+    var activityIndicator: AdaptyActivityIndicatorView? { activityIndicatorComponentView }
     var productsView: ProductsComponentView? { productsComponentView }
     var continueButton: AdaptyButtonComponentView? { continueButtonComponentView }
 
@@ -164,7 +164,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
             stackView.addArrangedSubview(footerView)
         }
 
-        layoutTopGradientView(AdaptyGradientViewComponent(), on: view)
+        layoutTopGradientView(AdaptyGradientView(), on: view)
 
         if let closeButton {
             let closeButtonView = AdaptyButtonComponentView(
@@ -178,7 +178,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
             layoutCloseButton(closeButtonView, on: view)
         }
 
-        let progressView = AdaptyActivityIndicatorComponentView(backgroundColor: .black.withAlphaComponent(0.6),
+        let progressView = AdaptyActivityIndicatorView(backgroundColor: .black.withAlphaComponent(0.6),
                                                                 indicatorColor: .white)
         layoutProgressView(progressView, on: view)
         activityIndicatorComponentView = progressView
@@ -242,7 +242,7 @@ extension LayoutBuilder {
 // TODO: Move out
 extension LayoutBuilder {
     func layoutProductsBlock(_ productsBlock: AdaptyUI.ProductsBlock,
-                             initialProducts: [ProductInfo],
+                             initialProducts: [ProductInfoModel],
                              in stackView: UIStackView) throws -> ProductsComponentView {
         guard !initialProducts.isEmpty else {
             // TODO: change the error
@@ -253,15 +253,15 @@ extension LayoutBuilder {
 
         switch productsBlock.type {
         case .horizontal:
-            productsView = try AdaptyMultipleProductsComponentView(axis: .horizontal,
+            productsView = try MultipleProductsComponentView(axis: .horizontal,
                                                                    products: initialProducts,
                                                                    productsBlock: productsBlock)
         case .vertical:
-            productsView = try AdaptyMultipleProductsComponentView(axis: .vertical,
+            productsView = try MultipleProductsComponentView(axis: .vertical,
                                                                    products: initialProducts,
                                                                    productsBlock: productsBlock)
         case .single:
-            productsView = try AdaptySingleProductComponentView(product: initialProducts[0],
+            productsView = try SingleProductComponentView(product: initialProducts[0],
                                                                 productsBlock: productsBlock)
         }
 

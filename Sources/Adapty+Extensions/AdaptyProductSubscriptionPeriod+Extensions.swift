@@ -1,5 +1,5 @@
 //
-//  AdaptyProductSubscriptionPeriodExtensions.swift
+//  AdaptyProductSubscriptionPeriod+Extensions.swift
 //
 //
 //  Created by Alexey Goncharov on 2023-01-24.

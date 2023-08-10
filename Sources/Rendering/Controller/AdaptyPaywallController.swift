@@ -84,7 +84,7 @@ public class AdaptyPaywallController: UIViewController {
         subscribeForEvents()
 
         do {
-            layoutBuilder = try Self.createLayoutFromConfiguration(
+            layoutBuilder = try TemplateLayoutBuilderFabric.createLayoutFromConfiguration(
                 presenter.viewConfiguration,
                 products: presenter.products
             )

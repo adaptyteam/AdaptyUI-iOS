@@ -1,5 +1,5 @@
 //
-//  AdaptyActivityIndicatorComponentView.swift
+//  AdaptyActivityIndicatorView.swift
 //
 //
 //  Created by Alexey Goncharov on 2023-01-26.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AdaptyActivityIndicatorComponentView: UIView {
+class AdaptyActivityIndicatorView: UIView {
     private let indicatorColor: UIColor
 
     init(backgroundColor: UIColor, indicatorColor: UIColor) {

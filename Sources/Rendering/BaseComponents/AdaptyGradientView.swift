@@ -1,5 +1,5 @@
 //
-//  AdaptyGradientViewComponent.swift
+//  AdaptyGradientView.swift
 //
 //
 //  Created by Alexey Goncharov on 2023-01-25.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AdaptyGradientViewComponent: UIView {
+class AdaptyGradientView: UIView {
     init() {
         super.init(frame: .zero)
 

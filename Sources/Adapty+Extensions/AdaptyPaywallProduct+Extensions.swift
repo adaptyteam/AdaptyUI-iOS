@@ -8,21 +8,6 @@
 import Adapty
 import Foundation
 
-extension AdaptyProductDiscount {
-    func localizedDescriptionString() -> String? {
-        switch paymentMode {
-        case .payAsYouGo:
-            return (localizedPrice ?? "") + " for " + (localizedSubscriptionPeriod ?? "")
-        case .payUpFront:
-            return (localizedPrice ?? "") + " for the first " + (localizedNumberOfPeriods ?? "")
-        case .freeTrial:
-            return (localizedSubscriptionPeriod ?? "") + " free trial"
-        case .unknown:
-            return nil
-        }
-    }
-}
-
 extension AdaptyPaywallProduct {
     func eligibleOfferString(introEligibility: AdaptyEligibility) -> String? {
         if let promotionalOfferId = promotionalOfferId,

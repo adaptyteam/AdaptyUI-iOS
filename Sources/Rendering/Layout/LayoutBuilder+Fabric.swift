@@ -8,15 +8,16 @@
 import Adapty
 import UIKit
 
+// TODO: move out
 extension AdaptyUI.LocalizedViewConfiguration {
     func extractDefaultStyle() throws -> AdaptyUI.LocalizedViewStyle {
         try extractStyle("default")
     }
 }
 
-extension AdaptyPaywallController {
+struct TemplateLayoutBuilderFabric {
     static func createBasic(config: AdaptyUI.LocalizedViewConfiguration,
-                            products: [ProductInfo]) throws -> TemplateLayoutBuilderBasic {
+                            products: [ProductInfoModel]) throws -> TemplateLayoutBuilderBasic {
         guard let coverImageHeightMultilpyer = config.mainImageRelativeHeight else {
             throw AdaptyUIError.componentNotFound("main_image_relative_height")
         }
@@ -36,7 +37,7 @@ extension AdaptyPaywallController {
     }
 
     static func createTransparent(config: AdaptyUI.LocalizedViewConfiguration,
-                                  products: [ProductInfo]) throws -> TemplateLayoutBuilderTransparent {
+                                  products: [ProductInfoModel]) throws -> TemplateLayoutBuilderTransparent {
         let style = try config.extractDefaultStyle()
         
         return .init(background: .image(try style.backgroundImage),
@@ -51,7 +52,7 @@ extension AdaptyPaywallController {
     }
 
     static func createFlat(config: AdaptyUI.LocalizedViewConfiguration,
-                           products: [ProductInfo]) throws -> TemplateLayoutBuilderFlat {
+                           products: [ProductInfoModel]) throws -> TemplateLayoutBuilderFlat {
         guard let coverImageHeightMultilpyer = config.mainImageRelativeHeight else {
             throw AdaptyUIError.componentNotFound("main_image_relative_height")
         }
@@ -72,7 +73,7 @@ extension AdaptyPaywallController {
     }
 
     static func createLayoutFromConfiguration(_ viewConfiguration: AdaptyUI.LocalizedViewConfiguration,
-                                              products: [ProductInfo]) throws -> LayoutBuilder {
+                                              products: [ProductInfoModel]) throws -> LayoutBuilder {
         switch viewConfiguration.templateId {
         case "basic":
             return try createBasic(config: viewConfiguration, products: products)

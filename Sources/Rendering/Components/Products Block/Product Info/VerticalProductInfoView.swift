@@ -1,5 +1,5 @@
 //
-//  AdaptyVerticalProductInfoView.swift
+//  VerticalProductInfoView.swift
 //
 //
 //  Created by Alexey Goncharov on 27.7.23..
@@ -8,11 +8,11 @@
 import Adapty
 import UIKit
 
-final class AdaptyVerticalProductInfoView: UIStackView, ProductInfoView {
-    let info: ProductInfo
+final class VerticalProductInfoView: UIStackView, ProductInfoView {
+    let info: ProductInfoModel
     let productsBlock: AdaptyUI.ProductsBlock
 
-    init(info: ProductInfo,
+    init(info: ProductInfoModel,
          productsBlock: AdaptyUI.ProductsBlock) throws {
         self.info = info
         self.productsBlock = productsBlock

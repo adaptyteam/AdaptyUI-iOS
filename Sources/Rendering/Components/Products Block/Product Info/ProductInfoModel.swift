@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ProductInfoModel.swift
 //
 //
 //  Created by Alexey Goncharov on 27.7.23..
@@ -8,19 +8,7 @@
 import Adapty
 import UIKit
 
-protocol ProductInfo {
-    var id: String { get }
-    var title: String? { get }
-    var subtitle: String? { get }
-    var price: String? { get }
-    var priceSubtitle: String? { get }
-}
-
-protocol ProductInfoView: UIView {
-    init(info: ProductInfo, productsBlock: AdaptyUI.ProductsBlock) throws
-}
-
-struct MockProductInfo: ProductInfo {
+struct ProductInfoModel {
     let id: String
     let title: String?
     let subtitle: String?
@@ -36,17 +24,17 @@ struct MockProductInfo: ProductInfo {
     }
 }
 
-extension MockProductInfo {
-    static func placeholder(id: String, overridenTitle: String?) -> ProductInfo {
-        MockProductInfo(id: id, title: overridenTitle, subtitle: nil, price: nil, priceSubtitle: nil)
+extension ProductInfoModel {
+    static func placeholder(id: String, overridenTitle: String?) -> ProductInfoModel {
+        ProductInfoModel(id: id, title: overridenTitle, subtitle: nil, price: nil, priceSubtitle: nil)
     }
 
     static func build(
         product: AdaptyPaywallProduct,
         introEligibility: AdaptyEligibility,
         overridenTitle: String?
-    ) -> ProductInfo {
-        MockProductInfo(
+    ) -> ProductInfoModel {
+        ProductInfoModel(
             id: product.vendorProductId,
             title: overridenTitle ?? product.localizedTitle,
             subtitle: product.eligibleOfferString(introEligibility: introEligibility),

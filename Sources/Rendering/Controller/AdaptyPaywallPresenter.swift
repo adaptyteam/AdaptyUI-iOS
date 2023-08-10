@@ -22,7 +22,7 @@ class AdaptyPaywallPresenter {
     weak var delegate: AdaptyPaywallPresenterDelegate?
 
     @Published var viewConfiguration: AdaptyUI.LocalizedViewConfiguration
-    @Published var products: [ProductInfo]
+    @Published var products: [ProductInfoModel]
     @Published var selectedProductId: String?
     @Published var productsFetchingInProgress: Bool = false
     @Published var purchaseInProgress: Bool = false
@@ -40,6 +40,7 @@ class AdaptyPaywallPresenter {
                                                   eligibilities: introductoryOffersEligibilities)
         }
     }
+
     var introductoryOffersEligibilities: [String: AdaptyEligibility]? {
         didSet {
             products = Self.generateProductsInfos(paywall: paywall,
@@ -76,21 +77,17 @@ class AdaptyPaywallPresenter {
         paywall: AdaptyPaywall,
         products: [AdaptyPaywallProduct]?,
         eligibilities: [String: AdaptyEligibility]?
-    ) -> [ProductInfo] {
+    ) -> [ProductInfoModel] {
         guard let products = products else {
-            return paywall.vendorProductIds.map { id in
-                MockProductInfo(id: id,
-                                title: nil,
-                                subtitle: nil,
-                                price: nil,
-                                priceSubtitle: nil)
+            return paywall.vendorProductIds.map {
+                ProductInfoModel.placeholder(id: $0, overridenTitle: nil)
             }
         }
 
         return products.map {
-            MockProductInfo.build(product: $0,
-                                  introEligibility: eligibilities?[$0.vendorProductId] ?? .ineligible,
-                                  overridenTitle: nil)
+            ProductInfoModel.build(product: $0,
+                              introEligibility: eligibilities?[$0.vendorProductId] ?? .ineligible,
+                              overridenTitle: nil)
         }
     }
 

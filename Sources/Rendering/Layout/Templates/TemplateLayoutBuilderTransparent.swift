@@ -17,7 +17,7 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
     private let purchaseButton: AdaptyUI.Button
     private let footerBlock: AdaptyUI.FooterBlock?
     private let closeButton: AdaptyUI.Button?
-    private let initialProducts: [ProductInfo]
+    private let initialProducts: [ProductInfoModel]
 
     init(
         background: AdaptyUI.Filling,
@@ -28,7 +28,7 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
         purchaseButton: AdaptyUI.Button,
         footerBlock: AdaptyUI.FooterBlock?,
         closeButton: AdaptyUI.Button?,
-        initialProducts: [ProductInfo]
+        initialProducts: [ProductInfoModel]
     ) {
         self.background = background
         self.contentShape = contentShape
@@ -41,12 +41,12 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
         self.initialProducts = initialProducts
     }
 
-    private weak var activityIndicatorComponentView: AdaptyActivityIndicatorComponentView?
+    private weak var activityIndicatorComponentView: AdaptyActivityIndicatorView?
     private weak var contentViewComponentView: AdaptyBaseContentView?
     private weak var productsComponentView: ProductsComponentView?
     private weak var continueButtonComponentView: AdaptyButtonComponentView?
 
-    var activityIndicator: AdaptyActivityIndicatorComponentView? { activityIndicatorComponentView }
+    var activityIndicator: AdaptyActivityIndicatorView? { activityIndicatorComponentView }
     var productsView: ProductsComponentView? { productsComponentView }
     var continueButton: AdaptyButtonComponentView? { continueButtonComponentView }
 
@@ -135,7 +135,7 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
             layoutCloseButton(closeButtonView, on: view)
         }
         
-        let progressView = AdaptyActivityIndicatorComponentView(backgroundColor: .black.withAlphaComponent(0.6),
+        let progressView = AdaptyActivityIndicatorView(backgroundColor: .black.withAlphaComponent(0.6),
                                                                 indicatorColor: .white)
         layoutProgressView(progressView, on: view)
         activityIndicatorComponentView = progressView

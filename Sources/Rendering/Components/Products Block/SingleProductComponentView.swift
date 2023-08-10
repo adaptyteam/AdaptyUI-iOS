@@ -1,5 +1,5 @@
 //
-//  AdaptySingleProductComponentView.swift
+//  SingleProductComponentView.swift
 //
 //
 //  Created by Alexey Goncharov on 9.8.23..
@@ -8,10 +8,10 @@
 import Adapty
 import UIKit
 
-final class AdaptySingleProductComponentView: UIStackView, ProductsComponentView {
-    var onProductSelected: ((ProductInfo) -> Void)?
+final class SingleProductComponentView: UIStackView, ProductsComponentView {
+    var onProductSelected: ((ProductInfoModel) -> Void)?
 
-    private var product: ProductInfo
+    private var product: ProductInfoModel
     private let productsBlock: AdaptyUI.ProductsBlock
 
     private let productPriceText: AdaptyUI.СompoundText
@@ -20,7 +20,7 @@ final class AdaptySingleProductComponentView: UIStackView, ProductsComponentView
     private let mainProductTagText: AdaptyUI.СompoundText?
 
     init(
-        product: ProductInfo,
+        product: ProductInfoModel,
         productsBlock: AdaptyUI.ProductsBlock
     ) throws {
         guard productsBlock.type == .single else {
@@ -82,7 +82,7 @@ final class AdaptySingleProductComponentView: UIStackView, ProductsComponentView
         self.subtitleLabel = subtitleLabel
     }
 
-    func updateProducts(_ products: [ProductInfo], selectedProductId: String?) {
+    func updateProducts(_ products: [ProductInfoModel], selectedProductId: String?) {
         guard let product = products.first else { return }
 
         let titleAttributedString = NSMutableAttributedString()
@@ -114,10 +114,5 @@ final class AdaptySingleProductComponentView: UIStackView, ProductsComponentView
         }
     }
 
-    func updateIntroEligibilities(_ eligibilities: [String: AdaptyEligibility]?) {
-    }
-
-    func updateSelectedState(_ productId: String?) {
-    }
+    func updateSelectedState(_ productId: String?) { }
 }
-

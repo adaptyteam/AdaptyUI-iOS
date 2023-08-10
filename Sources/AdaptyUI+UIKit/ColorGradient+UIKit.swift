@@ -1,19 +1,15 @@
 //
-//  CAGradientLayer+Extensions.swift
+//  ColorGradient+UIKit.swift
 //
 //
-//  Created by Alexey Goncharov on 29.6.23..
+//  Created by Alexey Goncharov on 10.8.23..
 //
 
 import Adapty
 import UIKit
 
-extension AdaptyUI.Point {
-    var cgPoint: CGPoint { .init(x: x, y: y) }
-}
-
 extension AdaptyUI.ColorGradient.Kind {
-    var type:  CAGradientLayerType {
+    var type: CAGradientLayerType {
         switch self {
         case .conic: return .conic
         case .linear: return .axial

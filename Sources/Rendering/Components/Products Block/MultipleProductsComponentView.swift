@@ -1,5 +1,5 @@
 //
-//  AdaptyMultipleProductsComponentView.swift
+//  MultipleProductsComponentView.swift
 //
 //
 //  Created by Alexey Goncharov on 10.7.23..
@@ -8,23 +8,15 @@
 import Adapty
 import UIKit
 
-protocol ProductsComponentView: UIView {
-    var onProductSelected: ((ProductInfo) -> Void)? { get set }
-
-    func updateProducts(_ products: [ProductInfo], selectedProductId: String?)
-    func updateIntroEligibilities(_ eligibilities: [String: AdaptyEligibility]?)
-    func updateSelectedState(_ productId: String?)
-}
-
-final class AdaptyMultipleProductsComponentView: UIStackView, ProductsComponentView {
-    private var products: [ProductInfo]
+final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
+    private var products: [ProductInfoModel]
     private let productsBlock: AdaptyUI.ProductsBlock
 
-    var onProductSelected: ((ProductInfo) -> Void)?
+    var onProductSelected: ((ProductInfoModel) -> Void)?
 
     init(
         axis: NSLayoutConstraint.Axis,
-        products: [ProductInfo],
+        products: [ProductInfoModel],
         productsBlock: AdaptyUI.ProductsBlock
     ) throws {
         self.products = products
@@ -60,18 +52,18 @@ final class AdaptyMultipleProductsComponentView: UIStackView, ProductsComponentV
         }
     }
 
-    private func populateProductsButtons(_ products: [ProductInfo], selectedId: String) throws {
+    private func populateProductsButtons(_ products: [ProductInfoModel], selectedId: String) throws {
         for product in products {
             let productInfoView: ProductInfoView
 
             switch productsBlock.type {
             case .horizontal:
-                productInfoView = try AdaptyVerticalProductInfoView(
+                productInfoView = try VerticalProductInfoView(
                     info: product,
                     productsBlock: productsBlock
                 )
             default:
-                productInfoView = try AdaptyHorizontalProductInfoView(
+                productInfoView = try HorizontalProductInfoView(
                     info: product,
                     productsBlock: productsBlock
                 )
@@ -132,15 +124,11 @@ final class AdaptyMultipleProductsComponentView: UIStackView, ProductsComponentV
         }
     }
 
-    func updateProducts(_ products: [ProductInfo], selectedProductId: String?) {
+    func updateProducts(_ products: [ProductInfoModel], selectedProductId: String?) {
         self.products = products
 
         cleanupView()
         try? setupView()
-    }
-
-    func updateIntroEligibilities(_ eligibilities: [String: AdaptyEligibility]?) {
-        // TODO: implement
     }
 
     // TODO: why optional?
