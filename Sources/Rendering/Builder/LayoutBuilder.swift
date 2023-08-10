@@ -9,10 +9,15 @@ import Adapty
 import UIKit
 
 protocol LayoutBuilder {
+    var activityIndicator: AdaptyActivityIndicatorComponentView? { get }
     var productsView: ProductsComponentView? { get }
     var continueButton: AdaptyButtonComponentView? { get }
     
     func buildInterface(on view: UIView) throws
     func viewDidLayoutSubviews(_ view: UIView)
-    func onAction(_ callback: @escaping (AdaptyUI.ButtonAction) -> Void)
+    
+    func addListeners(
+        onContinue: @escaping () -> Void,
+        onAction: @escaping (AdaptyUI.ButtonAction?) -> Void
+    )
 }

@@ -91,15 +91,6 @@ public class AdaptyPaywallController: UIViewController {
 
             try layoutBuilder.buildInterface(on: view)
 
-            layoutBuilder.continueButton?.onTap = { [weak self] _ in
-                guard let self = self else { return }
-
-                self.presenter.makePurchase()
-
-                if let delegate = self.delegate, let product = self.presenter.selectedAdaptyProduct {
-                    delegate.paywallController(self, didStartPurchase: product)
-                }
-            }
         } catch {
             if let error = error as? AdaptyUIError {
                 log(.error, "Rendering Error = \(error)")
@@ -111,12 +102,27 @@ public class AdaptyPaywallController: UIViewController {
             }
         }
 
+
         layoutBuilder.productsView?.onProductSelected = { [weak self] product in
             self?.presenter.selectProduct(id: product.id)
         }
-        layoutBuilder.onAction { [weak self] action in
-            self?.handleAction(action)
-        }
+
+        layoutBuilder.addListeners(
+            onContinue: { [weak self] in
+                guard let self = self else { return }
+
+                self.presenter.makePurchase()
+
+                if let delegate = self.delegate, let product = self.presenter.selectedAdaptyProduct {
+                    delegate.paywallController(self, didStartPurchase: product)
+                }
+
+            },
+            onAction: { [weak self] action in
+                guard let action = action else { return }
+                self?.handleAction(action)
+            }
+        )
 
         presenter.logShowPaywall()
         log(.verbose, "viewDidLoad end")
@@ -274,15 +280,15 @@ public class AdaptyPaywallController: UIViewController {
 
     private func updateGlobalLoadingIndicator(restoreInProgress: Bool, animated: Bool) {
         if restoreInProgress {
-            loadingView?.show(animated: animated)
+            layoutBuilder.activityIndicator?.show(animated: animated)
         } else {
-            loadingView?.hide(animated: animated)
+            layoutBuilder.activityIndicator?.hide(animated: animated)
         }
     }
 
     // MARK: - Building
 
-    private var loadingView: AdaptyActivityIndicatorView?
+//    private var loadingView: AdaptyActivityIndicatorComponentView?
 //    private var coverImageGradient: AdaptyGradientViewComponent?
 //    private var closeButton: AdaptyCloseButton?
 //    private var baseStack: UIStackView?
@@ -291,8 +297,6 @@ public class AdaptyPaywallController: UIViewController {
 //    private var serviceButtons: AdaptyServiceButtonsComponent?
 
     private func buildTemplateInterface(reader: AdaptyTemplateReader) throws {
-        view.backgroundColor = try reader.contentBackgroundColor().uiColor
-
         let coverImageView = try AdaptyInterfaceBilder.buildCoverImageView(on: view,
                                                                            reader: reader)
 
@@ -349,12 +353,12 @@ public class AdaptyPaywallController: UIViewController {
 //            onRestore: { [weak self] in self?.presenter.restorePurchases() }
 //        )
 
-        let loadingView = AdaptyInterfaceBilder.buildInProgressView(on: view)
+//        let loadingView = AdaptyInterfaceBilder.buildInProgressView(on: view)
 
 //        self.productsList = productsList
 //        self.continueButton = continueButton
 //        self.serviceButtons = serviceButtons
-        self.loadingView = loadingView
+//        self.loadingView = loadingView
 
 //        if reader.showCloseButton {
 //            closeButton = AdaptyInterfaceBilder.buildCloseButton(on: view) { [weak self] in

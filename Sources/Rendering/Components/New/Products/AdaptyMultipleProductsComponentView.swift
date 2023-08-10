@@ -80,12 +80,12 @@ final class AdaptyMultipleProductsComponentView: UIStackView, ProductsComponentV
             let button = AdaptyButtonComponentView(
                 component: try productsBlock.button,
                 contentView: productInfoView,
-                contentViewMargins: .init(top: 12, left: 20, bottom: 12, right: 20)
+                contentViewMargins: .init(top: 12, left: 20, bottom: 12, right: 20),
+                onTap: { [weak self] _ in
+                    self?.onProductSelected?(product)
+                }
             )
             button.isSelected = product.id == selectedId
-            button.onTap = { [weak self] _ in
-                self?.onProductSelected?(product)
-            }
 
             addArrangedSubview(button)
 

@@ -24,17 +24,18 @@ extension UIEdgeInsets {
 
 final class AdaptyButtonComponentView: UIButton {
     let component: AdaptyUI.Button
-
-    var onTap: ((AdaptyUI.ButtonAction?) -> Void)?
+    let onTap: (AdaptyUI.ButtonAction?) -> Void
 
     private var gradientLayer: CAGradientLayer?
     private var contentView: UIView?
 
     init(component: AdaptyUI.Button,
          contentView: UIView? = nil,
-         contentViewMargins: UIEdgeInsets? = nil) {
+         contentViewMargins: UIEdgeInsets? = nil,
+         onTap: @escaping (AdaptyUI.ButtonAction?) -> Void) {
         self.component = component
-
+        self.onTap = onTap
+        
         super.init(frame: .zero)
 
         translatesAutoresizingMaskIntoConstraints = false
@@ -178,7 +179,7 @@ final class AdaptyButtonComponentView: UIButton {
 
     @objc
     private func buttonDidTouchUp() {
-        onTap?(component.action)
+        onTap(component.action)
     }
     
     func updateInProgress(_ inProgress: Bool) {

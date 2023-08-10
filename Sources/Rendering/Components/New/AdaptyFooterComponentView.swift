@@ -10,9 +10,12 @@ import UIKit
 
 final class AdaptyFooterComponentView: UIStackView {
     let footerBlock: AdaptyUI.FooterBlock
+    let onTap: (AdaptyUI.ButtonAction?) -> Void
 
-    init(footerBlock: AdaptyUI.FooterBlock) throws {
+    init(footerBlock: AdaptyUI.FooterBlock,
+         onTap: @escaping (AdaptyUI.ButtonAction?) -> Void) throws {
         self.footerBlock = footerBlock
+        self.onTap = onTap
 
         super.init(frame: .zero)
 
@@ -27,13 +30,14 @@ final class AdaptyFooterComponentView: UIStackView {
         translatesAutoresizingMaskIntoConstraints = false
         axis = .horizontal
         distribution = .fillEqually
-        
-        for (_, item) in footerBlock.orderedItems {
-            guard case let .button(button) = item else {
-                return
-            }
 
-            let buttonView = AdaptyButtonComponentView(component: button)
+        for (_, item) in footerBlock.orderedItems {
+            guard case let .button(button) = item else { continue }
+
+            let buttonView = AdaptyButtonComponentView(
+                component: button,
+                onTap: { [weak self] action in self?.onTap(action) }
+            )
             addArrangedSubview(buttonView)
         }
     }

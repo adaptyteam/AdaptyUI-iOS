@@ -11,8 +11,8 @@ import UIKit
 struct AdaptyInterfaceBilder { }
 
 extension AdaptyInterfaceBilder {
-    static func buildInProgressView(on superview: UIView) -> AdaptyActivityIndicatorView {
-        let loadingView = AdaptyActivityIndicatorView(backgroundColor: .black.withAlphaComponent(0.6),
+    static func buildInProgressView(on superview: UIView) -> AdaptyActivityIndicatorComponentView {
+        let loadingView = AdaptyActivityIndicatorComponentView(backgroundColor: .black.withAlphaComponent(0.6),
                                                       indicatorColor: .white)
 
         superview.addSubview(loadingView)

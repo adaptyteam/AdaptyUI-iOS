@@ -56,20 +56,30 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         self.initialProducts = initialProducts
     }
 
+    private weak var activityIndicatorComponentView: AdaptyActivityIndicatorComponentView?
     private weak var contentViewComponentView: AdaptyBaseContentView?
     private weak var productsComponentView: ProductsComponentView?
     private weak var continueButtonComponentView: AdaptyButtonComponentView?
 
-    private var onActionCallback: ((AdaptyUI.ButtonAction) -> Void)?
-
+    var activityIndicator: AdaptyActivityIndicatorComponentView? { activityIndicatorComponentView }
     var productsView: ProductsComponentView? { productsComponentView }
     var continueButton: AdaptyButtonComponentView? { continueButtonComponentView }
 
-    func onAction(_ callback: @escaping (AdaptyUI.ButtonAction) -> Void) {
-        onActionCallback = callback
+    private var onContinueCallback: (() -> Void)?
+    private var onActionCallback: ((AdaptyUI.ButtonAction?) -> Void)?
+
+    func addListeners(
+        onContinue: @escaping () -> Void,
+        onAction: @escaping (AdaptyUI.ButtonAction?) -> Void
+    ) {
+        onContinueCallback = onContinue
+        onActionCallback = onAction
     }
 
     func buildInterface(on view: UIView) throws {
+        // TODO: check if it is actual
+//        view.backgroundColor = try reader.contentBackgroundColor().uiColor
+
         let backgroundView = AdaptyBackgroundComponentView(background: contentShape.background)
         layoutBackground(backgroundView, on: view)
 
@@ -133,7 +143,10 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
             continueButtonPlaceholder.heightAnchor.constraint(equalToConstant: 58.0)
         )
 
-        let continueButtonView = AdaptyButtonComponentView(component: purchaseButton)
+        let continueButtonView = AdaptyButtonComponentView(component: purchaseButton) { [weak self] _ in
+            self?.onContinueCallback?()
+        }
+
         layoutContinueButton(continueButtonView,
                              placeholder: continueButtonPlaceholder,
                              on: view)
@@ -142,25 +155,33 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         contentViewComponentView = contentView
 
         if let footerBlock {
-            let footerView = try AdaptyFooterComponentView(footerBlock: footerBlock)
+            let footerView = try AdaptyFooterComponentView(
+                footerBlock: footerBlock,
+                onTap: { [weak self] action in
+                    self?.onActionCallback?(action)
+                }
+            )
             stackView.addArrangedSubview(footerView)
         }
 
         layoutTopGradientView(AdaptyGradientViewComponent(), on: view)
 
         if let closeButton {
-            let closeButtonView = AdaptyButtonComponentView(component: closeButton,
-                                                            contentViewMargins: .closeButtonDefaultMargin)
-            closeButtonView.onTap = { [weak self] _ in
-                self?.onActionCallback?(.close)
-            }
+            let closeButtonView = AdaptyButtonComponentView(
+                component: closeButton,
+                contentViewMargins: .closeButtonDefaultMargin,
+                onTap: { [weak self] _ in
+                    self?.onActionCallback?(.close)
+                }
+            )
 
             layoutCloseButton(closeButtonView, on: view)
         }
-        
-        let progressView = AdaptyActivityIndicatorView(backgroundColor: .black.withAlphaComponent(0.6),
-                                                      indicatorColor: .white)
+
+        let progressView = AdaptyActivityIndicatorComponentView(backgroundColor: .black.withAlphaComponent(0.6),
+                                                                indicatorColor: .white)
         layoutProgressView(progressView, on: view)
+        activityIndicatorComponentView = progressView
     }
 
     func viewDidLayoutSubviews(_ view: UIView) {
@@ -245,7 +266,7 @@ extension LayoutBuilder {
         }
 
         stackView.addArrangedSubview(productsView)
-        
+
         return productsView
     }
 }

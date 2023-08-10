@@ -20,7 +20,7 @@ extension LayoutBuilder {
 }
 
 extension LayoutBuilder {
-    func layoutProgressView(_ view: AdaptyActivityIndicatorView, on superview: UIView) {
+    func layoutProgressView(_ view: AdaptyActivityIndicatorComponentView, on superview: UIView) {
         superview.addSubview(view)
         superview.addConstraints([
             view.topAnchor.constraint(equalTo: superview.topAnchor),
