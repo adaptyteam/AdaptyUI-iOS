@@ -25,18 +25,3 @@ final class AdaptyBaseScrollView: UIScrollView {
         fatalError("init(coder:) has not been implemented")
     }
 }
-
-extension AdaptyInterfaceBilder {
-    static func layoutScrollView(
-        _ scrollView: AdaptyBaseScrollView,
-        on superview: UIView
-    ) {
-        superview.addSubview(scrollView)
-        superview.addConstraints([
-            scrollView.topAnchor.constraint(equalTo: superview.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: superview.bottomAnchor),
-        ])
-    }
-}

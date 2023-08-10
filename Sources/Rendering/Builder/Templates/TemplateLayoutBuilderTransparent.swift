@@ -66,7 +66,7 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
         layoutBackground(backgroundView, on: view)
 
         let scrollView = AdaptyBaseScrollView()
-        AdaptyInterfaceBilder.layoutScrollView(scrollView, on: view)
+        layoutScrollView(scrollView, on: view)
 
         let contentView = AdaptyBaseContentView(
             layout: .transparent,
@@ -99,7 +99,8 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
                                                         initialProducts: initialProducts,
                                                         in: stackView)
 
-        let continueButtonView = AdaptyButtonComponentView(component: purchaseButton) { [weak self] _ in
+        let continueButtonView = AdaptyButtonComponentView(component: purchaseButton,
+                                                           addProgressView: true) { [weak self] _ in
             self?.onContinueCallback?()
         }
         

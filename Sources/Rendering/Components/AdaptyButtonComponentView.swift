@@ -32,10 +32,11 @@ final class AdaptyButtonComponentView: UIButton {
     init(component: AdaptyUI.Button,
          contentView: UIView? = nil,
          contentViewMargins: UIEdgeInsets? = nil,
+         addProgressView: Bool = false,
          onTap: @escaping (AdaptyUI.ButtonAction?) -> Void) {
         self.component = component
         self.onTap = onTap
-        
+
         super.init(frame: .zero)
 
         translatesAutoresizingMaskIntoConstraints = false
@@ -45,8 +46,18 @@ final class AdaptyButtonComponentView: UIButton {
             setupContentView(contentView, contentViewMargins)
         } else if let title = component.normal?.title?.attributedString() {
             setAttributedTitle(title, for: .normal)
+            
             contentEdgeInsets = contentViewMargins ?? .zero
             titleLabel?.numberOfLines = 0
+        }
+
+        if addProgressView,
+            case let .text(text) = component.normal?.title?.items.first(where: {
+            guard case .text = $0 else { return false }
+            return true
+        }) {
+            setAttributedTitle(NSAttributedString(string: ""), for: .disabled)
+            setupActivityIndicator(color: text.fill?.asColor?.uiColor ?? .white)
         }
 
         addTarget(self, action: #selector(buttonDidTouchUp), for: .touchUpInside)
@@ -74,6 +85,23 @@ final class AdaptyButtonComponentView: UIButton {
         ])
 
         contentView = view
+    }
+
+    private weak var progressView: UIActivityIndicatorView?
+
+    private func setupActivityIndicator(color: UIColor) {
+        let progressView = UIActivityIndicatorView(style: .medium)
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        progressView.color = color
+        progressView.isHidden = true
+        addSubview(progressView)
+
+        addConstraints([
+            progressView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            progressView.centerYAnchor.constraint(equalTo: centerYAnchor),
+        ])
+
+        self.progressView = progressView
     }
 
     func updateContent(_ text: AdaptyUI.СompoundText?) {
@@ -181,16 +209,17 @@ final class AdaptyButtonComponentView: UIButton {
     private func buttonDidTouchUp() {
         onTap(component.action)
     }
-    
+
     func updateInProgress(_ inProgress: Bool) {
-        // TODO:
-//        progressView.isHidden = !inProgress
-//        isEnabled = !inProgress
-//
-//        if inProgress {
-//            progressView.startAnimating()
-//        } else {
-//            progressView.stopAnimating()
-//        }
+        guard let progressView = progressView else { return }
+        
+        progressView.isHidden = !inProgress
+        isEnabled = !inProgress
+
+        if inProgress {
+            progressView.startAnimating()
+        } else {
+            progressView.stopAnimating()
+        }
     }
 }

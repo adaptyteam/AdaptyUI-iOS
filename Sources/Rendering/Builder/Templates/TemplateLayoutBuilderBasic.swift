@@ -97,8 +97,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
 
         let scrollView = AdaptyBaseScrollView()
         scrollView.delegate = scrollViewDelegate
-
-        AdaptyInterfaceBilder.layoutScrollView(scrollView, on: view)
+        layoutScrollView(scrollView, on: view)
 
         let contentView = AdaptyBaseContentView(
             layout: .basic(multiplier: coverImageHeightMultilpyer),
@@ -143,7 +142,8 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
             continueButtonPlaceholder.heightAnchor.constraint(equalToConstant: 58.0)
         )
 
-        let continueButtonView = AdaptyButtonComponentView(component: purchaseButton) { [weak self] _ in
+        let continueButtonView = AdaptyButtonComponentView(component: purchaseButton,
+                                                           addProgressView: true) { [weak self] _ in
             self?.onContinueCallback?()
         }
 
