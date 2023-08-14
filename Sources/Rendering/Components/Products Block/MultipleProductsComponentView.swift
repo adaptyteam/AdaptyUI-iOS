@@ -8,6 +8,49 @@
 import Adapty
 import UIKit
 
+extension AdaptyUI {
+    typealias ProductsInfos = [String: ProductInfo]
+
+    struct ProductInfo {
+        let id: String
+        let title: AdaptyUI.СompoundText?
+    }
+}
+
+extension AdaptyUI.LocalizedViewItem {
+    func toProductInfo(id: String) -> AdaptyUI.ProductInfo? {
+        guard
+            case let .object(customObject) = self,
+            customObject.type == "product_info"
+        else { return nil }
+
+        return .init(id: id,
+                     title: customObject.properties["title"]?.asText)
+    }
+
+    var asProductsInfos: AdaptyUI.ProductsInfos? {
+        guard
+            case let .object(customObject) = self,
+            customObject.type == "products_infos"
+        else { return nil }
+
+        var infos = [String: AdaptyUI.ProductInfo]()
+
+        for (key, value) in customObject.properties {
+            guard let productInfo = value.toProductInfo(id: key) else { continue }
+            infos[key] = productInfo
+        }
+
+        return infos
+    }
+}
+
+extension AdaptyUI.ProductsBlock {
+    var productsInfos: AdaptyUI.ProductsInfos? {
+        items["infos"]?.asProductsInfos
+    }
+}
+
 final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
     private var products: [ProductInfoModel]
     private let productsBlock: AdaptyUI.ProductsBlock
@@ -53,6 +96,9 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
     }
 
     private func populateProductsButtons(_ products: [ProductInfoModel], selectedId: String) throws {
+        let productsInfos = productsBlock.productsInfos
+        let a = productsInfos?.first?.value
+
         for product in products {
             let productInfoView: ProductInfoView
 
