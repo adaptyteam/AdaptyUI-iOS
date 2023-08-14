@@ -114,5 +114,5 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
         }
     }
 
-    func updateSelectedState(_ productId: String?) { }
+    func updateSelectedState(_ productId: String) { }
 }

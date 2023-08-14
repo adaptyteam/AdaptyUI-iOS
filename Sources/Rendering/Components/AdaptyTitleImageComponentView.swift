@@ -60,9 +60,8 @@ final class AdaptyTitleImageComponentView: UIImageView {
         }
 
         switch type {
-        case let .rectangle(cornerRadius):
-            // TODO: support corners
-            layer.cornerRadius = cornerRadius.value ?? 0.0
+        case let .rectangle(radius):
+            layer.applyRectangleMask(radius: radius)
         case .circle:
             layer.mask = CAShapeLayer.circleLayer(in: bounds)
             layer.mask?.backgroundColor = UIColor.clear.cgColor

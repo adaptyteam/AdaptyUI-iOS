@@ -173,14 +173,13 @@ public class AdaptyPaywallController: UIViewController {
             .receive(on: RunLoop.main)
             .dropFirst()
             .sink { [weak self] value in
-                self?.updateSelectedProductId(value)
-
                 guard let self = self,
                       let delegate = self.delegate,
                       let product = self.presenter.adaptyProducts?.first(where: { $0.vendorProductId == value }) else {
                     return
                 }
 
+                self.updateSelectedProductId(product.vendorProductId)
                 delegate.paywallController(self, didSelectProduct: product)
             }
             .store(in: &cancellable)
@@ -269,7 +268,7 @@ public class AdaptyPaywallController: UIViewController {
         }
     }
 
-    private func updateSelectedProductId(_ productId: String?) {
+    private func updateSelectedProductId(_ productId: String) {
         layoutBuilder.productsView?.updateSelectedState(productId)
     }
 

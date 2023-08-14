@@ -131,12 +131,8 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
         try? setupView()
     }
 
-    // TODO: why optional?
-    func updateSelectedState(_ productId: String?) {
-        guard
-            let productId = productId,
-            let index = products.firstIndex(where: { $0.id == productId })
-        else {
+    func updateSelectedState(_ productId: String) {
+        guard let index = products.firstIndex(where: { $0.id == productId }) else {
             return
         }
 

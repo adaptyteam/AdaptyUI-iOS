@@ -46,16 +46,16 @@ final class AdaptyButtonComponentView: UIButton {
             setupContentView(contentView, contentViewMargins)
         } else if let title = component.normal?.title?.attributedString() {
             setAttributedTitle(title, for: .normal)
-            
+
             contentEdgeInsets = contentViewMargins ?? .zero
             titleLabel?.numberOfLines = 0
         }
 
         if addProgressView,
-            case let .text(text) = component.normal?.title?.items.first(where: {
-            guard case .text = $0 else { return false }
-            return true
-        }) {
+           case let .text(text) = component.normal?.title?.items.first(where: {
+               guard case .text = $0 else { return false }
+               return true
+           }) {
             setAttributedTitle(NSAttributedString(string: ""), for: .disabled)
             setupActivityIndicator(color: text.fill?.asColor?.uiColor ?? .white)
         }
@@ -186,23 +186,7 @@ final class AdaptyButtonComponentView: UIButton {
     }
 
     private func updateShapeMask(_ type: AdaptyUI.ShapeType?) {
-        guard let type else {
-            backgroundColor = .clear
-            layer.mask = nil
-            return
-        }
-
-        switch type {
-        case let .rectangle(cornerRadius):
-            // TODO: support corners
-            layer.cornerRadius = cornerRadius.value ?? 0.0
-        case .circle:
-            layer.mask = CAShapeLayer.circleLayer(in: bounds)
-            layer.mask?.backgroundColor = UIColor.clear.cgColor
-            break
-        default:
-            break
-        }
+        layer.applyShapeMask(type)
     }
 
     @objc
@@ -212,7 +196,7 @@ final class AdaptyButtonComponentView: UIButton {
 
     func updateInProgress(_ inProgress: Bool) {
         guard let progressView = progressView else { return }
-        
+
         progressView.isHidden = !inProgress
         isEnabled = !inProgress
 

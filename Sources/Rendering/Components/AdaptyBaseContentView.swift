@@ -37,10 +37,8 @@ final class AdaptyBaseContentView: UIView {
 
     private func updateMask() {
         switch shape.type {
-        case let .rectangle(cornerRadius):
-            // TODO: support different corners
-            layer.cornerRadius = cornerRadius.value ?? 0.0
-            layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        case let .rectangle(radius):
+            layer.applyRectangleMask(radius: radius)
         case .curveUp:
             layer.mask = CAShapeLayer.curveUpShapeLayer(in: bounds, curveHeight: Self.curveHeight)
         case .curveDown:
