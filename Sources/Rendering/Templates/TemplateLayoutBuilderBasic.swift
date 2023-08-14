@@ -179,7 +179,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         }
 
         let progressView = AdaptyActivityIndicatorView(backgroundColor: .black.withAlphaComponent(0.6),
-                                                                indicatorColor: .white)
+                                                       indicatorColor: .white)
         layoutProgressView(progressView, on: view)
         activityIndicatorComponentView = progressView
     }
@@ -223,50 +223,5 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
                                                 multiplier: 1.0 - multiplier,
                                                 constant: overlap + 32.0),
         ])
-    }
-}
-
-// TODO: Move out
-extension LayoutBuilder {
-    func layoutTopGradientView(_ gradientView: UIView, on view: UIView) {
-        view.addSubview(gradientView)
-        view.addConstraints([
-            gradientView.topAnchor.constraint(equalTo: view.topAnchor),
-            gradientView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20.0),
-            gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            gradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
-    }
-}
-
-// TODO: Move out
-extension LayoutBuilder {
-    func layoutProductsBlock(_ productsBlock: AdaptyUI.ProductsBlock,
-                             initialProducts: [ProductInfoModel],
-                             in stackView: UIStackView) throws -> ProductsComponentView {
-        guard !initialProducts.isEmpty else {
-            // TODO: change the error
-            throw AdaptyUIError.unsupportedTemplate("test")
-        }
-
-        let productsView: ProductsComponentView
-
-        switch productsBlock.type {
-        case .horizontal:
-            productsView = try MultipleProductsComponentView(axis: .horizontal,
-                                                                   products: initialProducts,
-                                                                   productsBlock: productsBlock)
-        case .vertical:
-            productsView = try MultipleProductsComponentView(axis: .vertical,
-                                                                   products: initialProducts,
-                                                                   productsBlock: productsBlock)
-        case .single:
-            productsView = try SingleProductComponentView(product: initialProducts[0],
-                                                                productsBlock: productsBlock)
-        }
-
-        stackView.addArrangedSubview(productsView)
-
-        return productsView
     }
 }

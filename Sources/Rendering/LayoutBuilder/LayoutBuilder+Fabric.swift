@@ -8,13 +8,6 @@
 import Adapty
 import UIKit
 
-// TODO: move out
-extension AdaptyUI.LocalizedViewConfiguration {
-    func extractDefaultStyle() throws -> AdaptyUI.LocalizedViewStyle {
-        try extractStyle("default")
-    }
-}
-
 struct TemplateLayoutBuilderFabric {
     static func createBasic(config: AdaptyUI.LocalizedViewConfiguration,
                             products: [ProductInfoModel]) throws -> TemplateLayoutBuilderBasic {
