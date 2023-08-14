@@ -12,6 +12,7 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
     var onProductSelected: ((ProductInfoModel) -> Void)?
 
     private var product: ProductInfoModel
+    private let productInfo: AdaptyUI.ProductInfo
     private let productsBlock: AdaptyUI.ProductsBlock
 
     private let productPriceText: AdaptyUI.СompoundText
@@ -28,6 +29,13 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
         }
 
         self.product = product
+
+        guard let productsInfos = productsBlock.productsInfos,
+              let productInfo = productsInfos[product.id] else {
+            throw AdaptyUIError.wrongComponentType("products_infos")
+        }
+
+        self.productInfo = productInfo
         self.productsBlock = productsBlock
 
         productPriceText = try productsBlock.productPrice
@@ -85,22 +93,8 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
     func updateProducts(_ products: [ProductInfoModel], selectedProductId: String?) {
         guard let product = products.first else { return }
 
-        let titleAttributedString = NSMutableAttributedString()
-
-        if let price = product.price {
-            titleAttributedString.append(
-                price.attributedString(using: productPriceText)
-            )
-        }
-
-        if let title = product.title {
-            titleAttributedString.append(
-                (" / " + title).attributedString(using: productTitleText)
-            )
-        }
-
-        if titleAttributedString.length > 0 {
-            titleLabel.attributedText = titleAttributedString
+        if let attributedString = productInfo.title?.attributedString(tagConverter: product.tagConverter) {
+            titleLabel.attributedText = attributedString
             titleLabel.isHidden = false
         } else {
             titleLabel.isHidden = true
@@ -115,4 +109,28 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
     }
 
     func updateSelectedState(_ productId: String) { }
+}
+
+extension ProductInfoModel {
+    func tagConverter(_ tagString: String) -> String? {
+        guard let tag = tagString.asTag else { return nil }
+        switch tag {
+        case .price: return price
+        }
+    }
+}
+
+extension AdaptyUI.Text {
+    enum Tag: String {
+        case price = "PRICE"
+    }
+}
+
+extension String {
+    var asTag: AdaptyUI.Text.Tag? {
+        guard hasPrefix("</") && hasSuffix("/>") else { return nil }
+        let tagString = replacingOccurrences(of: "</", with: "")
+            .replacingOccurrences(of: "/>", with: "")
+        return AdaptyUI.Text.Tag(rawValue: tagString)
+    }
 }

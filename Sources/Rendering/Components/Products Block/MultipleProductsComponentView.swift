@@ -85,6 +85,8 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
         let selectedId = products[productsBlock.mainProductIndex].id
         try populateProductsButtons(products, selectedId: selectedId)
     }
+    
+    private weak var tagLabel: AdaptyInsetLabel?
 
     private func cleanupView() {
         let views = arrangedSubviews
@@ -93,13 +95,15 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
             removeArrangedSubview(view)
             view.removeFromSuperview()
         }
+        
+        tagLabel?.removeFromSuperview()
     }
 
     private func populateProductsButtons(_ products: [ProductInfoModel], selectedId: String) throws {
-        let productsInfos = productsBlock.productsInfos
-        let a = productsInfos?.first?.value
+//        let productsInfos = productsBlock.productsInfos
 
         for product in products {
+            
             let productInfoView: ProductInfoView
 
             switch productsBlock.type {
@@ -167,6 +171,8 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
                 tagLabel.centerYAnchor.constraint(equalTo: mainProductView.topAnchor),
                 tagLabel.heightAnchor.constraint(equalToConstant: 20.0),
             ])
+            
+            self.tagLabel = tagLabel
         }
     }
 

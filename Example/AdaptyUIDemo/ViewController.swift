@@ -167,6 +167,8 @@ extension ViewController: AdaptyPaywallControllerDelegate {
     public func paywallController(_ controller: AdaptyPaywallController,
                                   didFailRenderingWith error: AdaptyError) {
         print("#ExampleUI# didFailRenderingWith \(error)")
+        
+        controller.dismiss(animated: true)
     }
 
     public func paywallController(_ controller: AdaptyPaywallController,

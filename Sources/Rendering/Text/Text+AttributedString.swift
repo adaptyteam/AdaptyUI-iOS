@@ -82,9 +82,10 @@ extension AdaptyUI.Text {
 
     func attributedString(
         paragraph: AdaptyUI.Text.ParagraphStyle,
+        kern: CGFloat?,
         trailingPadding: CGFloat?
     ) -> NSAttributedString? {
-        value?.attributedString(using: self, paragraph: paragraph, trailingPadding: trailingPadding)
+        value?.attributedString(using: self, paragraph: paragraph, kern: kern, trailingPadding: trailingPadding)
     }
 }
 
@@ -157,17 +158,29 @@ extension AdaptyUI.Text.Item {
     func attributedString(
         bulletSpace: Double?,
         neighbourItemFont: AdaptyUI.Font?,
-        paragraph: AdaptyUI.Text.ParagraphStyle
+        paragraph: AdaptyUI.Text.ParagraphStyle,
+        kern: CGFloat?,
+        tagConverter: ((String) -> String?)?
     ) -> NSAttributedString? {
         switch self {
         case let .text(text):
-            return text.attributedString(
-                paragraph: paragraph,
-                trailingPadding: nil
-            )
+            guard let initialValue = text.value,
+                  let convertedValue = tagConverter?(initialValue) else {
+                return text.attributedString(
+                    paragraph: paragraph,
+                    kern: kern,
+                    trailingPadding: nil
+                )
+            }
+
+            return convertedValue.attributedString(using: text,
+                                                   paragraph: paragraph,
+                                                   kern: kern,
+                                                   trailingPadding: nil)
         case let .textBullet(text):
             return text.attributedString(
                 paragraph: paragraph,
+                kern: kern,
                 trailingPadding: (bulletSpace ?? 0.0) - text.calculatedWidth()
             )
         case .newline:
@@ -193,21 +206,25 @@ extension AdaptyUI.Text.Item {
 }
 
 extension String {
-    func attributedString(using text: AdaptyUI.СompoundText,
-                          paragraph: AdaptyUI.Text.ParagraphStyle = .init()) -> NSAttributedString {
+    func attributedString(
+        using text: AdaptyUI.СompoundText,
+        paragraph: AdaptyUI.Text.ParagraphStyle = .init(),
+        kern: CGFloat? = nil
+    ) -> NSAttributedString {
         guard case let .text(text) = text.items.first else { return NSAttributedString(string: self) }
-        return attributedString(using: text, paragraph: paragraph, trailingPadding: nil)
+        return attributedString(using: text, paragraph: paragraph, kern: kern, trailingPadding: nil)
     }
 
     func attributedString(
         using text: AdaptyUI.Text,
         paragraph: AdaptyUI.Text.ParagraphStyle,
+        kern: CGFloat?,
         trailingPadding: CGFloat?
     ) -> NSAttributedString {
         let result = NSMutableAttributedString()
         result.append(NSAttributedString(string: self))
 
-        if let trailingPadding, trailingPadding > 0.0 {
+        if let trailingPadding = trailingPadding, trailingPadding > 0.0 {
             let padding = NSTextAttachment()
             padding.bounds = CGRect(x: 0, y: 0, width: trailingPadding, height: 0)
             result.append(NSAttributedString(attachment: padding))
@@ -221,18 +238,22 @@ extension String {
             NSAttributedString.Key.font: text.uiFont ?? .systemFont(ofSize: 15),
         ], range: NSRange(location: 0, length: result.length))
 
+        if let kern = kern {
+            result.addAttributes([
+                NSAttributedString.Key.kern: kern,
+            ], range: NSRange(location: 0, length: result.length))
+        }
+
         return result
     }
 }
 
 extension AdaptyUI.СompoundText {
     func attributedString(
+        paragraph: AdaptyUI.Text.ParagraphStyle = .init(),
         kern: CGFloat? = nil,
-        paragraph: AdaptyUI.Text.ParagraphStyle = .init()
+        tagConverter: ((String) -> String?)? = nil
     ) -> NSAttributedString {
-        // TODO: implement Kern
-//        NSAttributedString.Key.kern: 0.2,
-        
         let result = NSMutableAttributedString()
 
         for i in 0 ..< items.count {
@@ -247,7 +268,9 @@ extension AdaptyUI.СompoundText {
                 bulletSpace: bulletSpace,
                 neighbourItemFont: nextItem?.font ?? previousItem?.font,
                 paragraph: paragraph.copyWith(alignment: neighbourAlign?.textAlignment,
-                                              headIndent: paragraph.headIndent + CGFloat(bulletSpace ?? 0.0))
+                                              headIndent: paragraph.headIndent + CGFloat(bulletSpace ?? 0.0)),
+                kern: kern,
+                tagConverter: tagConverter
             ) {
                 if i > 0 && item.isBullet && !(previousItem?.isNewline ?? true) {
                     result.append(NSAttributedString(string: "\n"))
