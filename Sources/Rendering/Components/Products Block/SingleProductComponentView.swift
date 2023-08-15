@@ -110,27 +110,3 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
 
     func updateSelectedState(_ productId: String) { }
 }
-
-extension ProductInfoModel {
-    func tagConverter(_ tagString: String) -> String? {
-        guard let tag = tagString.asTag else { return nil }
-        switch tag {
-        case .price: return price
-        }
-    }
-}
-
-extension AdaptyUI.Text {
-    enum Tag: String {
-        case price = "PRICE"
-    }
-}
-
-extension String {
-    var asTag: AdaptyUI.Text.Tag? {
-        guard hasPrefix("</") && hasSuffix("/>") else { return nil }
-        let tagString = replacingOccurrences(of: "</", with: "")
-            .replacingOccurrences(of: "/>", with: "")
-        return AdaptyUI.Text.Tag(rawValue: tagString)
-    }
-}

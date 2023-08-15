@@ -43,3 +43,13 @@ extension ProductInfoModel {
         )
     }
 }
+
+extension ProductInfoModel {
+    var tagConverter: AdaptyUI.Text.ProductTagConverter {
+        { tag in
+            switch tag {
+            case .price: return price
+            }
+        }
+    }
+}
