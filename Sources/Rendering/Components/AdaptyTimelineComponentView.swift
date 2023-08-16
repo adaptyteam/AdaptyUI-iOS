@@ -10,7 +10,7 @@ import UIKit
 
 extension AdaptyUI {
     struct TimelineEntry {
-        let text: AdaptyUI.СompoundText
+        let text: AdaptyUI.CompoundText
         let image: AdaptyUI.Image
         let gradient: AdaptyUI.ColorGradient
     }

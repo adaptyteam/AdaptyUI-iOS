@@ -8,12 +8,21 @@
 import Adapty
 import UIKit
 
+// TODO: move out
 extension AdaptyUI {
     typealias ProductsInfos = [String: ProductInfo]
 
     struct ProductInfo {
         let id: String
-        let title: AdaptyUI.СompoundText?
+        let title: AdaptyUI.CompoundText?
+
+        let subtitle: AdaptyUI.CompoundText?
+        let subtitlePayAsYouGo: AdaptyUI.CompoundText?
+        let subtitlePayUpFront: AdaptyUI.CompoundText?
+        let subtitleFreeTrial: AdaptyUI.CompoundText?
+
+        let secondTitle: AdaptyUI.CompoundText?
+        let secondSubitle: AdaptyUI.CompoundText?
     }
 }
 
@@ -24,8 +33,16 @@ extension AdaptyUI.LocalizedViewItem {
             customObject.type == "product_info"
         else { return nil }
 
-        return .init(id: id,
-                     title: customObject.properties["title"]?.asText)
+        return .init(
+            id: id,
+            title: customObject.properties["title"]?.asText,
+            subtitle: customObject.properties["subtitle"]?.asText,
+            subtitlePayAsYouGo: customObject.properties["subtitle_payasyougo"]?.asText,
+            subtitlePayUpFront: customObject.properties["subtitle_payupfront"]?.asText,
+            subtitleFreeTrial: customObject.properties["subtitle_freetrial"]?.asText,
+            secondTitle: customObject.properties["second_title"]?.asText,
+            secondSubitle: customObject.properties["second_subtitle"]?.asText
+        )
     }
 
     var asProductsInfos: AdaptyUI.ProductsInfos? {
@@ -42,12 +59,6 @@ extension AdaptyUI.LocalizedViewItem {
         }
 
         return infos
-    }
-}
-
-extension AdaptyUI.ProductsBlock {
-    var productsInfos: AdaptyUI.ProductsInfos? {
-        items["infos"]?.asProductsInfos
     }
 }
 
@@ -84,9 +95,10 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
 
         let selectedId = products[productsBlock.mainProductIndex].id
         try populateProductsButtons(products, selectedId: selectedId)
+        try renderMainProductTag()
     }
-    
-    private weak var tagLabel: AdaptyInsetLabel?
+
+    private weak var tagView: ProductBadgeView?
 
     private func cleanupView() {
         let views = arrangedSubviews
@@ -95,30 +107,27 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
             removeArrangedSubview(view)
             view.removeFromSuperview()
         }
-        
-        tagLabel?.removeFromSuperview()
+
+        tagView?.removeFromSuperview()
     }
 
     private func populateProductsButtons(_ products: [ProductInfoModel], selectedId: String) throws {
-//        let productsInfos = productsBlock.productsInfos
-
+        let productsInfos = try productsBlock.productsInfos
+        
         for product in products {
+            guard let productInfo = productsInfos[product.id] else {
+                throw AdaptyUIError.componentNotFound("\(product.id):product_info")
+            }
             
             let productInfoView: ProductInfoView
-
+            
             switch productsBlock.type {
             case .horizontal:
-                productInfoView = try VerticalProductInfoView(
-                    info: product,
-                    productsBlock: productsBlock
-                )
+                productInfoView = try VerticalProductInfoView(product: product, info: productInfo)
             default:
-                productInfoView = try HorizontalProductInfoView(
-                    info: product,
-                    productsBlock: productsBlock
-                )
+                productInfoView = try HorizontalProductInfoView(product: product, info: productInfo)
             }
-
+            
             let button = AdaptyButtonComponentView(
                 component: try productsBlock.button,
                 contentView: productInfoView,
@@ -128,9 +137,9 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
                 }
             )
             button.isSelected = product.id == selectedId
-
+            
             addArrangedSubview(button)
-
+            
             switch productsBlock.type {
             case .horizontal:
                 addConstraint(button.heightAnchor.constraint(equalToConstant: 128.0))
@@ -138,42 +147,36 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
                 addConstraint(button.heightAnchor.constraint(equalToConstant: 64.0))
             }
         }
+    }
+    
+    private func renderMainProductTag() throws {
+        guard let tagText = productsBlock.mainProductTagText else { return }
 
-        if let tagText = productsBlock.mainProductTagText {
-            let index = productsBlock.mainProductIndex < arrangedSubviews.count ? productsBlock.mainProductIndex : 0
-            let mainProductView = arrangedSubviews[index]
+        let index = productsBlock.mainProductIndex < arrangedSubviews.count ? productsBlock.mainProductIndex : 0
+        let mainProductView = arrangedSubviews[index]
 
-            let tagLabel = AdaptyInsetLabel()
+        let tagView = try ProductBadgeView(text: tagText,
+                                           shape: productsBlock.mainProductTagShape)
 
-            tagLabel.translatesAutoresizingMaskIntoConstraints = false
-            tagLabel.insets = UIEdgeInsets(top: 0.0, left: 8.0, bottom: 0.0, right: 8.0)
-            tagLabel.layer.cornerRadius = 10.0
-            tagLabel.layer.masksToBounds = true
+        addSubview(tagView)
 
-            tagLabel.backgroundColor = productsBlock.mainProductTagBackground?.uiColor
-            tagLabel.attributedText = tagText.attributedString(kern: 0.2)
-
-            addSubview(tagLabel)
-
-            switch productsBlock.type {
-            case .horizontal:
-                addConstraints([
-                    tagLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-                ])
-            default:
-
-                addConstraints([
-                    tagLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8.0),
-                ])
-            }
-
+        switch productsBlock.type {
+        case .horizontal:
             addConstraints([
-                tagLabel.centerYAnchor.constraint(equalTo: mainProductView.topAnchor),
-                tagLabel.heightAnchor.constraint(equalToConstant: 20.0),
+                tagView.centerXAnchor.constraint(equalTo: mainProductView.centerXAnchor),
             ])
-            
-            self.tagLabel = tagLabel
+        default:
+            addConstraints([
+                tagView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8.0),
+            ])
         }
+
+        addConstraints([
+            tagView.centerYAnchor.constraint(equalTo: mainProductView.topAnchor),
+            tagView.heightAnchor.constraint(equalToConstant: 20.0),
+        ])
+
+        self.tagView = tagView
     }
 
     func updateProducts(_ products: [ProductInfoModel], selectedProductId: String?) {

@@ -64,8 +64,6 @@ class AdaptyPaywallPresenter {
         self.logId = logId
         self.paywall = paywall
         self.viewConfiguration = viewConfiguration
-
-        // TODO: pass overridenTitle
         self.products = Self.generateProductsInfos(paywall: paywall,
                                                    products: products,
                                                    eligibilities: nil)
@@ -79,15 +77,12 @@ class AdaptyPaywallPresenter {
         eligibilities: [String: AdaptyEligibility]?
     ) -> [ProductInfoModel] {
         guard let products = products else {
-            return paywall.vendorProductIds.map {
-                ProductInfoModel.placeholder(id: $0, overridenTitle: nil)
-            }
+            return paywall.vendorProductIds.map { EmptyProductInfo(id: $0) }
         }
 
         return products.map {
-            ProductInfoModel.build(product: $0,
-                              introEligibility: eligibilities?[$0.vendorProductId] ?? .ineligible,
-                              overridenTitle: nil)
+            RealProductInfo(product: $0,
+                            introEligibility: eligibilities?[$0.vendorProductId] ?? .ineligible)
         }
     }
 

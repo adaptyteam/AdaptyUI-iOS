@@ -22,7 +22,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     private let coverImage: AdaptyUI.Image
     private let coverImageHeightMultilpyer: CGFloat
     private let contentShape: AdaptyUI.Shape
-    private let titleRows: AdaptyUI.СompoundText?
+    private let titleRows: AdaptyUI.CompoundText?
     private let featuresBlock: AdaptyUI.FeaturesBlock?
     private let productsBlock: AdaptyUI.ProductsBlock
     private let purchaseButton: AdaptyUI.Button
@@ -36,7 +36,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         coverImage: AdaptyUI.Image,
         coverImageHeightMultilpyer: CGFloat,
         contentShape: AdaptyUI.Shape,
-        titleRows: AdaptyUI.СompoundText?,
+        titleRows: AdaptyUI.CompoundText?,
         featuresBlock: AdaptyUI.FeaturesBlock?,
         productsBlock: AdaptyUI.ProductsBlock,
         purchaseButton: AdaptyUI.Button,

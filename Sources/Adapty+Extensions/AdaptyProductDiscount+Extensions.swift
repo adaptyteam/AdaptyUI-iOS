@@ -10,6 +10,7 @@ import Foundation
 
 extension AdaptyProductDiscount {
     // TODO: discuss localization
+    @available(*, deprecated)
     func localizedDescriptionString() -> String? {
         switch paymentMode {
         case .payAsYouGo:

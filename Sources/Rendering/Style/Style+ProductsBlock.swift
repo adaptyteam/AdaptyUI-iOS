@@ -1,6 +1,6 @@
 //
 //  Style+ProductsBlock.swift
-//  
+//
 //
 //  Created by Alexey Goncharov on 14.8.23..
 //
@@ -16,16 +16,26 @@ extension AdaptyUI.ProductsBlock {
             return result
         }
     }
-
-    var mainProductTagBackground: AdaptyUI.Color? {
-        items["main_product_tag_background"]?.asColor
+    
+    var productsInfos: AdaptyUI.ProductsInfos {
+        get throws {
+            guard let result = items["infos"]?.asProductsInfos else {
+                throw AdaptyUIError.componentNotFound("infos")
+            }
+            return result
+        }
     }
 
-    var mainProductTagText: AdaptyUI.СompoundText? {
+    var mainProductTagShape: AdaptyUI.Shape? {
+        items["main_product_tag_shape"]?.asShape
+    }
+
+    var mainProductTagText: AdaptyUI.CompoundText? {
         items["main_product_tag_text"]?.asText
     }
 
-    var productTitle: AdaptyUI.СompoundText {
+    // TODO: remove
+    var productTitle: AdaptyUI.CompoundText {
         get throws {
             guard let result = items["product_title"]?.asText else {
                 throw AdaptyUIError.componentNotFound("product_title")
@@ -34,7 +44,8 @@ extension AdaptyUI.ProductsBlock {
         }
     }
 
-    var productOffer: AdaptyUI.СompoundText {
+    // TODO: remove
+    var productOffer: AdaptyUI.CompoundText {
         get throws {
             guard let result = items["product_offer"]?.asText else {
                 throw AdaptyUIError.componentNotFound("product_offer")
@@ -43,7 +54,8 @@ extension AdaptyUI.ProductsBlock {
         }
     }
 
-    var productPrice: AdaptyUI.СompoundText {
+    // TODO: remove
+    var productPrice: AdaptyUI.CompoundText {
         get throws {
             guard let result = items["product_price"]?.asText else {
                 throw AdaptyUIError.componentNotFound("product_price")
@@ -52,7 +64,8 @@ extension AdaptyUI.ProductsBlock {
         }
     }
 
-    var productPriceCalculated: AdaptyUI.СompoundText {
+    // TODO: remove
+    var productPriceCalculated: AdaptyUI.CompoundText {
         get throws {
             guard let result = items["product_price_calculated"]?.asText else {
                 throw AdaptyUIError.componentNotFound("product_price_calculated")

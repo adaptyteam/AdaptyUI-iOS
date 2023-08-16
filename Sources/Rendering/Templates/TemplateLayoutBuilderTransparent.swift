@@ -11,7 +11,7 @@ import UIKit
 class TemplateLayoutBuilderTransparent: LayoutBuilder {
     private let background: AdaptyUI.Filling
     private let contentShape: AdaptyUI.Shape
-    private let titleRows: AdaptyUI.СompoundText?
+    private let titleRows: AdaptyUI.CompoundText?
     private let featuresBlock: AdaptyUI.FeaturesBlock?
     private let productsBlock: AdaptyUI.ProductsBlock
     private let purchaseButton: AdaptyUI.Button
@@ -22,7 +22,7 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
     init(
         background: AdaptyUI.Filling,
         contentShape: AdaptyUI.Shape,
-        titleRows: AdaptyUI.СompoundText?,
+        titleRows: AdaptyUI.CompoundText?,
         featuresBlock: AdaptyUI.FeaturesBlock?,
         productsBlock: AdaptyUI.ProductsBlock,
         purchaseButton: AdaptyUI.Button,

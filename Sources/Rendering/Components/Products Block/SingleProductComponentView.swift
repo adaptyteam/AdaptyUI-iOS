@@ -12,13 +12,7 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
     var onProductSelected: ((ProductInfoModel) -> Void)?
 
     private var product: ProductInfoModel
-    private let productInfo: AdaptyUI.ProductInfo
-    private let productsBlock: AdaptyUI.ProductsBlock
-
-    private let productPriceText: AdaptyUI.СompoundText
-    private let productTitleText: AdaptyUI.СompoundText
-    private let productOfferText: AdaptyUI.СompoundText
-    private let mainProductTagText: AdaptyUI.СompoundText?
+    private let info: AdaptyUI.ProductInfo
 
     init(
         product: ProductInfoModel,
@@ -30,18 +24,13 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
 
         self.product = product
 
-        guard let productsInfos = productsBlock.productsInfos,
-              let productInfo = productsInfos[product.id] else {
-            throw AdaptyUIError.wrongComponentType("products_infos")
+        let productsInfos = try productsBlock.productsInfos
+
+        guard let productInfo = productsInfos[product.id] else {
+            throw AdaptyUIError.componentNotFound("\(product.id):product_info")
         }
 
-        self.productInfo = productInfo
-        self.productsBlock = productsBlock
-
-        productPriceText = try productsBlock.productPrice
-        productTitleText = try productsBlock.productTitle
-        productOfferText = try productsBlock.productOffer
-        mainProductTagText = productsBlock.mainProductTagText
+        info = productInfo
 
         super.init(frame: .zero)
 
@@ -56,6 +45,7 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
 
     private weak var titleLabel: UILabel!
     private weak var subtitleLabel: UILabel!
+    private weak var descriptionLabel: UILabel!
 
     private func setupView() throws {
         translatesAutoresizingMaskIntoConstraints = false
@@ -72,11 +62,6 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
 
         let descriptionLabel = UILabel()
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        if let text = mainProductTagText {
-            descriptionLabel.attributedText = text.attributedString()
-        } else {
-            descriptionLabel.isHidden = true
-        }
 
         let bottomStackView = UIStackView(arrangedSubviews: [subtitleLabel, descriptionLabel])
         bottomStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -88,23 +73,36 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
 
         self.titleLabel = titleLabel
         self.subtitleLabel = subtitleLabel
+        self.descriptionLabel = descriptionLabel
     }
 
     func updateProducts(_ products: [ProductInfoModel], selectedProductId: String?) {
         guard let product = products.first else { return }
+        let tagConverter = product.tagConverter
 
-        if let attributedString = productInfo.title?.attributedString(tagConverter: product.tagConverter) {
-            titleLabel.attributedText = attributedString
+        if let title = info.title?.attributedString(tagConverter: tagConverter) {
+            titleLabel.attributedText = title
             titleLabel.isHidden = false
         } else {
             titleLabel.isHidden = true
         }
 
-        if let subtitle = product.subtitle, !subtitle.isEmpty {
-            subtitleLabel.attributedText = subtitle.attributedString(using: productOfferText)
-            subtitleLabel.isHidden = false
+        switch product.eligibleOffer?.paymentMode {
+        case .payAsYouGo:
+            subtitleLabel.attributedText = info.subtitlePayAsYouGo?.attributedString(tagConverter: tagConverter)
+        case .payUpFront:
+            subtitleLabel.attributedText = info.subtitlePayUpFront?.attributedString(tagConverter: tagConverter)
+        case .freeTrial:
+            subtitleLabel.attributedText = info.subtitleFreeTrial?.attributedString(tagConverter: tagConverter)
+        default:
+            subtitleLabel.attributedText = info.subtitle?.attributedString(tagConverter: tagConverter)
+        }
+
+        if let secondTitle = info.secondTitle?.attributedString(tagConverter: tagConverter) {
+            descriptionLabel.attributedText = secondTitle
+            descriptionLabel.isHidden = false
         } else {
-            subtitleLabel.isHidden = true
+            descriptionLabel.isHidden = true
         }
     }
 

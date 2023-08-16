@@ -20,7 +20,7 @@ public class AdaptyPaywallController: UIViewController {
 
     private let productsTitlesResolver: (AdaptyProduct) -> String
     private let scrollViewDelegate = AdaptyCoverImageScrollDelegate()
-    private var layoutBuilder: LayoutBuilder!
+    private var layoutBuilder: LayoutBuilder?
     private let presenter: AdaptyPaywallPresenter
     private var cancellable = Set<AnyCancellable>()
 
@@ -82,47 +82,8 @@ public class AdaptyPaywallController: UIViewController {
 
         subscribeForDataChange()
         subscribeForEvents()
-
-        do {
-            layoutBuilder = try TemplateLayoutBuilderFabric.createLayoutFromConfiguration(
-                presenter.viewConfiguration,
-                products: presenter.products
-            )
-
-            try layoutBuilder.buildInterface(on: view)
-
-        } catch {
-            if let error = error as? AdaptyUIError {
-                log(.error, "Rendering Error = \(error)")
-                delegate?.paywallController(self, didFailRenderingWith: AdaptyError(error))
-            } else {
-                log(.error, "Unknown Rendering Error = \(error)")
-                let adaptyError = AdaptyError(AdaptyUIError.rendering(error))
-                delegate?.paywallController(self, didFailRenderingWith: adaptyError)
-            }
-        }
-
-
-        layoutBuilder.productsView?.onProductSelected = { [weak self] product in
-            self?.presenter.selectProduct(id: product.id)
-        }
-
-        layoutBuilder.addListeners(
-            onContinue: { [weak self] in
-                guard let self = self else { return }
-
-                self.presenter.makePurchase()
-
-                if let delegate = self.delegate, let product = self.presenter.selectedAdaptyProduct {
-                    delegate.paywallController(self, didStartPurchase: product)
-                }
-
-            },
-            onAction: { [weak self] action in
-                guard let action = action else { return }
-                self?.handleAction(action)
-            }
-        )
+        buildInterface()
+        subscribeForActions()
 
         presenter.logShowPaywall()
         log(.verbose, "viewDidLoad end")
@@ -138,6 +99,29 @@ public class AdaptyPaywallController: UIViewController {
         super.viewDidDisappear(animated)
 
         log(.verbose, "viewDidDisappear")
+    }
+
+    private func buildInterface() {
+        do {
+            layoutBuilder = try TemplateLayoutBuilderFabric.createLayoutFromConfiguration(
+                presenter.viewConfiguration,
+                products: presenter.products
+            )
+
+            try layoutBuilder?.buildInterface(on: view)
+
+        } catch {
+            if let error = error as? AdaptyUIError {
+                log(.error, "Rendering Error = \(error)")
+                delegate?.paywallController(self, didFailRenderingWith: AdaptyError(error))
+            } else {
+                log(.error, "Unknown Rendering Error = \(error)")
+                let adaptyError = AdaptyError(AdaptyUIError.rendering(error))
+                delegate?.paywallController(self, didFailRenderingWith: adaptyError)
+            }
+
+            return
+        }
     }
 
     private func handleAction(_ action: AdaptyUI.ButtonAction) {
@@ -165,7 +149,7 @@ public class AdaptyPaywallController: UIViewController {
             .sink { [weak self] value in
                 guard let self = self else { return }
 
-                self.layoutBuilder.productsView?.updateProducts(value, selectedProductId: self.presenter.selectedProductId)
+                self.layoutBuilder?.productsView?.updateProducts(value, selectedProductId: self.presenter.selectedProductId)
             }
             .store(in: &cancellable)
 
@@ -207,6 +191,29 @@ public class AdaptyPaywallController: UIViewController {
         presenter.onRestore = { [weak self] result in
             self?.handleRestoreResult(result)
         }
+    }
+
+    private func subscribeForActions() {
+        layoutBuilder?.productsView?.onProductSelected = { [weak self] product in
+            self?.presenter.selectProduct(id: product.id)
+        }
+
+        layoutBuilder?.addListeners(
+            onContinue: { [weak self] in
+                guard let self = self else { return }
+
+                self.presenter.makePurchase()
+
+                if let delegate = self.delegate, let product = self.presenter.selectedAdaptyProduct {
+                    delegate.paywallController(self, didStartPurchase: product)
+                }
+
+            },
+            onAction: { [weak self] action in
+                guard let action = action else { return }
+                self?.handleAction(action)
+            }
+        )
     }
 
     private func handlePurchaseResult(_ result: AdaptyResult<AdaptyPurchasedInfo>,
@@ -269,19 +276,19 @@ public class AdaptyPaywallController: UIViewController {
     }
 
     private func updateSelectedProductId(_ productId: String) {
-        layoutBuilder.productsView?.updateSelectedState(productId)
+        layoutBuilder?.productsView?.updateSelectedState(productId)
     }
 
     private func updatePurchaseInProgress(_ inProgress: Bool) {
-        layoutBuilder.productsView?.isUserInteractionEnabled = !inProgress
-        layoutBuilder.continueButton?.updateInProgress(inProgress)
+        layoutBuilder?.productsView?.isUserInteractionEnabled = !inProgress
+        layoutBuilder?.continueButton?.updateInProgress(inProgress)
     }
 
     private func updateGlobalLoadingIndicator(restoreInProgress: Bool, animated: Bool) {
         if restoreInProgress {
-            layoutBuilder.activityIndicator?.show(animated: animated)
+            layoutBuilder?.activityIndicator?.show(animated: animated)
         } else {
-            layoutBuilder.activityIndicator?.hide(animated: animated)
+            layoutBuilder?.activityIndicator?.hide(animated: animated)
         }
     }
 }

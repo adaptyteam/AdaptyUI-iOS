@@ -209,7 +209,7 @@ extension AdaptyUI.Text.Item {
 
 extension String {
     func attributedString(
-        using text: AdaptyUI.СompoundText,
+        using text: AdaptyUI.CompoundText,
         paragraph: AdaptyUI.Text.ParagraphStyle = .init(),
         kern: CGFloat? = nil
     ) -> NSAttributedString {
@@ -218,7 +218,7 @@ extension String {
     }
 
     func attributedString(
-        using text: AdaptyUI.Text,
+        using text: AdaptyUI.Text, // TODO: maybe remove?
         paragraph: AdaptyUI.Text.ParagraphStyle,
         kern: CGFloat?,
         trailingPadding: CGFloat?
@@ -250,7 +250,7 @@ extension String {
     }
 }
 
-extension AdaptyUI.СompoundText {
+extension AdaptyUI.CompoundText {
     func attributedString(
         paragraph: AdaptyUI.Text.ParagraphStyle = .init(),
         kern: CGFloat? = nil,

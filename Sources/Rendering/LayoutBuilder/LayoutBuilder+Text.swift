@@ -9,7 +9,7 @@ import Adapty
 import UIKit
 
 extension LayoutBuilder {
-    func layoutText(_ text: AdaptyUI.СompoundText, in stackView: UIStackView) throws {
+    func layoutText(_ text: AdaptyUI.CompoundText, in stackView: UIStackView) throws {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.attributedText = text.attributedString()

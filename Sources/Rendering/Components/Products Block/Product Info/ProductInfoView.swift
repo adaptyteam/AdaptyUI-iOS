@@ -5,9 +5,9 @@
 //  Created by Alexey Goncharov on 10.8.23..
 //
 
-import UIKit
 import Adapty
+import UIKit
 
 protocol ProductInfoView: UIView {
-    init(info: ProductInfoModel, productsBlock: AdaptyUI.ProductsBlock) throws
+    init(product: ProductInfoModel, info: AdaptyUI.ProductInfo) throws
 }

@@ -8,48 +8,61 @@
 import Adapty
 import UIKit
 
-struct ProductInfoModel {
+protocol ProductInfoModel {
+    var id: String { get }
+    var eligibleOffer: AdaptyProductDiscount? { get }
+    var tagConverter: AdaptyUI.Text.ProductTagConverter { get }
+}
+
+struct EmptyProductInfo: ProductInfoModel {
     let id: String
-    let title: String?
-    let subtitle: String?
-    let price: String?
-    let priceSubtitle: String?
+    var eligibleOffer: AdaptyProductDiscount? { nil }
+    var tagConverter: AdaptyUI.Text.ProductTagConverter { { _ in nil } }
 
-    init(id: String, title: String?, subtitle: String?, price: String?, priceSubtitle: String?) {
+    init(id: String) {
         self.id = id
-        self.title = title
-        self.subtitle = subtitle
-        self.price = price
-        self.priceSubtitle = priceSubtitle
     }
 }
 
-extension ProductInfoModel {
-    static func placeholder(id: String, overridenTitle: String?) -> ProductInfoModel {
-        ProductInfoModel(id: id, title: overridenTitle, subtitle: nil, price: nil, priceSubtitle: nil)
+struct RealProductInfo: ProductInfoModel {
+    let product: AdaptyPaywallProduct
+    let introEligibility: AdaptyEligibility
+
+    var eligibleOffer: AdaptyProductDiscount? { product.eligibleDiscount(introEligibility: introEligibility) }
+
+    init(product: AdaptyPaywallProduct, introEligibility: AdaptyEligibility) {
+        self.product = product
+        self.introEligibility = introEligibility
     }
 
-    static func build(
-        product: AdaptyPaywallProduct,
-        introEligibility: AdaptyEligibility,
-        overridenTitle: String?
-    ) -> ProductInfoModel {
-        ProductInfoModel(
-            id: product.vendorProductId,
-            title: overridenTitle ?? product.localizedTitle,
-            subtitle: product.eligibleOfferString(introEligibility: introEligibility),
-            price: product.localizedPrice,
-            priceSubtitle: product.perWeekPriceString()
-        )
-    }
-}
+    var id: String { product.vendorProductId }
 
-extension ProductInfoModel {
     var tagConverter: AdaptyUI.Text.ProductTagConverter {
         { tag in
             switch tag {
-            case .price: return price
+            case .title: return product.localizedTitle
+            case .price: return product.localizedPrice
+            case .pricePerDay: return product.pricePer(period: .day)
+            case .pricePerWeek: return product.pricePer(period: .week)
+            case .pricePerMonth: return product.pricePer(period: .month)
+            case .pricePerYear: return product.pricePer(period: .year)
+            case .offerPrice:
+                return product.eligibleDiscount(introEligibility: introEligibility)?.localizedPrice
+            case .offerPeriods:
+                return product.eligibleDiscount(introEligibility: introEligibility)?.localizedSubscriptionPeriod
+            case .offerNumberOfPeriods:
+                return product.eligibleDiscount(introEligibility: introEligibility)?.localizedNumberOfPeriods
             }
         }
+    }
+}
+
+extension ProductInfoModel {
+    static func empty(id: String) -> ProductInfoModel {
+        EmptyProductInfo(id: id)
+    }
+
+    static func real(product: AdaptyPaywallProduct, introEligibility: AdaptyEligibility) -> ProductInfoModel {
+        RealProductInfo(product: product, introEligibility: introEligibility)
     }
 }

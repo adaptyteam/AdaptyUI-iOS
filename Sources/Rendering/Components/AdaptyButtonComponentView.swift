@@ -104,7 +104,7 @@ final class AdaptyButtonComponentView: UIButton {
         self.progressView = progressView
     }
 
-    func updateContent(_ text: AdaptyUI.СompoundText?) {
+    func updateContent(_ text: AdaptyUI.CompoundText?) {
         contentView?.removeFromSuperview()
         contentView = nil
 
@@ -154,7 +154,7 @@ final class AdaptyButtonComponentView: UIButton {
     }
 
     private func updateShapeBackground(_ filling: AdaptyUI.Filling?) {
-        guard let filling else {
+        guard let filling = filling else {
             backgroundColor = .clear
             return
         }

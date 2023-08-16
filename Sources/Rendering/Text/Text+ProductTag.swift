@@ -12,21 +12,35 @@ extension AdaptyUI.Text {
     typealias ProductTagConverter = (ProductTag) -> String?
 
     enum ProductTag: String {
+        case title = "TITLE"
+        
         case price = "PRICE"
+        case pricePerDay = "PRICE_PER_DAY"
+        case pricePerWeek = "PRICE_PER_WEEK"
+        case pricePerMonth = "PRICE_PER_MONTH"
+        case pricePerYear = "PRICE_PER_YEAR"
+        
+        case offerPrice = "OFFER_PRICE"
+        case offerPeriods = "OFFER_PERIOD"
+        case offerNumberOfPeriods = "OFFER_NUMBER_OF_PERIOD"
+    }
+}
 
-        static func fromRawMatch(_ match: String) -> ProductTag? {
-            let cleanedMatch = match
-                .replacingOccurrences(of: "</", with: "")
-                .replacingOccurrences(of: "/>", with: "")
+extension AdaptyUI.Text.ProductTag {
+    static func fromRawMatch(_ match: String) -> Self? {
+        let cleanedMatch = match
+            .replacingOccurrences(of: "</", with: "")
+            .replacingOccurrences(of: "/>", with: "")
 
-            return .init(rawValue: cleanedMatch)
-        }
+        return .init(rawValue: cleanedMatch)
     }
 }
 
 extension String {
+    private static let productTagPattern = "</[a-zA-Z_0-9-]+/>"
+
     func replaceAllTags(converter: AdaptyUI.Text.ProductTagConverter) -> String {
-        guard let regex = try? NSRegularExpression(pattern: "</[a-zA-Z_0-9-]+/>") else {
+        guard let regex = try? NSRegularExpression(pattern: Self.productTagPattern) else {
             return self
         }
 
