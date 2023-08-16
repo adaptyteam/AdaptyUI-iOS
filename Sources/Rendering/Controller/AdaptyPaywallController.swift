@@ -127,18 +127,18 @@ public class AdaptyPaywallController: UIViewController {
         switch action {
         case .close:
             log(.verbose, "close tap")
-            delegate?.paywallControllerDidPressCloseButton(self)
+            delegate?.paywallController(self, didPerform: .close)
         case let .openUrl(urlString):
             log(.verbose, "openUrl tap")
             guard let urlString, let url = URL(string: urlString) else { return }
-            delegate?.paywallController(self, openURL: url)
+            delegate?.paywallController(self, didPerform: .openURL(url: url))
         case .restore:
             log(.verbose, "restore tap")
             presenter.restorePurchases()
         case let .custom(id):
             log(.verbose, "custom (\(id ?? "null") tap")
-            // TODO: implement custom action logic
-            break
+            guard let id = id else { return }
+            delegate?.paywallController(self, didPerform: .custom(id: id))
         }
     }
 

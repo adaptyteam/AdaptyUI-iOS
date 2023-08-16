@@ -33,8 +33,16 @@ extension UIAlertController {
 }
 
 extension AdaptyPaywallControllerDelegate {
-    public func paywallControllerDidPressCloseButton(_ controller: AdaptyPaywallController) {
-        controller.dismiss(animated: true)
+    func paywallController(_ controller: AdaptyPaywallController,
+                           didPerform action: AdaptyUI.Action) {
+        switch action {
+        case .close:
+            controller.dismiss(animated: true)
+        case let .openURL(url):
+            UIApplication.shared.open(url, options: [:])
+        case .custom:
+            break
+        }
     }
 
     public func paywallController(_ controller: AdaptyPaywallController,
@@ -58,11 +66,6 @@ extension AdaptyPaywallControllerDelegate {
     public func paywallController(_ controller: AdaptyPaywallController,
                                   didFailLoadingProductsWith error: AdaptyError) -> Bool {
         false
-    }
-
-    public func paywallController(_ controller: AdaptyPaywallController,
-                                  openURL url: URL) {
-        UIApplication.shared.open(url, options: [:])
     }
 
     public func paywallController(_ controller: AdaptyPaywallController,

@@ -9,6 +9,12 @@ import Adapty
 import UIKit
 
 extension AdaptyUI {
+    public enum Action {
+        case close
+        case openURL(url: URL)
+        case custom(id: String)
+    }
+
     public enum Event {
         /// This event occurs when a successful restore is made.
         case restored
@@ -20,14 +26,8 @@ extension AdaptyUI {
 
 /// Implement this protocol to respond to different events happening inside the purchase screen.
 public protocol AdaptyPaywallControllerDelegate: NSObject {
-    /// If the user presses the close button, this method will be invoked.
-    ///
-    /// The default implementation is simply dismissing the controller:
-    /// ```
-    /// controller.dismiss(animated: true)
-    /// ```
-    /// - Parameter controller: an ``AdaptyPaywallController`` within which the event occurred.
-    func paywallControllerDidPressCloseButton(_ controller: AdaptyPaywallController)
+    func paywallController(_ controller: AdaptyPaywallController,
+                           didPerform action: AdaptyUI.Action)
 
     /// If product was selected for purchase (by user or by system), this method will be invoked.
     ///
@@ -109,18 +109,6 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
     /// - Returns: Return `true`, if you want to retry products fetching.
     func paywallController(_ controller: AdaptyPaywallController,
                            didFailLoadingProductsWith error: AdaptyError) -> Bool
-
-    /// If the user presses the "Terms" or "Privacy Policy" buttons, this method will be invoked.
-    ///
-    /// The default implementation opens the link in the default browser:
-    /// ```
-    /// UIApplication.shared.open(url, options: [:])
-    /// ```
-    /// - Parameters:
-    ///   - controller: an ``AdaptyPaywallController`` within which the event occurred.
-    ///   - url: a url, which contains a link to the desired page.
-    func paywallController(_ controller: AdaptyPaywallController,
-                           openURL url: URL)
 
     /// In some cases it is necessary to show the message to the user.
     /// By overriding this method, you can show the event or error in any way you like.
