@@ -19,7 +19,6 @@ public class AdaptyPaywallController: UIViewController {
     public weak var delegate: AdaptyPaywallControllerDelegate?
 
     private let productsTitlesResolver: (AdaptyProduct) -> String
-    private let scrollViewDelegate = AdaptyCoverImageScrollDelegate()
     private var layoutBuilder: LayoutBuilder?
     private let presenter: AdaptyPaywallPresenter
     private var cancellable = Set<AnyCancellable>()
@@ -98,6 +97,12 @@ public class AdaptyPaywallController: UIViewController {
         super.viewDidDisappear(animated)
 
         log(.verbose, "viewDidDisappear")
+    }
+
+    override public func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        layoutBuilder?.viewDidLayoutSubviews(view)
     }
 
     private func buildInterface() {

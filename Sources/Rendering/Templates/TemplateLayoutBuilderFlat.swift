@@ -21,6 +21,8 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
     private let closeButton: AdaptyUI.Button?
     private let initialProducts: [ProductInfoModel]
 
+    private let scrollViewDelegate = AdaptyCompoundScrollViewDelegate()
+
     init(
         background: AdaptyUI.Filling,
         contentShape: AdaptyUI.Shape,
@@ -51,6 +53,7 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
     private weak var contentViewComponentView: AdaptyBaseContentView?
     private weak var productsComponentView: ProductsComponentView?
     private weak var continueButtonComponentView: AdaptyButtonComponentView?
+    private weak var scrollView: AdaptyBaseScrollView?
 
     var activityIndicator: AdaptyActivityIndicatorView? { activityIndicatorComponentView }
     var productsView: ProductsComponentView? { productsComponentView }
@@ -71,9 +74,16 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
         let backgroundView = AdaptyBackgroundComponentView(background: background)
         layoutBackground(backgroundView, on: view)
 
+        scrollViewDelegate.behaviours.append(
+            AdaptyLimitOverscrollScrollBehaviour()
+        )
+
         let scrollView = AdaptyBaseScrollView()
+        scrollView.delegate = scrollViewDelegate
         layoutScrollView(scrollView, on: view)
 
+        self.scrollView = scrollView
+        
         let contentView = AdaptyBaseContentView(
             layout: .flat,
             shape: contentShape
@@ -123,7 +133,7 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
                                                            addProgressView: true) { [weak self] _ in
             self?.onContinueCallback?()
         }
-        
+
         layoutContinueButton(continueButtonView,
                              placeholder: continueButtonPlaceholder,
                              on: view)
@@ -141,6 +151,20 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
             stackView.addArrangedSubview(footerView)
         }
 
+        layoutTopGradientView(AdaptyGradientView(position: .top), on: view)
+
+        let bottomShadeView = AdaptyGradientView(position: .bottom)
+        layoutBottomGradientView(bottomShadeView, on: view)
+
+        scrollViewDelegate.behaviours.append(
+            AdaptyPurchaseButtonShadeBehaviour(
+                button: continueButtonView,
+                buttonPlaceholder: continueButtonPlaceholder,
+                shadeView: bottomShadeView,
+                baseView: view
+            )
+        )
+
         if let closeButton {
             let closeButtonView = AdaptyButtonComponentView(
                 component: closeButton,
@@ -154,13 +178,17 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
         }
 
         let progressView = AdaptyActivityIndicatorView(backgroundColor: .black.withAlphaComponent(0.6),
-                                                                indicatorColor: .white)
+                                                       indicatorColor: .white)
         layoutProgressView(progressView, on: view)
         activityIndicatorComponentView = progressView
     }
 
     func viewDidLayoutSubviews(_ view: UIView) {
         contentViewComponentView?.updateSafeArea(view.safeAreaInsets)
+        
+        if let scrollView = scrollView {
+            scrollViewDelegate.scrollViewDidScroll(scrollView)
+        }
     }
 
     // MARK: - Layout

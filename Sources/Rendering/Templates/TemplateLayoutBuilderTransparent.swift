@@ -19,6 +19,8 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
     private let closeButton: AdaptyUI.Button?
     private let initialProducts: [ProductInfoModel]
 
+    private let scrollViewDelegate = AdaptyCompoundScrollViewDelegate()
+
     init(
         background: AdaptyUI.Filling,
         contentShape: AdaptyUI.Shape,
@@ -66,6 +68,7 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
         layoutBackground(backgroundView, on: view)
 
         let scrollView = AdaptyBaseScrollView()
+        scrollView.delegate = scrollViewDelegate
         layoutScrollView(scrollView, on: view)
 
         let contentView = AdaptyBaseContentView(
@@ -122,6 +125,8 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
 
             stackView.addArrangedSubview(footerView)
         }
+        
+        layoutTopGradientView(AdaptyGradientView(position: .top), on: view)
 
         if let closeButton {
             let closeButtonView = AdaptyButtonComponentView(

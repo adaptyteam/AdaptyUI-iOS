@@ -30,7 +30,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     private let footerBlock: AdaptyUI.FooterBlock?
     private let initialProducts: [ProductInfoModel]
 
-    private let scrollViewDelegate = AdaptyCoverImageScrollDelegate()
+    private let scrollViewDelegate = AdaptyCompoundScrollViewDelegate()
 
     init(
         coverImage: AdaptyUI.Image,
@@ -60,6 +60,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     private weak var contentViewComponentView: AdaptyBaseContentView?
     private weak var productsComponentView: ProductsComponentView?
     private weak var continueButtonComponentView: AdaptyButtonComponentView?
+    private weak var scrollView: AdaptyBaseScrollView?
 
     var activityIndicator: AdaptyActivityIndicatorView? { activityIndicatorComponentView }
     var productsView: ProductsComponentView? { productsComponentView }
@@ -77,6 +78,10 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     }
 
     func buildInterface(on view: UIView) throws {
+        scrollViewDelegate.behaviours.append(
+            AdaptyLimitOverscrollScrollBehaviour()
+        )
+        
         let backgroundView = AdaptyBackgroundComponentView(background: contentShape.background)
         layoutBackground(backgroundView, on: view)
 
@@ -90,12 +95,15 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
                              multiplier: coverImageHeightMultilpyer,
                              minHeight: 300.0)
 
-        scrollViewDelegate.coverView = imageView
+        scrollViewDelegate.behaviours.append(
+            AdaptyCoverImageScrollBehaviour(coverView: imageView)
+        )
 
         let scrollView = AdaptyBaseScrollView()
         scrollView.delegate = scrollViewDelegate
         layoutScrollView(scrollView, on: view)
-
+        self.scrollView = scrollView
+        
         let contentView = AdaptyBaseContentView(
             layout: .basic(multiplier: coverImageHeightMultilpyer),
             shape: contentShape
@@ -161,7 +169,8 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
             stackView.addArrangedSubview(footerView)
         }
 
-        layoutTopGradientView(AdaptyGradientView(), on: view)
+        layoutTopGradientView(AdaptyGradientView(position: .top), on: view)
+        layoutBottomGradientView(AdaptyGradientView(position: .bottom), on: view)
 
         if let closeButton {
             let closeButtonView = AdaptyButtonComponentView(
@@ -183,6 +192,10 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
 
     func viewDidLayoutSubviews(_ view: UIView) {
         contentViewComponentView?.updateSafeArea(view.safeAreaInsets)
+        
+        if let scrollView = scrollView {
+            scrollViewDelegate.scrollViewDidScroll(scrollView)
+        }
     }
 
     // MARK: - Layout
