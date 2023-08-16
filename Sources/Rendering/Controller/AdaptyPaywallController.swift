@@ -45,7 +45,6 @@ public class AdaptyPaywallController: UIViewController {
         if let style = try? localizedConfig.extractDefaultStyle() {
             selectedProductIndex = style.productBlock.mainProductIndex
         } else {
-            // TODO: warn
             selectedProductIndex = 0
         }
 

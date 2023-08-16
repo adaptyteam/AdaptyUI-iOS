@@ -218,7 +218,7 @@ extension String {
     }
 
     func attributedString(
-        using text: AdaptyUI.Text, // TODO: maybe remove?
+        using text: AdaptyUI.Text,
         paragraph: AdaptyUI.Text.ParagraphStyle,
         kern: CGFloat?,
         trailingPadding: CGFloat?

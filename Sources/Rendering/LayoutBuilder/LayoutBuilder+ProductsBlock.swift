@@ -12,11 +12,6 @@ extension LayoutBuilder {
     func layoutProductsBlock(_ productsBlock: AdaptyUI.ProductsBlock,
                              initialProducts: [ProductInfoModel],
                              in stackView: UIStackView) throws -> ProductsComponentView {
-        guard !initialProducts.isEmpty else {
-            // TODO: change the error
-            throw AdaptyUIError.unsupportedTemplate("test")
-        }
-
         let productsView: ProductsComponentView
 
         switch productsBlock.type {

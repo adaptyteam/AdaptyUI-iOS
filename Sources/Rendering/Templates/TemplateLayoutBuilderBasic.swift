@@ -77,9 +77,6 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     }
 
     func buildInterface(on view: UIView) throws {
-        // TODO: check if it is actual
-//        view.backgroundColor = try reader.contentBackgroundColor().uiColor
-
         let backgroundView = AdaptyBackgroundComponentView(background: contentShape.background)
         layoutBackground(backgroundView, on: view)
 
