@@ -8,7 +8,7 @@
 import Adapty
 
 extension AdaptyUI {
-    typealias ProductsInfos = [String: ProductInfo]
+    typealias ProductsInfos = [ProductInfo]
 
     struct ProductInfo {
         let id: String
@@ -49,14 +49,15 @@ extension AdaptyUI.LocalizedViewItem {
             customObject.type == "products_infos"
         else { return nil }
 
-        var infos = [String: AdaptyUI.ProductInfo]()
-
-        for (key, value) in customObject.properties {
-            guard let productInfo = value.toProductInfo(id: key) else { continue }
-            infos[key] = productInfo
-        }
-
-        return infos
+        return customObject.orderedProperties.compactMap { $0.value.toProductInfo(id: "123") }
+//        var infos = [String: AdaptyUI.ProductInfo]()
+//
+//        for (key, value) in customObject.properties {
+//            guard let productInfo = value.toProductInfo(id: key) else { continue }
+//            infos[key] = productInfo
+//        }
+//
+//        return infos
     }
 }
 

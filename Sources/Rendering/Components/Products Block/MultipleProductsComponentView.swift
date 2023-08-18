@@ -8,6 +8,12 @@
 import Adapty
 import UIKit
 
+extension Collection where Indices.Iterator.Element == Index {
+    subscript(safe index: Index) -> Iterator.Element? {
+        (startIndex <= index && index < endIndex) ? self[index] : nil
+    }
+}
+
 final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
     private var products: [ProductInfoModel]
     private let productsBlock: AdaptyUI.ProductsBlock
@@ -60,8 +66,10 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
     private func populateProductsButtons(_ products: [ProductInfoModel], selectedId: String) throws {
         let productsInfos = try productsBlock.productsInfos
 
-        for product in products {
-            guard let productInfo = productsInfos[product.id] else {
+        for i in 0 ..< products.count {
+            let product = products[i]
+
+            guard let productInfo = productsInfos[safe: i] else {
                 throw AdaptyUIError.componentNotFound("\(product.id):product_info")
             }
 

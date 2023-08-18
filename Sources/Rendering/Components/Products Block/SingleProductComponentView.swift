@@ -26,7 +26,7 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
 
         let productsInfos = try productsBlock.productsInfos
 
-        guard let productInfo = productsInfos[product.id] else {
+        guard let productInfo = productsInfos.first else {
             throw AdaptyUIError.componentNotFound("\(product.id):product_info")
         }
 
