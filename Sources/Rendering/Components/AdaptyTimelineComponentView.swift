@@ -12,6 +12,9 @@ extension AdaptyUI {
     struct TimelineEntry {
         let text: AdaptyUI.CompoundText
         let image: AdaptyUI.Image
+        let imageColor: AdaptyUI.Color?
+
+        let shape: AdaptyUI.Shape
         let gradient: AdaptyUI.ColorGradient
     }
 }
@@ -23,21 +26,25 @@ extension AdaptyUI.LocalizedViewItem {
             customObject.type == "timeline_entry",
             let text = customObject.properties["text"]?.asText,
             let image = customObject.properties["image"]?.asImage,
+            let shape = customObject.properties["shape"]?.asShape,
             let gradient = customObject.properties["gradient"]?.asColorGradient
         else { return nil }
 
-        return .init(text: text, image: image, gradient: gradient)
+        return .init(
+            text: text,
+            image: image,
+            imageColor: customObject.properties["image_color"]?.asColor,
+            shape: shape,
+            gradient: gradient
+        )
     }
 }
 
 final class AdaptyTimelineEntrySideComponentView: UIView {
-    let image: AdaptyUI.Image
-    let gradient: AdaptyUI.ColorGradient
+    let timelineEntry: AdaptyUI.TimelineEntry
 
-    init(image: AdaptyUI.Image,
-         gradient: AdaptyUI.ColorGradient) throws {
-        self.image = image
-        self.gradient = gradient
+    init(timelineEntry: AdaptyUI.TimelineEntry) throws {
+        self.timelineEntry = timelineEntry
 
         super.init(frame: .zero)
         try setupView()
@@ -50,41 +57,63 @@ final class AdaptyTimelineEntrySideComponentView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
+        shapeView?.layer.applyShapeMask(timelineEntry.shape.type)
         gradientLayer?.frame = gradientView?.bounds ?? .zero
     }
-    
+
+    private var shapeView: UIView?
     private var gradientView: UIView?
     private var gradientLayer: CAGradientLayer?
-    
+
     private func setupView() throws {
         translatesAutoresizingMaskIntoConstraints = false
 
+        let shapeView = UIView()
+        shapeView.translatesAutoresizingMaskIntoConstraints = false
+        shapeView.backgroundColor = timelineEntry.shape.background?.asColor?.uiColor
+        shapeView.layer.applyShapeMask(timelineEntry.shape.type)
+
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(data: image.data)
-        
+        if let imageColor = timelineEntry.imageColor?.uiColor {
+            imageView.image = timelineEntry.image.uiImage?.withRenderingMode(.alwaysTemplate)
+            imageView.tintColor = imageColor
+        } else {
+            imageView.image = timelineEntry.image.uiImage
+        }
+
         let gradientView = UIView()
         gradientView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let gradientLayer = CAGradientLayer.create(gradient)
+
+        let gradientLayer = CAGradientLayer.create(timelineEntry.gradient)
         gradientLayer.frame = gradientView.bounds
         gradientView.layer.addSublayer(gradientLayer)
-        
+
         addSubview(gradientView)
-        addSubview(imageView)
+        addSubview(shapeView)
+        shapeView.addSubview(imageView)
 
         addConstraints([
-            imageView.topAnchor.constraint(equalTo: topAnchor),
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: 28.0),
-            
+            shapeView.topAnchor.constraint(equalTo: topAnchor),
+            shapeView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            shapeView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            shapeView.heightAnchor.constraint(equalTo: shapeView.widthAnchor, multiplier: 1.0),
+
             gradientView.centerXAnchor.constraint(equalTo: centerXAnchor),
             gradientView.topAnchor.constraint(equalTo: imageView.centerYAnchor),
             gradientView.widthAnchor.constraint(equalToConstant: 3.0),
-            gradientView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            gradientView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
-        
+
+        shapeView.addConstraints([
+            imageView.centerXAnchor.constraint(equalTo: shapeView.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: shapeView.centerYAnchor),
+
+            imageView.widthAnchor.constraint(equalToConstant: 16.0),
+            imageView.heightAnchor.constraint(equalToConstant: 16.0),
+        ])
+
+        self.shapeView = shapeView
         self.gradientView = gradientView
         self.gradientLayer = gradientLayer
     }
@@ -113,17 +142,17 @@ final class AdaptyTimelineComponentView: UIStackView {
         stack.axis = .horizontal
         stack.spacing = 8.0
         stack.alignment = .fill
-        
-        let sideView = try AdaptyTimelineEntrySideComponentView(image: entry.image, gradient: entry.gradient)
+
+        let sideView = try AdaptyTimelineEntrySideComponentView(timelineEntry: entry)
         stack.addArrangedSubview(sideView)
-        
+
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         label.attributedText = entry.text.attributedString(paragraph: .init(lineSpacing: 2.0))
 
         stack.addArrangedSubview(label)
-        
+
         stack.addConstraint(sideView.widthAnchor.constraint(equalToConstant: 28.0))
 
         return stack

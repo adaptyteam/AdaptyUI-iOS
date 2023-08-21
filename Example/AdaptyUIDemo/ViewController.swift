@@ -25,7 +25,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         // TODO: remove
-        textField.text = "example_ab_test"
+//        textField.text = "example_ab_test"
+        textField.text = "PAYWALL_BUILDER_V2_TEST"
 
         spinner.isHidden = true
         updatePaywallData()
@@ -126,6 +127,20 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: AdaptyPaywallControllerDelegate {
+    func paywallController(_ controller: AdaptyPaywallController,
+                           didPerform action: AdaptyUI.Action) {
+        print("#ExampleUI# paywallController didPerform \(action)")
+
+        switch action {
+        case .close:
+            controller.dismiss(animated: true)
+        case let .openURL(url):
+            UIApplication.shared.open(url, options: [:])
+        case .custom:
+            break
+        }
+    }
+
     public func paywallControllerDidPressCloseButton(_ controller: AdaptyPaywallController) {
         print("#ExampleUI# paywallControllerDidPressCloseButton")
         controller.dismiss(animated: true)
@@ -167,8 +182,10 @@ extension ViewController: AdaptyPaywallControllerDelegate {
     public func paywallController(_ controller: AdaptyPaywallController,
                                   didFailRenderingWith error: AdaptyError) {
         print("#ExampleUI# didFailRenderingWith \(error)")
-        
-        controller.dismiss(animated: true)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+            controller.dismiss(animated: true)
+        }
     }
 
     public func paywallController(_ controller: AdaptyPaywallController,
