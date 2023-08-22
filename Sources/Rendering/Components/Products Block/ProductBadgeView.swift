@@ -43,8 +43,8 @@ class ProductBadgeView: UIView {
         addConstraints([
             tagLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8.0),
             tagLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8.0),
-            tagLabel.topAnchor.constraint(equalTo: topAnchor),
-            tagLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
+            tagLabel.topAnchor.constraint(equalTo: topAnchor, constant: 2.0),
+            tagLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2.0),
         ])
     }
 

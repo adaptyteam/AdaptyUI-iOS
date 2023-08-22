@@ -90,11 +90,11 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
                                                       right: 24),
                                   layout: .bottomToTop)
 
-        if let titleRows {
+        if let titleRows = titleRows {
             try layoutText(titleRows, in: stackView)
         }
 
-        if let featuresBlock {
+        if let featuresBlock = featuresBlock {
             try layoutFeaturesBlock(featuresBlock, in: stackView)
         }
 
@@ -115,7 +115,7 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
         continueButtonComponentView = continueButtonView
         contentViewComponentView = contentView
 
-        if let footerBlock {
+        if let footerBlock = footerBlock {
             let footerView = try AdaptyFooterComponentView(
                 footerBlock: footerBlock,
                 onTap: { [weak self] action in
@@ -128,7 +128,7 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
         
         layoutTopGradientView(AdaptyGradientView(position: .top), on: view)
 
-        if let closeButton {
+        if let closeButton = closeButton {
             let closeButtonView = AdaptyButtonComponentView(
                 component: closeButton,
                 contentViewMargins: .closeButtonDefaultMargin,

@@ -49,6 +49,17 @@ final class AdaptyButtonComponentView: UIButton {
 
             contentEdgeInsets = contentViewMargins ?? .zero
             titleLabel?.numberOfLines = 0
+            
+            if #available(iOS 15.0, *) {
+                var configuration: UIButton.Configuration = .borderless()
+                configuration = .bordered()
+                configuration.contentInsets = .init(top: 12, leading: 16, bottom: 12, trailing: 16)
+
+                self.configuration = configuration
+            } else {
+                contentEdgeInsets = .init(top: 12, left: 16, bottom: 12, right: 16)
+                titleEdgeInsets = .init(top: 12, left: 16, bottom: 12, right: 16)
+            }
         }
 
         if addProgressView,
@@ -177,7 +188,7 @@ final class AdaptyButtonComponentView: UIButton {
                 self.gradientLayer = gradientLayer
             }
             backgroundColor = .clear
-        }
+        }        
     }
 
     private func updateShapeBorder(_ border: AdaptyUI.Shape.Border?) {

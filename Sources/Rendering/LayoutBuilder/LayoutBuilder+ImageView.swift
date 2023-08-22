@@ -12,15 +12,13 @@ extension LayoutBuilder {
         _ imageView: UIImageView,
         on superview: UIView,
         multiplier: CGFloat,
-        minHeight: CGFloat
+        minHeight: CGFloat?
     ) {
         superview.addSubview(imageView)
 
         let hConstraintMult = imageView.heightAnchor.constraint(equalTo: superview.heightAnchor,
                                                                 multiplier: multiplier)
         hConstraintMult.priority = .init(999.0)
-        let hConstraintFix = imageView.heightAnchor.constraint(greaterThanOrEqualToConstant: minHeight)
-        hConstraintFix.priority = .init(1000.0)
 
         superview.addConstraints([
             imageView.topAnchor.constraint(equalTo: superview.topAnchor, constant: 0.0),
@@ -28,8 +26,14 @@ extension LayoutBuilder {
             imageView.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: 0.0),
 
             hConstraintMult,
-            hConstraintFix,
         ])
+        
+        if let minHeight = minHeight, minHeight > 0 {
+            let hConstraintFix = imageView.heightAnchor.constraint(greaterThanOrEqualToConstant: minHeight)
+            hConstraintFix.priority = .init(1000.0)
+            
+            superview.addConstraint(hConstraintFix)
+        }
     }
 
     func layoutTitleImageView(

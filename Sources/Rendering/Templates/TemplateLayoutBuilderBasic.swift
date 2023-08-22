@@ -93,7 +93,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         layoutCoverImageView(imageView,
                              on: view,
                              multiplier: coverImageHeightMultilpyer,
-                             minHeight: 300.0)
+                             minHeight: nil)
 
         scrollViewDelegate.behaviours.append(
             AdaptyCoverImageScrollBehaviour(coverView: imageView)
@@ -126,11 +126,11 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
                                                                  bottom: 24,
                                                                  right: 24))
 
-        if let titleRows {
+        if let titleRows = titleRows {
             try layoutText(titleRows, in: stackView)
         }
 
-        if let featuresBlock {
+        if let featuresBlock = featuresBlock {
             try layoutFeaturesBlock(featuresBlock, in: stackView)
         }
 
@@ -172,7 +172,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         layoutTopGradientView(AdaptyGradientView(position: .top), on: view)
         layoutBottomGradientView(AdaptyGradientView(position: .bottom), on: view)
 
-        if let closeButton {
+        if let closeButton = closeButton {
             let closeButtonView = AdaptyButtonComponentView(
                 component: closeButton,
                 contentViewMargins: .closeButtonDefaultMargin,

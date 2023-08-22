@@ -79,6 +79,9 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
         )
 
         let scrollView = AdaptyBaseScrollView()
+        scrollView.insetsLayoutMarginsFromSafeArea = false
+        scrollView.automaticallyAdjustsScrollIndicatorInsets = false
+        
         scrollView.delegate = scrollViewDelegate
         layoutScrollView(scrollView, on: view)
 
@@ -96,7 +99,7 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
         stackView.spacing = 16
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        contentView.layoutContent(stackView, inset: UIEdgeInsets(top: 48,
+        contentView.layoutContent(stackView, inset: UIEdgeInsets(top: 0,
                                                                  left: 24,
                                                                  bottom: 24,
                                                                  right: 24))
@@ -108,11 +111,11 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
                              superView: view,
                              multiplier: coverImageHeightMultilpyer)
 
-        if let titleRows {
+        if let titleRows = titleRows {
             try layoutText(titleRows, in: stackView)
         }
 
-        if let featuresBlock {
+        if let featuresBlock = featuresBlock {
             try layoutFeaturesBlock(featuresBlock, in: stackView)
         }
 
@@ -141,7 +144,7 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
         continueButtonComponentView = continueButtonView
         contentViewComponentView = contentView
 
-        if let footerBlock {
+        if let footerBlock = footerBlock {
             let footerView = try AdaptyFooterComponentView(
                 footerBlock: footerBlock,
                 onTap: { [weak self] action in
@@ -165,7 +168,7 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
             )
         )
 
-        if let closeButton {
+        if let closeButton = closeButton {
             let closeButtonView = AdaptyButtonComponentView(
                 component: closeButton,
                 contentViewMargins: .closeButtonDefaultMargin,

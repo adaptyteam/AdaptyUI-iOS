@@ -31,13 +31,19 @@ final class VerticalProductInfoView: UIStackView, ProductInfoView {
         let titleLabel = UILabel()
         titleLabel.minimumScaleFactor = 0.5
         titleLabel.adjustsFontSizeToFitWidth = true
-        titleLabel.attributedText = info.title?.attributedString(tagConverter: tagConverter)
+        titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        if let title = info.title {
+            titleLabel.attributedText = title.attributedString(tagConverter: tagConverter)
+        } else {
+            titleLabel.text = " "
+        }
 
         let subtitleLabel = UILabel()
         subtitleLabel.numberOfLines = 2
         subtitleLabel.minimumScaleFactor = 0.5
         subtitleLabel.adjustsFontSizeToFitWidth = true
-        subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        subtitleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+//        subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
 
         switch product.eligibleOffer?.paymentMode {
         case .payAsYouGo:
@@ -47,7 +53,11 @@ final class VerticalProductInfoView: UIStackView, ProductInfoView {
         case .freeTrial:
             subtitleLabel.attributedText = info.subtitleFreeTrial?.attributedString(tagConverter: tagConverter)
         default:
-            subtitleLabel.attributedText = info.subtitle?.attributedString(tagConverter: tagConverter)
+            if let subtitle = info.subtitle {
+                subtitleLabel.attributedText = subtitle.attributedString(tagConverter: tagConverter)
+            } else {
+                subtitleLabel.text = " "
+            }
         }
         
         let topStack = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])

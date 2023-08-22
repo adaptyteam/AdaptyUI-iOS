@@ -29,8 +29,12 @@ final class HorizontalProductInfoView: UIStackView, ProductInfoView {
         let tagConverter = product.tagConverter
 
         let titleLabel = UILabel()
-        titleLabel.attributedText = info.title?.attributedString(tagConverter: tagConverter)
-
+        if let title = info.title {
+            titleLabel.attributedText = title.attributedString(tagConverter: tagConverter)
+        } else {
+            titleLabel.text = " "
+        }
+        
         let subtitleLabel = UILabel()
         subtitleLabel.minimumScaleFactor = 0.5
         subtitleLabel.adjustsFontSizeToFitWidth = true
@@ -44,7 +48,11 @@ final class HorizontalProductInfoView: UIStackView, ProductInfoView {
         case .freeTrial:
             subtitleLabel.attributedText = info.subtitleFreeTrial?.attributedString(tagConverter: tagConverter)
         default:
-            subtitleLabel.attributedText = info.subtitle?.attributedString(tagConverter: tagConverter)
+            if let subtitle = info.subtitle {
+                subtitleLabel.attributedText = subtitle.attributedString(tagConverter: tagConverter)
+            } else {
+                subtitleLabel.text = " "
+            }
         }
 
         let priceTitleLabel = UILabel()
