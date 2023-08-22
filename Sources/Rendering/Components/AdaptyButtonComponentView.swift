@@ -19,7 +19,12 @@ extension AdaptyUI.Button {
 }
 
 extension UIEdgeInsets {
-    static let closeButtonDefaultMargin: UIEdgeInsets = .init(top: 0, left: 16, bottom: 0, right: 16)
+    var toDicrectional: NSDirectionalEdgeInsets {
+        .init(top: top, leading: left, bottom: bottom, trailing: right)
+    }
+    
+    static let closeButtonDefaultMargin: UIEdgeInsets = .init(top: 12, left: 16, bottom: 12, right: 16)
+    static let footerButtonDefaultMargin: UIEdgeInsets = .init(top: 12, left: 0, bottom: 12, right: 0)
 }
 
 final class AdaptyButtonComponentView: UIButton {
@@ -28,15 +33,17 @@ final class AdaptyButtonComponentView: UIButton {
 
     private var gradientLayer: CAGradientLayer?
     private var contentView: UIView?
-
+    private let contentViewMargins: UIEdgeInsets?
+    
     init(component: AdaptyUI.Button,
          contentView: UIView? = nil,
-         contentViewMargins: UIEdgeInsets? = nil,
+         contentViewMargins: UIEdgeInsets = .zero,
          addProgressView: Bool = false,
          onTap: @escaping (AdaptyUI.ButtonAction?) -> Void) {
         self.component = component
         self.onTap = onTap
-
+        self.contentViewMargins = contentViewMargins
+        
         super.init(frame: .zero)
 
         translatesAutoresizingMaskIntoConstraints = false
@@ -47,18 +54,18 @@ final class AdaptyButtonComponentView: UIButton {
         } else if let title = component.normal?.title?.attributedString() {
             setAttributedTitle(title, for: .normal)
 
-            contentEdgeInsets = contentViewMargins ?? .zero
+            contentEdgeInsets = contentViewMargins
             titleLabel?.numberOfLines = 0
             
             if #available(iOS 15.0, *) {
                 var configuration: UIButton.Configuration = .borderless()
                 configuration = .bordered()
-                configuration.contentInsets = .init(top: 12, leading: 16, bottom: 12, trailing: 16)
+                configuration.contentInsets = contentViewMargins.toDicrectional
 
                 self.configuration = configuration
             } else {
-                contentEdgeInsets = .init(top: 12, left: 16, bottom: 12, right: 16)
-                titleEdgeInsets = .init(top: 12, left: 16, bottom: 12, right: 16)
+                contentEdgeInsets = contentViewMargins
+                titleEdgeInsets = contentViewMargins
             }
         }
 

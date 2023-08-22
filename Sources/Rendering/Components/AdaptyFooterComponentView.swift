@@ -36,6 +36,7 @@ final class AdaptyFooterComponentView: UIStackView {
 
             let buttonView = AdaptyButtonComponentView(
                 component: button,
+                contentViewMargins: .footerButtonDefaultMargin,
                 onTap: { [weak self] action in self?.onTap(action) }
             )
             addArrangedSubview(buttonView)
