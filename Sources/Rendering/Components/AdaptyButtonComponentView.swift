@@ -33,7 +33,7 @@ final class AdaptyButtonComponentView: UIButton {
 
     private var gradientLayer: CAGradientLayer?
     private var contentView: UIView?
-    private let contentViewMargins: UIEdgeInsets?
+    private let contentViewMargins: UIEdgeInsets
     
     init(component: AdaptyUI.Button,
          contentView: UIView? = nil,
@@ -59,7 +59,7 @@ final class AdaptyButtonComponentView: UIButton {
             
             if #available(iOS 15.0, *) {
                 var configuration: UIButton.Configuration = .borderless()
-                configuration = .bordered()
+                configuration = .plain()
                 configuration.contentInsets = contentViewMargins.toDicrectional
 
                 self.configuration = configuration
@@ -130,13 +130,13 @@ final class AdaptyButtonComponentView: UIButton {
 
         if #available(iOS 15.0, *) {
             var configuration: UIButton.Configuration = .borderless()
-            configuration = .bordered()
-            configuration.contentInsets = .init(top: 12, leading: 16, bottom: 12, trailing: 16)
+            configuration = .plain()
+            configuration.contentInsets = contentViewMargins.toDicrectional
 
             self.configuration = configuration
         } else {
-            contentEdgeInsets = .init(top: 12, left: 16, bottom: 12, right: 16)
-            titleEdgeInsets = .init(top: 12, left: 16, bottom: 12, right: 16)
+            contentEdgeInsets = contentViewMargins
+            titleEdgeInsets = contentViewMargins
         }
     }
 
