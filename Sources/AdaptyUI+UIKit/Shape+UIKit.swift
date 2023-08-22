@@ -5,8 +5,8 @@
 //  Created by Alexey Goncharov on 29.6.23..
 //
 
-import UIKit
 import Adapty
+import UIKit
 
 extension UIBezierPath {
     static func customRoundedRect(
@@ -73,25 +73,29 @@ extension UIBezierPath {
 }
 
 extension CALayer {
+    var maxCornerRadius: CGFloat { min(bounds.width, bounds.height) / 2.0 }
+
     func applyRectangleMask(radius: AdaptyUI.Shape.CornerRadius) {
+        let maxRadius = maxCornerRadius
+
         switch radius {
         case let .same(value):
-            cornerRadius = value
+            cornerRadius = min(value, maxRadius)
             masksToBounds = true
         case let .different(topLeft, topRight, bottomRight, bottomLeft):
             let maskLayer = CAShapeLayer()
             maskLayer.path = UIBezierPath.customRoundedRect(in: bounds,
-                                                            topLeft,
-                                                            topRight,
-                                                            bottomLeft,
-                                                            bottomRight).cgPath
+                                                            min(topLeft, maxRadius),
+                                                            min(topRight, maxRadius),
+                                                            min(bottomLeft, maxRadius),
+                                                            min(bottomRight, maxRadius)).cgPath
             mask = maskLayer
             masksToBounds = true
         case .none:
             masksToBounds = false
         }
     }
-    
+
     func applyShapeMask(_ type: AdaptyUI.ShapeType?) {
         guard let type else {
             mask = nil

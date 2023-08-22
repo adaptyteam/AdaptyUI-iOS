@@ -37,7 +37,6 @@ class ProductBadgeView: UIView {
         let tagLabel = AdaptyInsetLabel()
 
         tagLabel.translatesAutoresizingMaskIntoConstraints = false
-//        tagLabel.insets = UIEdgeInsets(top: 0.0, left: 8.0, bottom: 0.0, right: 8.0)
         tagLabel.attributedText = text.attributedString(kern: 0.2)
 
         addSubview(tagLabel)
@@ -49,6 +48,12 @@ class ProductBadgeView: UIView {
         ])
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        layer.applyShapeMask(shape?.type)
+    }
+    
     private var gradientLayer: CAGradientLayer?
     private var imageView: UIImageView?
 
