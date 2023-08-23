@@ -11,7 +11,7 @@ import UIKit
 extension AdaptyUI.Shape {
     fileprivate var recommendedContentOverlap: CGFloat {
         switch type {
-        case let .rectangle(cornerRadius): return cornerRadius.value ?? 0.0
+        case let .rectangle(cornerRadius): return max(24.0, cornerRadius.value ?? 0.0)
         case .curveUp, .curveDown: return 1.5 * AdaptyBaseContentView.curveHeight
         case .circle: return 0.0
         }
