@@ -16,7 +16,9 @@ extension LayoutBuilder {
                 throw AdaptyUIError.componentNotFound("list")
             }
 
-            try layoutText(text, in: stackView)
+            try layoutText(text,
+                           paragraph: .init(paragraphSpacing: 8.0),
+                           in: stackView)
         case .timeline:
             let featuresTimelineView = try AdaptyTimelineComponentView(block: block)
             stackView.addArrangedSubview(featuresTimelineView)

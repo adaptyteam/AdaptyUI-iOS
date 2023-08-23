@@ -127,7 +127,9 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
                                                                  right: 24))
 
         if let titleRows = titleRows {
-            try layoutText(titleRows, in: stackView)
+            try layoutText(titleRows,
+                           paragraph: .init(paragraphSpacing: 4.0),
+                           in: stackView)
         }
 
         if let featuresBlock = featuresBlock {
