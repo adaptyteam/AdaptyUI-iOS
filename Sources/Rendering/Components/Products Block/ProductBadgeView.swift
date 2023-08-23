@@ -51,6 +51,7 @@ class ProductBadgeView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        applyFilling(shape?.background)
         layer.applyShapeMask(shape?.type)
     }
     

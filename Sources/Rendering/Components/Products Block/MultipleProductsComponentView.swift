@@ -96,10 +96,7 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
 
             switch productsBlock.type {
             case .horizontal:
-                addConstraint(
-                    button.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1.0)
-                )
-//                addConstraint(button.heightAnchor.constraint(equalToConstant: 128.0))
+                addConstraint(button.heightAnchor.constraint(equalToConstant: 128.0))
                 break
             default:
                 addConstraint(button.heightAnchor.constraint(equalToConstant: 64.0))
