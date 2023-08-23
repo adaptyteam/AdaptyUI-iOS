@@ -11,7 +11,10 @@ struct AdaptyLimitOverscrollScrollBehaviour: AdaptyScrollViewBehaviour {
     let maxOffsetTop: CGFloat?
     let maxOffsetBottom: CGFloat?
 
-    init(maxOffsetTop: CGFloat? = 100.0, maxOffsetBottom: CGFloat = 100.0) {
+    init(
+        maxOffsetTop: CGFloat? = 64.0,
+        maxOffsetBottom: CGFloat = 64.0
+    ) {
         self.maxOffsetTop = maxOffsetTop
         self.maxOffsetBottom = maxOffsetBottom
     }

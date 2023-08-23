@@ -64,8 +64,11 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
     }
 
     func buildInterface(on view: UIView) throws {
+        let verticalOverscroll = 64.0
+
         scrollViewDelegate.behaviours.append(
-            AdaptyLimitOverscrollScrollBehaviour()
+            AdaptyLimitOverscrollScrollBehaviour(maxOffsetTop: verticalOverscroll,
+                                                 maxOffsetBottom: verticalOverscroll)
         )
 
         let backgroundView = AdaptyBackgroundComponentView(background: background)
@@ -80,7 +83,10 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
             shape: contentShape
         )
 
-        layoutContentView(contentView, on: scrollView)
+        layoutContentView(contentView,
+                          topOverlap: verticalOverscroll,
+                          bottomOverlap: verticalOverscroll,
+                          on: scrollView)
 
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -88,9 +94,9 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         contentView.layoutContent(stackView,
-                                  inset: UIEdgeInsets(top: 48,
+                                  inset: UIEdgeInsets(top: 48 + verticalOverscroll,
                                                       left: 24,
-                                                      bottom: 24,
+                                                      bottom: 24 + verticalOverscroll,
                                                       right: 24),
                                   layout: .bottomToTop)
 
@@ -159,19 +165,22 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
     // MARK: - Layout
 
     private func layoutContentView(_ contentView: AdaptyBaseContentView,
+                                   topOverlap: CGFloat,
+                                   bottomOverlap: CGFloat,
                                    on scrollView: UIScrollView) {
         scrollView.addSubview(contentView)
 
         scrollView.addConstraints([
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: -topOverlap),
 
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: bottomOverlap),
 
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             contentView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor,
-                                                multiplier: 1.0),
+                                                multiplier: 1.0,
+                                                constant: topOverlap + bottomOverlap),
         ])
     }
 }

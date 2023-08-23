@@ -78,8 +78,11 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     }
 
     func buildInterface(on view: UIView) throws {
+        let verticalOverscroll = 64.0
+        
         scrollViewDelegate.behaviours.append(
-            AdaptyLimitOverscrollScrollBehaviour()
+            AdaptyLimitOverscrollScrollBehaviour(maxOffsetTop: verticalOverscroll,
+                                                 maxOffsetBottom: verticalOverscroll)
         )
         
         let backgroundView = AdaptyBackgroundComponentView(background: contentShape.background)
@@ -112,18 +115,19 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         layoutContentView(
             contentView,
             multiplier: coverImageHeightMultilpyer,
-            overlap: contentShape.recommendedContentOverlap,
+            topOverlap: contentShape.recommendedContentOverlap,
+            bottomOverlap: verticalOverscroll,
             on: scrollView
         )
 
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = 24.0
+        stackView.spacing = 16
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         contentView.layoutContent(stackView, inset: UIEdgeInsets(top: contentShape.recommendedContentOverlap,
                                                                  left: 24,
-                                                                 bottom: 24,
+                                                                 bottom: 24 + verticalOverscroll,
                                                                  right: 24))
 
         if let titleRows = titleRows {
@@ -204,7 +208,8 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
 
     private func layoutContentView(_ contentView: AdaptyBaseContentView,
                                    multiplier: CGFloat,
-                                   overlap: CGFloat,
+                                   topOverlap: CGFloat,
+                                   bottomOverlap: CGFloat,
                                    on scrollView: UIScrollView) {
         scrollView.addSubview(contentView)
 
@@ -223,17 +228,17 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
 
         scrollView.addConstraints([
             contentView.topAnchor.constraint(equalTo: spacerView.bottomAnchor,
-                                             constant: -overlap),
+                                             constant: -topOverlap),
 
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: bottomOverlap),
 
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
 
             contentView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor,
                                                 multiplier: 1.0 - multiplier,
-                                                constant: overlap + 32.0),
+                                                constant: topOverlap + bottomOverlap + 32.0),
         ])
     }
 }
