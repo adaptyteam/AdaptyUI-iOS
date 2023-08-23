@@ -94,6 +94,8 @@ final class AdaptyTimelineEntrySideComponentView: UIView {
         shapeView.addSubview(imageView)
 
         addConstraints([
+            heightAnchor.constraint(greaterThanOrEqualToConstant: 28.0),
+            
             shapeView.topAnchor.constraint(equalTo: topAnchor),
             shapeView.leadingAnchor.constraint(equalTo: leadingAnchor),
             shapeView.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -139,9 +141,11 @@ final class AdaptyTimelineComponentView: UIStackView {
 
     private func createItemView(_ entry: AdaptyUI.TimelineEntry) throws -> UIView {
         let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
         stack.spacing = 8.0
         stack.alignment = .fill
+        stack.distribution = .fill
 
         let sideView = try AdaptyTimelineEntrySideComponentView(timelineEntry: entry)
         stack.addArrangedSubview(sideView)
