@@ -25,14 +25,14 @@ struct TemplateLayoutBuilderFabric {
                      productsBlock: style.productBlock,
                      purchaseButton: try style.purchaseButton,
                      footerBlock: style.footerBlock,
-                     closeButton: try style.closeButton,
+                     closeButton: config.isHard ? nil : try style.closeButton,
                      initialProducts: products)
     }
 
     static func createTransparent(config: AdaptyUI.LocalizedViewConfiguration,
                                   products: [ProductInfoModel]) throws -> TemplateLayoutBuilderTransparent {
         let style = try config.extractDefaultStyle()
-        
+
         return .init(background: .image(try style.backgroundImage),
                      contentShape: try style.contentShape,
                      titleRows: style.titleRows,
@@ -40,7 +40,7 @@ struct TemplateLayoutBuilderFabric {
                      productsBlock: style.productBlock,
                      purchaseButton: try style.purchaseButton,
                      footerBlock: style.footerBlock,
-                     closeButton: try style.closeButton,
+                     closeButton: config.isHard ? nil : try style.closeButton,
                      initialProducts: products)
     }
 
@@ -51,7 +51,7 @@ struct TemplateLayoutBuilderFabric {
         }
 
         let style = try config.extractDefaultStyle()
-        
+
         return .init(background: try style.background,
                      contentShape: try style.contentShape,
                      coverImage: try style.coverImageShape,
@@ -61,7 +61,7 @@ struct TemplateLayoutBuilderFabric {
                      productsBlock: style.productBlock,
                      purchaseButton: try style.purchaseButton,
                      footerBlock: style.footerBlock,
-                     closeButton: try style.closeButton,
+                     closeButton: config.isHard ? nil : try style.closeButton,
                      initialProducts: products)
     }
 
