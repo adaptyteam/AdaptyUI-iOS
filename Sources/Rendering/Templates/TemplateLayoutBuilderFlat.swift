@@ -71,22 +71,22 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
     }
 
     func buildInterface(on view: UIView) throws {
-        let backgroundView = AdaptyBackgroundComponentView(background: background)
-        layoutBackground(backgroundView, on: view)
-
         scrollViewDelegate.behaviours.append(
             AdaptyLimitOverscrollScrollBehaviour()
         )
 
+        let backgroundView = AdaptyBackgroundComponentView(background: background)
+        layoutBackground(backgroundView, on: view)
+
         let scrollView = AdaptyBaseScrollView()
         scrollView.insetsLayoutMarginsFromSafeArea = false
         scrollView.automaticallyAdjustsScrollIndicatorInsets = false
-        
+
         scrollView.delegate = scrollViewDelegate
         layoutScrollView(scrollView, on: view)
 
         self.scrollView = scrollView
-        
+
         let contentView = AdaptyBaseContentView(
             layout: .flat,
             shape: contentShape
@@ -190,7 +190,7 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
 
     func viewDidLayoutSubviews(_ view: UIView) {
         contentViewComponentView?.updateSafeArea(view.safeAreaInsets)
-        
+
         if let scrollView = scrollView {
             scrollViewDelegate.scrollViewDidScroll(scrollView)
         }

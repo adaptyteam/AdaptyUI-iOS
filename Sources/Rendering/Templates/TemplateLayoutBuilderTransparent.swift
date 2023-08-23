@@ -64,6 +64,10 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
     }
 
     func buildInterface(on view: UIView) throws {
+        scrollViewDelegate.behaviours.append(
+            AdaptyLimitOverscrollScrollBehaviour()
+        )
+
         let backgroundView = AdaptyBackgroundComponentView(background: background)
         layoutBackground(backgroundView, on: view)
 
@@ -108,7 +112,7 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
                                                            addProgressView: true) { [weak self] _ in
             self?.onContinueCallback?()
         }
-        
+
         stackView.addArrangedSubview(continueButtonView)
         stackView.addConstraint(
             continueButtonView.heightAnchor.constraint(equalToConstant: 58.0)
@@ -127,7 +131,7 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
 
             stackView.addArrangedSubview(footerView)
         }
-        
+
         layoutTopGradientView(AdaptyGradientView(position: .top), on: view)
 
         if let closeButton = closeButton {
@@ -141,9 +145,9 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
 
             layoutCloseButton(closeButtonView, on: view)
         }
-        
+
         let progressView = AdaptyActivityIndicatorView(backgroundColor: .black.withAlphaComponent(0.6),
-                                                                indicatorColor: .white)
+                                                       indicatorColor: .white)
         layoutProgressView(progressView, on: view)
         activityIndicatorComponentView = progressView
     }
