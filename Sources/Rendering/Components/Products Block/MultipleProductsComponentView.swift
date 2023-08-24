@@ -45,12 +45,9 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
         distribution = .fillEqually
         spacing = 8.0
 
-        let selectedId = products[productsBlock.mainProductIndex].id
+        let selectedId = products[safe: productsBlock.mainProductIndex]?.id
         try populateProductsButtons(products, selectedId: selectedId)
-        try renderMainProductTag()
     }
-
-    private weak var tagView: ProductBadgeView?
 
     private func cleanupView() {
         let views = arrangedSubviews
@@ -59,11 +56,9 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
             removeArrangedSubview(view)
             view.removeFromSuperview()
         }
-
-        tagView?.removeFromSuperview()
     }
 
-    private func populateProductsButtons(_ products: [ProductInfoModel], selectedId: String) throws {
+    private func populateProductsButtons(_ products: [ProductInfoModel], selectedId: String?) throws {
         let productsInfos = try productsBlock.productsInfos
 
         for i in 0 ..< products.count {
@@ -73,64 +68,84 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
                 throw AdaptyUIError.componentNotFound("\(product.id):product_info")
             }
 
-            let productInfoView: ProductInfoView
+            let productView = UIView()
+            addArrangedSubview(productView)
 
-            switch productsBlock.type {
-            case .horizontal:
-                productInfoView = try VerticalProductInfoView(product: product, info: productInfo)
-            default:
-                productInfoView = try HorizontalProductInfoView(product: product, info: productInfo)
-            }
-
-            let button = AdaptyButtonComponentView(
-                component: try productsBlock.button,
-                contentView: productInfoView,
-                contentViewMargins: .init(top: 12, left: 20, bottom: 12, right: 20),
-                onTap: { [weak self] _ in
-                    self?.onProductSelected?(product)
-                }
+            try buildProductItemView(
+                on: productView,
+                blockType: productsBlock.type,
+                product: product,
+                productInfo: productInfo,
+                isSelected: product.id == selectedId
             )
-            button.isSelected = product.id == selectedId
-
-            addArrangedSubview(button)
 
             switch productsBlock.type {
             case .horizontal:
-                addConstraint(button.heightAnchor.constraint(equalToConstant: 128.0))
-                break
+                addConstraint(productView.heightAnchor.constraint(equalToConstant: 128.0))
             default:
-                addConstraint(button.heightAnchor.constraint(equalToConstant: 64.0))
+                addConstraint(productView.heightAnchor.constraint(equalToConstant: 64.0))
             }
         }
     }
 
-    private func renderMainProductTag() throws {
-        guard let tagText = productsBlock.mainProductTagText else { return }
-
-        let index = productsBlock.mainProductIndex < arrangedSubviews.count ? productsBlock.mainProductIndex : 0
-        let mainProductView = arrangedSubviews[index]
-
-        let tagView = try ProductBadgeView(text: tagText,
-                                           shape: productsBlock.mainProductTagShape)
-
-        addSubview(tagView)
-
-        switch productsBlock.type {
-        case .horizontal:
-            addConstraints([
-                tagView.centerXAnchor.constraint(equalTo: mainProductView.centerXAnchor),
-            ])
-        default:
-            addConstraints([
-                tagView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8.0),
-            ])
+    private func buildProductItemView(
+        on containerView: UIView,
+        blockType: AdaptyUI.ProductsBlockType,
+        product: ProductInfoModel,
+        productInfo: AdaptyUI.ProductInfo,
+        isSelected: Bool
+    ) throws {
+        guard let buttonComponent = productInfo.button else {
+            throw AdaptyUIError.componentNotFound("product_info.button")
         }
 
-        addConstraints([
-            tagView.centerYAnchor.constraint(equalTo: mainProductView.topAnchor),
+        let productInfoView: ProductInfoView
+
+        switch blockType {
+        case .horizontal:
+            productInfoView = try VerticalProductInfoView(product: product, info: productInfo)
+        default:
+            productInfoView = try HorizontalProductInfoView(product: product, info: productInfo)
+        }
+
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.backgroundColor = .clear
+        containerView.clipsToBounds = false
+
+        let button = AdaptyButtonComponentView(
+            component: buttonComponent,
+            contentView: productInfoView,
+            contentViewMargins: .init(top: 12, left: 20, bottom: 12, right: 20),
+            onTap: { [weak self] _ in self?.onProductSelected?(product) }
+        )
+        button.isSelected = isSelected
+
+        containerView.addSubview(button)
+        containerView.addConstraints([
+            button.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            button.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            button.topAnchor.constraint(equalTo: containerView.topAnchor),
+            button.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
         ])
 
-        self.tagView = tagView
+        if let tagText = productInfo.tagText {
+            let tagView = try ProductBadgeView(text: tagText, shape: productInfo.tagShape)
+
+            containerView.addSubview(tagView)
+
+            switch blockType {
+            case .horizontal:
+                addConstraints([
+                    tagView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                    tagView.centerYAnchor.constraint(equalTo: containerView.topAnchor),
+                ])
+            default:
+                addConstraints([
+                    tagView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8.0),
+                    tagView.centerYAnchor.constraint(equalTo: containerView.topAnchor),
+                ])
+            }
+        }
     }
 
     func updateProducts(_ products: [ProductInfoModel], selectedProductId: String?) {

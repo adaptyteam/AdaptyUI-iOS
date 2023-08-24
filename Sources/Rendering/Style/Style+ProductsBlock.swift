@@ -21,6 +21,10 @@ extension AdaptyUI {
 
         let secondTitle: AdaptyUI.CompoundText?
         let secondSubitle: AdaptyUI.CompoundText?
+
+        let button: AdaptyUI.Button?
+        let tagText: AdaptyUI.CompoundText?
+        let tagShape: AdaptyUI.Shape?
     }
 }
 
@@ -39,7 +43,10 @@ extension AdaptyUI.LocalizedViewItem {
             subtitlePayUpFront: customObject.properties["subtitle_payupfront"]?.asText,
             subtitleFreeTrial: customObject.properties["subtitle_freetrial"]?.asText,
             secondTitle: customObject.properties["second_title"]?.asText,
-            secondSubitle: customObject.properties["second_subtitle"]?.asText
+            secondSubitle: customObject.properties["second_subtitle"]?.asText,
+            button: customObject.properties["button"]?.asButton,
+            tagText: customObject.properties["tag_text"]?.asText,
+            tagShape: customObject.properties["tag_shape"]?.asShape
         )
     }
 
@@ -50,27 +57,10 @@ extension AdaptyUI.LocalizedViewItem {
         else { return nil }
 
         return customObject.orderedProperties.compactMap { $0.value.toProductInfo(id: "123") }
-//        var infos = [String: AdaptyUI.ProductInfo]()
-//
-//        for (key, value) in customObject.properties {
-//            guard let productInfo = value.toProductInfo(id: key) else { continue }
-//            infos[key] = productInfo
-//        }
-//
-//        return infos
     }
 }
 
 extension AdaptyUI.ProductsBlock {
-    var button: AdaptyUI.Button {
-        get throws {
-            guard let result = items["button"]?.asButton else {
-                throw AdaptyUIError.componentNotFound("button")
-            }
-            return result
-        }
-    }
-
     var productsInfos: AdaptyUI.ProductsInfos {
         get throws {
             guard let result = items["infos"]?.asProductsInfos else {
@@ -78,13 +68,5 @@ extension AdaptyUI.ProductsBlock {
             }
             return result
         }
-    }
-
-    var mainProductTagShape: AdaptyUI.Shape? {
-        items["main_product_tag_shape"]?.asShape
-    }
-
-    var mainProductTagText: AdaptyUI.CompoundText? {
-        items["main_product_tag_text"]?.asText
     }
 }
