@@ -52,7 +52,7 @@ struct TemplateLayoutBuilderFabric {
 
         let style = try config.extractDefaultStyle()
 
-        return .init(background: try style.background,
+        return .init(background: try? style.background,
                      contentShape: try style.contentShape,
                      coverImage: try style.coverImageShape,
                      coverImageHeightMultilpyer: coverImageHeightMultilpyer,

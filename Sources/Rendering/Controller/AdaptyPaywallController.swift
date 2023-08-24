@@ -106,6 +106,8 @@ public class AdaptyPaywallController: UIViewController {
     }
 
     private func buildInterface() {
+        view.backgroundColor = .white
+        
         do {
             layoutBuilder = try TemplateLayoutBuilderFabric.createLayoutFromConfiguration(
                 presenter.viewConfiguration,

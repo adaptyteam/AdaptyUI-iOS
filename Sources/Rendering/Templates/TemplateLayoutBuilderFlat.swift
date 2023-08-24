@@ -9,7 +9,7 @@ import Adapty
 import UIKit
 
 class TemplateLayoutBuilderFlat: LayoutBuilder {
-    private let background: AdaptyUI.Filling
+    private let background: AdaptyUI.Filling?
     private let contentShape: AdaptyUI.Shape
     private let coverImage: AdaptyUI.Shape
     private let coverImageHeightMultilpyer: CGFloat
@@ -24,7 +24,7 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
     private let scrollViewDelegate = AdaptyCompoundScrollViewDelegate()
 
     init(
-        background: AdaptyUI.Filling,
+        background: AdaptyUI.Filling?,
         contentShape: AdaptyUI.Shape,
         coverImage: AdaptyUI.Shape,
         coverImageHeightMultilpyer: CGFloat,
