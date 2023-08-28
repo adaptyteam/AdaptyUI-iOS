@@ -67,10 +67,16 @@ final class VerticalProductInfoView: UIStackView, ProductInfoView {
         topStack.spacing = 0.0
 
         let priceTitleLabel = UILabel()
+        priceTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        priceTitleLabel.minimumScaleFactor = 0.5
+        priceTitleLabel.adjustsFontSizeToFitWidth = true
         priceTitleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         priceTitleLabel.attributedText = info.secondTitle?.attributedString(tagConverter: tagConverter)
 
         let priceSubtitleLabel = UILabel()
+        priceSubtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        priceSubtitleLabel.minimumScaleFactor = 0.5
+        priceSubtitleLabel.adjustsFontSizeToFitWidth = true
         priceSubtitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         priceSubtitleLabel.attributedText = info.secondSubitle?.attributedString(tagConverter: tagConverter)
 
