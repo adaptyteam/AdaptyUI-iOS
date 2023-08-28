@@ -24,6 +24,11 @@ extension AdaptyUI.Font {
         }
     }
 
-    var uiFont: UIFont { .systemFont(ofSize: defaultSize ?? 15.0, weight: conertedWeight) }
+    var uiFont: UIFont {
+        guard let font = UIFont(name: name, size: defaultSize ?? 15.0) else {
+            return .systemFont(ofSize: defaultSize ?? 15.0, weight: conertedWeight)
+        }
+        return font
+    }
     var uiColor: UIColor? { defaultColor?.uiColor }
 }
