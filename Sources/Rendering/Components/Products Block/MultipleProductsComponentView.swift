@@ -49,7 +49,11 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
         try populateProductsButtons(products, selectedId: selectedId)
     }
 
+    private var purchaseButtons = [AdaptyButtonComponentView]()
+
     private func cleanupView() {
+        purchaseButtons.removeAll()
+        
         let views = arrangedSubviews
 
         for view in views {
@@ -71,7 +75,7 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
             let productView = UIView()
             addArrangedSubview(productView)
 
-            try buildProductItemView(
+            let button = try buildProductItemView(
                 on: productView,
                 blockType: productsBlock.type,
                 product: product,
@@ -79,6 +83,8 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
                 isSelected: product.id == selectedId
             )
 
+            purchaseButtons.append(button)
+            
             switch productsBlock.type {
             case .horizontal:
                 addConstraint(productView.heightAnchor.constraint(equalToConstant: 128.0))
@@ -94,7 +100,7 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
         product: ProductInfoModel,
         productInfo: AdaptyUI.ProductInfo,
         isSelected: Bool
-    ) throws {
+    ) throws -> AdaptyButtonComponentView {
         guard let buttonComponent = productInfo.button else {
             throw AdaptyUIError.componentNotFound("product_info.button")
         }
@@ -146,6 +152,8 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
                 ])
             }
         }
+        
+        return button
     }
 
     func updateProducts(_ products: [ProductInfoModel], selectedProductId: String?) {
@@ -160,9 +168,9 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
             return
         }
 
-        for i in 0 ..< arrangedSubviews.count {
-            guard let button = arrangedSubviews[i] as? AdaptyButtonComponentView else { return }
-            button.isSelected = i == index
+        for i in 0 ..< purchaseButtons.count {
+            guard let subview = purchaseButtons[safe: i] else { continue }
+            subview.isSelected = i == index
         }
     }
 }
