@@ -173,12 +173,15 @@ extension AdaptyUI.Text.Item {
                 )
             }
 
-            let convertedText = initialValue.replaceAllTags(converter: tagConverter)
+            if let convertedText = initialValue.replaceAllTags(converter: tagConverter) {
+                return convertedText.attributedString(using: text,
+                                                      paragraph: paragraph,
+                                                      kern: kern,
+                                                      trailingPadding: nil)
 
-            return convertedText.attributedString(using: text,
-                                                  paragraph: paragraph,
-                                                  kern: kern,
-                                                  trailingPadding: nil)
+            } else {
+                return nil
+            }
         case let .textBullet(text):
             return text.attributedString(
                 paragraph: paragraph,

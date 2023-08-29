@@ -9,17 +9,22 @@ import Adapty
 import Foundation
 
 extension AdaptyUI.Text {
-    typealias ProductTagConverter = (ProductTag) -> String?
+    enum ProductTagReplacement {
+        case notApplicable
+        case value(String)
+    }
+
+    typealias ProductTagConverter = (ProductTag) -> ProductTagReplacement?
 
     enum ProductTag: String {
         case title = "TITLE"
-        
+
         case price = "PRICE"
         case pricePerDay = "PRICE_PER_DAY"
         case pricePerWeek = "PRICE_PER_WEEK"
         case pricePerMonth = "PRICE_PER_MONTH"
         case pricePerYear = "PRICE_PER_YEAR"
-        
+
         case offerPrice = "OFFER_PRICE"
         case offerPeriods = "OFFER_PERIOD"
         case offerNumberOfPeriods = "OFFER_NUMBER_OF_PERIOD"
@@ -39,7 +44,7 @@ extension AdaptyUI.Text.ProductTag {
 extension String {
     private static let productTagPattern = "</[a-zA-Z_0-9-]+/>"
 
-    func replaceAllTags(converter: AdaptyUI.Text.ProductTagConverter) -> String {
+    func replaceAllTags(converter: AdaptyUI.Text.ProductTagConverter) -> String? {
         guard let regex = try? NSRegularExpression(pattern: Self.productTagPattern) else {
             return self
         }
@@ -62,7 +67,14 @@ extension String {
                 result = result.replacingOccurrences(of: matchTag, with: "")
                 continue
             }
-            result = result.replacingOccurrences(of: matchTag, with: replacement)
+
+            switch replacement {
+            case .notApplicable:
+                // in case of notApplicable tag we are not able to render the full string
+                return nil
+            case let .value(replacementString):
+                result = result.replacingOccurrences(of: matchTag, with: replacementString)
+            }
         }
 
         return result

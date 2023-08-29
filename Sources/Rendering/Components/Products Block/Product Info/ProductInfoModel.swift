@@ -24,6 +24,18 @@ struct EmptyProductInfo: ProductInfoModel {
     }
 }
 
+extension AdaptyPaywallProduct {
+    func isApplicableForTag(_ tag: AdaptyUI.Text.ProductTag) -> Bool {
+        switch tag {
+        case .title, .price:
+            return true
+        case .pricePerDay, .pricePerWeek, .pricePerMonth, .pricePerYear,
+             .offerPrice, .offerPeriods, .offerNumberOfPeriods:
+            return subscriptionPeriod != nil
+        }
+    }
+}
+
 struct RealProductInfo: ProductInfoModel {
     let product: AdaptyPaywallProduct
     let introEligibility: AdaptyEligibility
@@ -39,19 +51,35 @@ struct RealProductInfo: ProductInfoModel {
 
     var tagConverter: AdaptyUI.Text.ProductTagConverter {
         { tag in
+            guard product.isApplicableForTag(tag) else { return .notApplicable }
+
+            let result: String?
+
             switch tag {
-            case .title: return product.localizedTitle
-            case .price: return product.localizedPrice
-            case .pricePerDay: return product.pricePer(period: .day)
-            case .pricePerWeek: return product.pricePer(period: .week)
-            case .pricePerMonth: return product.pricePer(period: .month)
-            case .pricePerYear: return product.pricePer(period: .year)
+            case .title:
+                result = product.localizedTitle
+            case .price:
+                result = product.localizedPrice
+            case .pricePerDay:
+                result = product.pricePer(period: .day)
+            case .pricePerWeek:
+                result = product.pricePer(period: .week)
+            case .pricePerMonth:
+                result = product.pricePer(period: .month)
+            case .pricePerYear:
+                result = product.pricePer(period: .year)
             case .offerPrice:
-                return product.eligibleDiscount(introEligibility: introEligibility)?.localizedPrice
+                result = product.eligibleDiscount(introEligibility: introEligibility)?.localizedPrice
             case .offerPeriods:
-                return product.eligibleDiscount(introEligibility: introEligibility)?.localizedSubscriptionPeriod
+                result = product.eligibleDiscount(introEligibility: introEligibility)?.localizedSubscriptionPeriod
             case .offerNumberOfPeriods:
-                return product.eligibleDiscount(introEligibility: introEligibility)?.localizedNumberOfPeriods
+                result = product.eligibleDiscount(introEligibility: introEligibility)?.localizedNumberOfPeriods
+            }
+
+            if let result = result {
+                return .value(result)
+            } else {
+                return nil
             }
         }
     }

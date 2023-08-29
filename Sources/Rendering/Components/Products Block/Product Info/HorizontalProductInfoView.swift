@@ -34,7 +34,7 @@ final class HorizontalProductInfoView: UIStackView, ProductInfoView {
         } else {
             titleLabel.text = " "
         }
-        
+
         let subtitleLabel = UILabel()
         subtitleLabel.minimumScaleFactor = 0.5
         subtitleLabel.adjustsFontSizeToFitWidth = true
@@ -67,10 +67,18 @@ final class HorizontalProductInfoView: UIStackView, ProductInfoView {
         titleStack.translatesAutoresizingMaskIntoConstraints = false
         titleStack.axis = .horizontal
 
+        let noSubtitle = subtitleLabel.attributedText?
+            .string
+            .trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true
+        let noSecondSubtitle = priceSubtitleLabel.attributedText?
+            .string
+            .trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true
+
         let subtitleStack = UIStackView(arrangedSubviews: [subtitleLabel, priceSubtitleLabel])
         subtitleStack.translatesAutoresizingMaskIntoConstraints = false
         subtitleStack.axis = .horizontal
         subtitleStack.spacing = 4.0
+        subtitleStack.isHidden = noSubtitle && noSecondSubtitle
 
         translatesAutoresizingMaskIntoConstraints = false
         axis = .vertical
