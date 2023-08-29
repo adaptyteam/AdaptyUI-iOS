@@ -8,7 +8,7 @@
 import Adapty
 import UIKit
 
-class ProductBadgeView: UIView {
+class ProductBadgeView: AdaptyShapeWithFillingView {
     let text: AdaptyUI.CompoundText
     let shape: AdaptyUI.Shape?
 
@@ -19,7 +19,7 @@ class ProductBadgeView: UIView {
         self.text = text
         self.shape = shape
 
-        super.init(frame: .zero)
+        super.init(shape: shape)
 
         try setupView()
     }
@@ -29,11 +29,6 @@ class ProductBadgeView: UIView {
     }
 
     private func setupView() throws {
-        translatesAutoresizingMaskIntoConstraints = false
-
-        applyFilling(shape?.background)
-        layer.applyShapeMask(shape?.type)
-
         let tagLabel = AdaptyInsetLabel()
 
         tagLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -46,51 +41,5 @@ class ProductBadgeView: UIView {
             tagLabel.topAnchor.constraint(equalTo: topAnchor, constant: 2.0),
             tagLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2.0),
         ])
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        applyFilling(shape?.background)
-        layer.applyShapeMask(shape?.type)
-    }
-    
-    private var gradientLayer: CAGradientLayer?
-    private var imageView: UIImageView?
-
-    func applyFilling(_ filling: AdaptyUI.Filling?) {
-        guard let filling = filling else {
-            backgroundColor = .clear
-            return
-        }
-
-        switch filling {
-        case let .color(color):
-            backgroundColor = color.uiColor
-        case let .image(image):
-            backgroundColor = .clear
-            if let imageView = imageView {
-                imageView.image = image.uiImage
-            } else {
-                let imageView = UIImageView(image: image.uiImage)
-                imageView.translatesAutoresizingMaskIntoConstraints = false
-                addConstraints([
-                    imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-                    imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-                    imageView.topAnchor.constraint(equalTo: topAnchor),
-                    imageView.bottomAnchor.constraint(equalTo: bottomAnchor),
-                ])
-            }
-        case let .colorGradient(gradient):
-            if let gradientLayer = gradientLayer {
-                gradientLayer.frame = bounds
-            } else {
-                let gradientLayer = CAGradientLayer.create(gradient)
-                gradientLayer.frame = bounds
-                layer.insertSublayer(gradientLayer, at: 0)
-                self.gradientLayer = gradientLayer
-            }
-            backgroundColor = .clear
-        }
     }
 }

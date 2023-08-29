@@ -68,10 +68,7 @@ final class AdaptyTimelineEntrySideComponentView: UIView {
     private func setupView() throws {
         translatesAutoresizingMaskIntoConstraints = false
 
-        let shapeView = UIView()
-        shapeView.translatesAutoresizingMaskIntoConstraints = false
-        shapeView.backgroundColor = timelineEntry.shape.background?.asColor?.uiColor
-        shapeView.layer.applyShapeMask(timelineEntry.shape.type)
+        let shapeView = AdaptyShapeWithFillingView(shape: timelineEntry.shape)
 
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -95,7 +92,7 @@ final class AdaptyTimelineEntrySideComponentView: UIView {
 
         addConstraints([
             heightAnchor.constraint(greaterThanOrEqualToConstant: 28.0),
-            
+
             shapeView.topAnchor.constraint(equalTo: topAnchor),
             shapeView.leadingAnchor.constraint(equalTo: leadingAnchor),
             shapeView.trailingAnchor.constraint(equalTo: trailingAnchor),
