@@ -102,7 +102,7 @@ final class AdaptyTimelineEntrySideComponentView: UIView {
             shapeView.heightAnchor.constraint(equalTo: shapeView.widthAnchor, multiplier: 1.0),
 
             gradientView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            gradientView.topAnchor.constraint(equalTo: imageView.centerYAnchor),
+            gradientView.topAnchor.constraint(equalTo: shapeView.bottomAnchor),
             gradientView.widthAnchor.constraint(equalToConstant: 3.0),
             gradientView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
