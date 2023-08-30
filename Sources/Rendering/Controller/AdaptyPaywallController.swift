@@ -232,15 +232,6 @@ public class AdaptyPaywallController: UIViewController {
         case let .failure(error):
             if error.adaptyErrorCode == .paymentCancelled {
                 delegate?.paywallController(self, didCancelPurchase: product)
-            } else if let alertDialog = delegate?.paywallController(
-                self,
-                buildDialogWith: .error(error),
-                onDialogDismissed: { [weak self] in
-                    guard let self = self else { return }
-                    self.delegate?.paywallController(self, didFailPurchase: product, error: error)
-                }
-            ) {
-                present(alertDialog, animated: true)
             } else {
                 delegate?.paywallController(self, didFailPurchase: product, error: error)
             }
@@ -250,34 +241,9 @@ public class AdaptyPaywallController: UIViewController {
     private func handleRestoreResult(_ result: AdaptyResult<AdaptyProfile>) {
         switch result {
         case let .success(profile):
-            if let alertDialog = delegate?.paywallController(
-                self,
-                buildDialogWith: .restored,
-                onDialogDismissed: { [weak self] in
-                    guard let self = self else { return }
-                    self.delegate?.paywallController(self, didFinishRestoreWith: profile)
-                }
-            ) {
-                present(alertDialog, animated: true)
-            } else {
-                delegate?.paywallController(self, didFinishRestoreWith: profile)
-            }
-
+            delegate?.paywallController(self, didFinishRestoreWith: profile)
         case let .failure(error):
-            guard error.adaptyErrorCode != .paymentCancelled else { break }
-
-            if let alertDialog = delegate?.paywallController(
-                self,
-                buildDialogWith: .error(error),
-                onDialogDismissed: { [weak self] in
-                    guard let self = self else { return }
-                    self.delegate?.paywallController(self, didFailRestoreWith: error)
-                }
-            ) {
-                present(alertDialog, animated: true)
-            } else {
-                delegate?.paywallController(self, didFailRestoreWith: error)
-            }
+            delegate?.paywallController(self, didFailRestoreWith: error)
         }
     }
 

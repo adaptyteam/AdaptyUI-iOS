@@ -14,14 +14,6 @@ extension AdaptyUI {
         case openURL(url: URL)
         case custom(id: String)
     }
-
-    public enum Event {
-        /// This event occurs when a successful restore is made.
-        case restored
-
-        /// This event occurs when an error is happened.
-        case error(AdaptyError)
-    }
 }
 
 /// Implement this protocol to respond to different events happening inside the purchase screen.
@@ -109,20 +101,6 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
     /// - Returns: Return `true`, if you want to retry products fetching.
     func paywallController(_ controller: AdaptyPaywallController,
                            didFailLoadingProductsWith error: AdaptyError) -> Bool
-
-    /// In some cases it is necessary to show the message to the user.
-    /// By overriding this method, you can show the event or error in any way you like.
-    ///
-    /// By default, errors will be shown inside the `UIAlertViewController`.
-    ///
-    /// - Parameters:
-    ///   - controller: an ``AdaptyPaywallController`` within which the event occurred.
-    ///   - event: an ``AdaptyUI.Event`` value that specifies the reason why the message should be shown to the user.
-    ///   - onDialogDismissed: Call this function when the dialog disappears.
-    /// - Returns: The controller that displays the message to the user.
-    func paywallController(_ controller: AdaptyPaywallController,
-                           buildDialogWith event: AdaptyUI.Event,
-                           onDialogDismissed: (() -> Void)?) -> UIViewController
 }
 
 extension AdaptyUI {
