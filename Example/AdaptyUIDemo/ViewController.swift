@@ -113,7 +113,7 @@ class ViewController: UIViewController {
 
         setInProgress(true)
 
-        AdaptyUI.getViewConfiguration(forPaywall: paywall) { [weak self] result in
+        AdaptyUI.getViewConfiguration(forPaywall: paywall, locale: "en") { [weak self] result in
             self?.setInProgress(false)
 
             switch result {
