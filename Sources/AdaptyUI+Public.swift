@@ -126,7 +126,34 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
 }
 
 extension AdaptyUI {
-    public static let SDKVersion = "1.2.0"
+    public static let SDKVersion = "2.0.0"
+
+    /// If you are using the [Paywall Builder](https://docs.adapty.io/docs/paywall-builder-getting-started), you can use this method to get a configuration object for your paywall.
+    ///
+    /// - Parameters:
+    ///   - forPaywall: the ``AdaptyPaywall`` for which you want to get a configuration.
+    ///   - completion: A result containing the ``AdaptyUI.ViewConfiguration>`` object. Use it with [AdaptyUI](https://github.com/adaptyteam/AdaptySDK-iOS-VisualPaywalls.git) library.
+    public static func getViewConfiguration(
+        forPaywall paywall: AdaptyPaywall,
+        locale: String,
+        _ completion: @escaping AdaptyResultCompletion<AdaptyUI.ViewConfiguration>
+    ) {
+        let data: Data
+        do {
+            data = try JSONSerialization.data(withJSONObject: [
+                "paywall_id": paywall.id,
+                "paywall_variation_id": paywall.variationId,
+                "locale": locale,
+                "builder_version": AdaptyUI.SDKVersion,
+            ])
+        } catch {
+            let encodingError = AdaptyUIError.encoding(error)
+            completion(.failure(AdaptyError(encodingError)))
+            return
+        }
+
+        AdaptyUI.getViewConfiguration(data: data, completion)
+    }
 
     /// Right after receiving ``AdaptyUI.ViewConfiguration``, you can create the corresponding ``AdaptyPaywallController`` to present it afterwards.
     ///
@@ -143,29 +170,6 @@ extension AdaptyUI {
         delegate: AdaptyPaywallControllerDelegate,
         productsTitlesResolver: ((AdaptyProduct) -> String)? = nil
     ) -> AdaptyPaywallController {
-        AdaptyPaywallController(
-            paywall: paywall,
-            products: products,
-            viewConfiguration: viewConfiguration,
-            delegate: delegate,
-            productsTitlesResolver: productsTitlesResolver
-        )
-    }
-
-    public static func paywallControllerTest(
-        for paywall: AdaptyPaywall,
-        products: [AdaptyPaywallProduct]? = nil,
-        viewConfiguration: AdaptyUI.ViewConfiguration,
-        delegate: AdaptyPaywallControllerDelegate,
-        productsTitlesResolver: ((AdaptyProduct) -> String)? = nil
-    ) -> UIViewController {
-//        do {
-//            return try AdaptyTemplateController.template(viewConfiguration)
-//        } catch {
-//            print("error = \(error)")
-//            return UIViewController()
-//        }
-
         AdaptyPaywallController(
             paywall: paywall,
             products: products,

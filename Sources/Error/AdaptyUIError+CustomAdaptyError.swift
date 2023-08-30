@@ -18,7 +18,7 @@ extension AdaptyUIError: CustomAdaptyError {
 
     public var originalError: Error? {
         switch self {
-        case let .rendering(error):
+        case let .encoding(error), let .rendering(error):
             return error
         default:
             return nil
@@ -27,6 +27,8 @@ extension AdaptyUIError: CustomAdaptyError {
 
     public var adaptyErrorCode: AdaptyError.ErrorCode {
         switch self {
+        case .encoding:
+            return AdaptyError.ErrorCode.encodingFailed
         case .unsupportedTemplate:
             return AdaptyError.ErrorCode.unsupportedData
         case .styleNotFound,
@@ -52,6 +54,8 @@ extension AdaptyUIError: CustomAdaptyError {
 
     public var description: String {
         switch self {
+        case let .encoding(error):
+            return "AdaptyUIError.encoding(\(error.localizedDescription))"
         case let .unsupportedTemplate(description):
             return "AdaptyUIError.unsupportedTemplate(\(description))"
         case let .styleNotFound(description):
