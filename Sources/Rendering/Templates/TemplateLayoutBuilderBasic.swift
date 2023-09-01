@@ -12,7 +12,8 @@ extension AdaptyUI.Shape {
     fileprivate var recommendedContentOverlap: CGFloat {
         switch type {
         case let .rectangle(cornerRadius): return max(24.0, cornerRadius.value ?? 0.0)
-        case .curveUp, .curveDown: return 1.5 * AdaptyBaseContentView.curveHeight
+        case .curveUp: return 1.5 * AdaptyBaseContentView.curveHeight
+        case .curveDown: return 0.8 * AdaptyBaseContentView.curveHeight
         case .circle: return 0.0
         }
     }
@@ -79,7 +80,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         onContinueCallback = onContinue
         onActionCallback = onAction
     }
-    
+
     func continueButtonShowIntroCallToAction(_ show: Bool) {
         if show, let text = purchaseButtonOfferTitle {
             continueButtonComponentView?.updateContent(text)
@@ -90,12 +91,12 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
 
     func buildInterface(on view: UIView) throws {
         let verticalOverscroll = 64.0
-        
+
         scrollViewDelegate.behaviours.append(
             AdaptyLimitOverscrollScrollBehaviour(maxOffsetTop: verticalOverscroll,
                                                  maxOffsetBottom: verticalOverscroll)
         )
-        
+
         let backgroundView = AdaptyBackgroundComponentView(background: contentShape.background)
         layoutBackground(backgroundView, on: view)
 
@@ -117,7 +118,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         scrollView.delegate = scrollViewDelegate
         layoutScrollView(scrollView, on: view)
         self.scrollView = scrollView
-        
+
         let contentView = AdaptyBaseContentView(
             layout: .basic(multiplier: coverImageHeightMultilpyer),
             shape: contentShape
@@ -209,7 +210,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
 
     func viewDidLayoutSubviews(_ view: UIView) {
         contentViewComponentView?.updateSafeArea(view.safeAreaInsets)
-        
+
         if let scrollView = scrollView {
             scrollViewDelegate.scrollViewDidScroll(scrollView)
         }
