@@ -6,6 +6,7 @@
 //
 
 import Adapty
+import Foundation
 
 extension AdaptyUI.LocalizedViewStyle {
     var backgroundImage: AdaptyUI.Image {

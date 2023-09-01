@@ -12,12 +12,14 @@ protocol ProductInfoModel {
     var id: String { get }
     var eligibleOffer: AdaptyProductDiscount? { get }
     var tagConverter: AdaptyUI.Text.ProductTagConverter { get }
+    var isEligibleForFreeTrial: Bool { get }
 }
 
 struct EmptyProductInfo: ProductInfoModel {
     let id: String
     var eligibleOffer: AdaptyProductDiscount? { nil }
     var tagConverter: AdaptyUI.Text.ProductTagConverter { { _ in nil } }
+    var isEligibleForFreeTrial: Bool { false }
 
     init(id: String) {
         self.id = id
@@ -41,6 +43,13 @@ struct RealProductInfo: ProductInfoModel {
     let introEligibility: AdaptyEligibility
 
     var eligibleOffer: AdaptyProductDiscount? { product.eligibleDiscount(introEligibility: introEligibility) }
+
+    var isEligibleForFreeTrial: Bool {
+        guard let discount = product.introductoryDiscount, introEligibility == .eligible else {
+            return false
+        }
+        return discount.paymentMode == .freeTrial
+    }
 
     init(product: AdaptyPaywallProduct, introEligibility: AdaptyEligibility) {
         self.product = product

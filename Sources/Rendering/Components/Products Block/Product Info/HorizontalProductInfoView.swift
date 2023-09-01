@@ -29,6 +29,11 @@ final class HorizontalProductInfoView: UIStackView, ProductInfoView {
         let tagConverter = product.tagConverter
 
         let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.adjustsFontSizeToFitWidth = true
+        titleLabel.minimumScaleFactor = 0.5
+        titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        
         if let title = info.title {
             titleLabel.attributedText = title.attributedString(tagConverter: tagConverter)
         } else {
@@ -36,6 +41,7 @@ final class HorizontalProductInfoView: UIStackView, ProductInfoView {
         }
 
         let subtitleLabel = UILabel()
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         subtitleLabel.minimumScaleFactor = 0.5
         subtitleLabel.adjustsFontSizeToFitWidth = true
         subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
@@ -56,11 +62,13 @@ final class HorizontalProductInfoView: UIStackView, ProductInfoView {
         }
 
         let priceTitleLabel = UILabel()
-        priceTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        priceTitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+//        priceTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         priceTitleLabel.attributedText = info.secondTitle?.attributedString(tagConverter: tagConverter)
 
         let priceSubtitleLabel = UILabel()
         priceSubtitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+//        priceSubtitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         priceSubtitleLabel.attributedText = info.secondSubitle?.attributedString(tagConverter: tagConverter)
 
         let titleStack = UIStackView(arrangedSubviews: [titleLabel, priceTitleLabel])

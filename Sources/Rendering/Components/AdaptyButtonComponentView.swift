@@ -16,6 +16,14 @@ extension AdaptyUI.Button {
             return normal?.shape
         }
     }
+    
+    func getStateTitle(_ isSelected: Bool) -> AdaptyUI.CompoundText? {
+        if isSelected, let selected {
+            return selected.title
+        } else {
+            return normal?.title
+        }
+    }
 }
 
 extension UIEdgeInsets {
@@ -122,6 +130,11 @@ final class AdaptyButtonComponentView: UIButton {
         self.progressView = progressView
     }
 
+    func resetContent() {
+        let title = component.getStateTitle(isSelected)
+        updateContent(title)
+    }
+    
     func updateContent(_ text: AdaptyUI.CompoundText?) {
         contentView?.removeFromSuperview()
         contentView = nil

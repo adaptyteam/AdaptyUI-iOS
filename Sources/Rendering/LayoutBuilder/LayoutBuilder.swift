@@ -16,6 +16,8 @@ protocol LayoutBuilder {
     func buildInterface(on view: UIView) throws
     func viewDidLayoutSubviews(_ view: UIView)
     
+    func continueButtonShowIntroCallToAction(_ show: Bool)
+    
     func addListeners(
         onContinue: @escaping () -> Void,
         onAction: @escaping (AdaptyUI.ButtonAction?) -> Void

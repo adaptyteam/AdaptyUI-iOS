@@ -24,6 +24,7 @@ struct TemplateLayoutBuilderFabric {
                      featuresBlock: style.featureBlock,
                      productsBlock: style.productBlock,
                      purchaseButton: try style.purchaseButton,
+                     purchaseButtonOfferTitle: style.purchaseButtonOfferTitle,
                      footerBlock: style.footerBlock,
                      closeButton: config.isHard ? nil : try style.closeButton,
                      initialProducts: products)
@@ -39,6 +40,7 @@ struct TemplateLayoutBuilderFabric {
                      featuresBlock: style.featureBlock,
                      productsBlock: style.productBlock,
                      purchaseButton: try style.purchaseButton,
+                     purchaseButtonOfferTitle: style.purchaseButtonOfferTitle,
                      footerBlock: style.footerBlock,
                      closeButton: config.isHard ? nil : try style.closeButton,
                      initialProducts: products)
@@ -60,6 +62,7 @@ struct TemplateLayoutBuilderFabric {
                      featuresBlock: style.featureBlock,
                      productsBlock: style.productBlock,
                      purchaseButton: try style.purchaseButton,
+                     purchaseButtonOfferTitle: style.purchaseButtonOfferTitle,
                      footerBlock: style.footerBlock,
                      closeButton: config.isHard ? nil : try style.closeButton,
                      initialProducts: products)

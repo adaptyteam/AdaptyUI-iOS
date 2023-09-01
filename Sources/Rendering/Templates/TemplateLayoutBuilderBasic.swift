@@ -26,6 +26,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     private let featuresBlock: AdaptyUI.FeaturesBlock?
     private let productsBlock: AdaptyUI.ProductsBlock
     private let purchaseButton: AdaptyUI.Button
+    private let purchaseButtonOfferTitle: AdaptyUI.CompoundText?
     private let closeButton: AdaptyUI.Button?
     private let footerBlock: AdaptyUI.FooterBlock?
     private let initialProducts: [ProductInfoModel]
@@ -40,6 +41,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         featuresBlock: AdaptyUI.FeaturesBlock?,
         productsBlock: AdaptyUI.ProductsBlock,
         purchaseButton: AdaptyUI.Button,
+        purchaseButtonOfferTitle: AdaptyUI.CompoundText?,
         footerBlock: AdaptyUI.FooterBlock?,
         closeButton: AdaptyUI.Button?,
         initialProducts: [ProductInfoModel]
@@ -51,6 +53,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         self.featuresBlock = featuresBlock
         self.productsBlock = productsBlock
         self.purchaseButton = purchaseButton
+        self.purchaseButtonOfferTitle = purchaseButtonOfferTitle
         self.footerBlock = footerBlock
         self.closeButton = closeButton
         self.initialProducts = initialProducts
@@ -75,6 +78,14 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     ) {
         onContinueCallback = onContinue
         onActionCallback = onAction
+    }
+    
+    func continueButtonShowIntroCallToAction(_ show: Bool) {
+        if show, let text = purchaseButtonOfferTitle {
+            continueButtonComponentView?.updateContent(text)
+        } else {
+            continueButtonComponentView?.resetContent()
+        }
     }
 
     func buildInterface(on view: UIView) throws {

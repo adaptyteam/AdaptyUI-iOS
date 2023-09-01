@@ -6,6 +6,7 @@
 //
 
 import Adapty
+import Foundation
 
 extension AdaptyUI {
     typealias ProductsInfos = [ProductInfo]
