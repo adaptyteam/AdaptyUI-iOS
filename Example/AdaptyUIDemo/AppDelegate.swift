@@ -11,8 +11,10 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+
         Adapty.logLevel = .verbose
-        Adapty.activate("public_live_iNuUlSsN.83zcTTR8D5Y8FI9cGUI6")
+        Adapty.activate("YOUR_API_KEY")
+
         return true
     }
 }

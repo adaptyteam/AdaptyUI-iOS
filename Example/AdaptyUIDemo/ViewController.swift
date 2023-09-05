@@ -24,10 +24,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // TODO: remove
-//        textField.text = "example_ab_test"
-        textField.text = "PAYWALL_BUILDER_V2_TEST"
-
         spinner.isHidden = true
         updatePaywallData()
     }
@@ -77,13 +73,12 @@ class ViewController: UIViewController {
 
     private func presentPaywall(_ paywall: AdaptyPaywall,
                                 products: [AdaptyPaywallProduct]?,
-                                viewConfiguration: AdaptyUI.ViewConfiguration) {
+                                viewConfiguration: AdaptyUI.LocalizedViewConfiguration) {
         let vc = AdaptyUI.paywallController(
             for: paywall,
             products: products,
             viewConfiguration: viewConfiguration,
-            delegate: self,
-            productsTitlesResolver: { $0.vendorProductId }
+            delegate: self
         )
         vc.modalPresentationStyle = .overCurrentContext
 
