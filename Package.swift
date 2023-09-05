@@ -12,9 +12,7 @@ let package = Package(
             targets: ["AdaptyUI"]),
     ],
     dependencies: [
-//        .package(url: "https://github.com/adaptyteam/AdaptySDK-iOS.git", revision: "850bb6e86b426ec025630510d19fcb9d19a3d84d")
-        .package(url: "https://github.com/adaptyteam/AdaptySDK-iOS.git", branch: "feature/new_visual_paywalls")
-//        .package(url: "https://github.com/adaptyteam/AdaptySDK-iOS.git", "2.6.1" ..< "2.7.0")
+        .package(url: "https://github.com/adaptyteam/AdaptySDK-iOS.git", "2.7.0" ..< "2.8.0")
     ],
     targets: [
         .target(
