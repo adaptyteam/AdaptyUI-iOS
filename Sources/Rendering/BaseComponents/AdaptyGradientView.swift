@@ -32,6 +32,7 @@ class AdaptyGradientView: UIView {
     private func setupView() {
         translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = .clear
+        isUserInteractionEnabled = false
 
         let gradientLayer = CAGradientLayer()
         
