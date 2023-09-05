@@ -122,7 +122,7 @@ extension AdaptyUI {
                 "paywall_id": paywall.id,
                 "paywall_variation_id": paywall.variationId,
                 "locale": locale,
-                "builder_version": AdaptyUI.SDKVersion,
+                "builder_version": "2.0.0",
             ])
         } catch {
             let encodingError = AdaptyUIError.encoding(error)
