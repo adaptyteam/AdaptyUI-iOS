@@ -15,7 +15,7 @@ extension AdaptyUIError: CustomDebugStringConvertible {
         case let .styleNotFound(description): return description
         case let .wrongComponentType(description): return description
         case let .componentNotFound(description): return description
-        case let .rendering(error): return error.localizedDescription
+        case let .encoding(error), let .rendering(error): return error.localizedDescription
         }
     }
 }

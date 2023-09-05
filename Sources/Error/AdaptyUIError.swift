@@ -8,6 +8,7 @@
 import Foundation
 
 public enum AdaptyUIError: Error {
+    case encoding(Error)
     case unsupportedTemplate(String)
     case styleNotFound(String)
     case componentNotFound(String)

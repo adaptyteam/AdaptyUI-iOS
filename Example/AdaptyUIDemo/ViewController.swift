@@ -24,11 +24,14 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // TODO: remove
-        textField.text = "london"
-
         spinner.isHidden = true
         updatePaywallData()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        loadPaywallPressed(self)
     }
 
     private var paywall: AdaptyPaywall?
@@ -54,7 +57,7 @@ class ViewController: UIViewController {
         variationLabel.text = paywall.variationId
         revisionLabel.text = "\(paywall.revision)"
         localeLabel.text = paywall.locale
-        presentButton.isEnabled = paywall.hasViewConfiguration
+        presentButton.isEnabled = true // paywall.hasViewConfiguration
         paywallInfoContainer.isHidden = false
     }
 
@@ -70,14 +73,14 @@ class ViewController: UIViewController {
 
     private func presentPaywall(_ paywall: AdaptyPaywall,
                                 products: [AdaptyPaywallProduct]?,
-                                viewConfiguration: AdaptyUI.ViewConfiguration) {
+                                viewConfiguration: AdaptyUI.LocalizedViewConfiguration) {
         let vc = AdaptyUI.paywallController(
             for: paywall,
             products: products,
             viewConfiguration: viewConfiguration,
-            delegate: self,
-            productsTitlesResolver: { $0.vendorProductId }
+            delegate: self
         )
+        vc.modalPresentationStyle = .overCurrentContext
 
         present(vc, animated: true)
     }
@@ -105,7 +108,7 @@ class ViewController: UIViewController {
 
         setInProgress(true)
 
-        AdaptyUI.getViewConfiguration(forPaywall: paywall) { [weak self] result in
+        AdaptyUI.getViewConfiguration(forPaywall: paywall, locale: "en") { [weak self] result in
             self?.setInProgress(false)
 
             switch result {
@@ -119,6 +122,20 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: AdaptyPaywallControllerDelegate {
+    func paywallController(_ controller: AdaptyPaywallController,
+                           didPerform action: AdaptyUI.Action) {
+        print("#ExampleUI# paywallController didPerform \(action)")
+
+        switch action {
+        case .close:
+            controller.dismiss(animated: true)
+        case let .openURL(url):
+            UIApplication.shared.open(url, options: [:])
+        case .custom:
+            break
+        }
+    }
+
     public func paywallControllerDidPressCloseButton(_ controller: AdaptyPaywallController) {
         print("#ExampleUI# paywallControllerDidPressCloseButton")
         controller.dismiss(animated: true)
@@ -160,6 +177,10 @@ extension ViewController: AdaptyPaywallControllerDelegate {
     public func paywallController(_ controller: AdaptyPaywallController,
                                   didFailRenderingWith error: AdaptyError) {
         print("#ExampleUI# didFailRenderingWith \(error)")
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+            controller.dismiss(animated: true)
+        }
     }
 
     public func paywallController(_ controller: AdaptyPaywallController,
