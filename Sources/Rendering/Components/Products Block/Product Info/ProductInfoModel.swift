@@ -45,10 +45,8 @@ struct RealProductInfo: ProductInfoModel {
     var eligibleOffer: AdaptyProductDiscount? { product.eligibleDiscount(introEligibility: introEligibility) }
 
     var isEligibleForFreeTrial: Bool {
-        guard let discount = product.introductoryDiscount, introEligibility == .eligible else {
-            return false
-        }
-        return discount.paymentMode == .freeTrial
+        guard let offer = eligibleOffer else { return false }
+        return offer.paymentMode == .freeTrial
     }
 
     init(product: AdaptyPaywallProduct, introEligibility: AdaptyEligibility) {

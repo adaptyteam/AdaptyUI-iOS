@@ -10,8 +10,8 @@ import Foundation
 
 extension AdaptyPaywallProduct {
     func eligibleDiscount(introEligibility: AdaptyEligibility) -> AdaptyProductDiscount? {
-        if let promotionalOfferId = promotionalOfferId,
-           let promotionalOffer = discounts.first(where: { $0.identifier == promotionalOfferId }) {
+        if promotionalOfferEligibility, let promotionalOfferId = promotionalOfferId,
+           let promotionalOffer = discount(byIdentifier: promotionalOfferId) {
             return promotionalOffer
         } else if introEligibility == .eligible {
             return introductoryDiscount
