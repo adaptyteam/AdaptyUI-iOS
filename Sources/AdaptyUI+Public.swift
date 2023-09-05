@@ -114,7 +114,7 @@ extension AdaptyUI {
     public static func getViewConfiguration(
         forPaywall paywall: AdaptyPaywall,
         locale: String,
-        _ completion: @escaping AdaptyResultCompletion<AdaptyUI.ViewConfiguration>
+        _ completion: @escaping AdaptyResultCompletion<AdaptyUI.LocalizedViewConfiguration>
     ) {
         let data: Data
         do {
@@ -130,7 +130,9 @@ extension AdaptyUI {
             return
         }
 
-        AdaptyUI.getViewConfiguration(data: data, completion)
+        AdaptyUI.getViewConfiguration(data: data) { result in
+            completion(result.map { $0.extractLocale(locale) })
+        }
     }
 
     /// Right after receiving ``AdaptyUI.ViewConfiguration``, you can create the corresponding ``AdaptyPaywallController`` to present it afterwards.
@@ -138,22 +140,20 @@ extension AdaptyUI {
     /// - Parameters:
     ///   - paywall: an ``AdaptyPaywall`` object, for which you are trying to get a controller.
     ///   - products: optional ``AdaptyPaywallProducts`` array. Pass this value in order to optimize the display time of the products on the screen. If you pass `nil`, ``AdaptyUI`` will automatically fetch the required products.
-    ///   - viewConfiguration: an ``AdaptyUI.ViewConfiguration`` object containing information about the visual part of the paywall. To load it, use the ``AdaptyUI.getViewConfiguration(paywall:)`` method.
+    ///   - viewConfiguration: an ``AdaptyUI.LocalizedViewConfiguration`` object containing information about the visual part of the paywall. To load it, use the ``AdaptyUI.getViewConfiguration(paywall:locale:)`` method.
     ///   - delegate: the object that implements the ``AdaptyPaywallControllerDelegate`` protocol. Use it to respond to different events happening inside the purchase screen.
     /// - Returns: an ``AdaptyPaywallController`` object, representing the requested paywall screen.
     public static func paywallController(
         for paywall: AdaptyPaywall,
         products: [AdaptyPaywallProduct]? = nil,
-        viewConfiguration: AdaptyUI.ViewConfiguration,
-        delegate: AdaptyPaywallControllerDelegate,
-        productsTitlesResolver: ((AdaptyProduct) -> String)? = nil
+        viewConfiguration: AdaptyUI.LocalizedViewConfiguration,
+        delegate: AdaptyPaywallControllerDelegate
     ) -> AdaptyPaywallController {
         AdaptyPaywallController(
             paywall: paywall,
             products: products,
             viewConfiguration: viewConfiguration,
-            delegate: delegate,
-            productsTitlesResolver: productsTitlesResolver
+            delegate: delegate
         )
     }
 }

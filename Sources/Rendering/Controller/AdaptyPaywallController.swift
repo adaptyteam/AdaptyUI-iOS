@@ -18,7 +18,6 @@ public class AdaptyPaywallController: UIViewController {
 
     public weak var delegate: AdaptyPaywallControllerDelegate?
 
-    private let productsTitlesResolver: (AdaptyProduct) -> String
     private var layoutBuilder: LayoutBuilder?
     private let presenter: AdaptyPaywallPresenter
     private var cancellable = Set<AnyCancellable>()
@@ -26,9 +25,8 @@ public class AdaptyPaywallController: UIViewController {
     init(
         paywall: AdaptyPaywall,
         products: [AdaptyPaywallProduct]?,
-        viewConfiguration: AdaptyUI.ViewConfiguration,
-        delegate: AdaptyPaywallControllerDelegate,
-        productsTitlesResolver: ((AdaptyProduct) -> String)?
+        viewConfiguration: AdaptyUI.LocalizedViewConfiguration,
+        delegate: AdaptyPaywallControllerDelegate
     ) {
         let logId = AdaptyUI.generateLogId()
 
@@ -36,12 +34,10 @@ public class AdaptyPaywallController: UIViewController {
 
         self.logId = logId
         self.delegate = delegate
-        self.productsTitlesResolver = productsTitlesResolver ?? { $0.localizedTitle }
 
-        let localizedConfig = viewConfiguration.extractLocale(paywall.locale)
         let selectedProductIndex: Int
 
-        if let style = try? localizedConfig.extractDefaultStyle() {
+        if let style = try? viewConfiguration.extractDefaultStyle() {
             selectedProductIndex = style.productBlock.mainProductIndex
         } else {
             selectedProductIndex = 0
@@ -51,7 +47,7 @@ public class AdaptyPaywallController: UIViewController {
                                            paywall: paywall,
                                            products: products,
                                            selectedProductIndex: selectedProductIndex,
-                                           viewConfiguration: localizedConfig)
+                                           viewConfiguration: viewConfiguration)
 
         super.init(nibName: nil, bundle: nil)
 
@@ -107,7 +103,7 @@ public class AdaptyPaywallController: UIViewController {
 
     private func buildInterface() {
         view.backgroundColor = .white
-        
+
         do {
             layoutBuilder = try TemplateLayoutBuilderFabric.createLayoutFromConfiguration(
                 presenter.viewConfiguration,
@@ -156,9 +152,9 @@ public class AdaptyPaywallController: UIViewController {
                 guard let self = self else { return }
 
                 self.layoutBuilder?.productsView?.updateProducts(value, selectedProductId: self.presenter.selectedProductId)
-                
+
                 if let selectedProductId = self.presenter.selectedProductId,
-                    let product = value.first(where: { $0.id == selectedProductId }) {
+                   let product = value.first(where: { $0.id == selectedProductId }) {
                     self.layoutBuilder?.continueButtonShowIntroCallToAction(product.isEligibleForFreeTrial)
                 }
             }
