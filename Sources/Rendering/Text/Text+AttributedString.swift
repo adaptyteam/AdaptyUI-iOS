@@ -11,7 +11,7 @@ import UIKit
 extension AdaptyUI.HorizontalAlign {
     var textAlignment: NSTextAlignment {
         switch self {
-        case .left: return .left
+        case .left: return .natural
         case .center: return .center
         case .right: return .right
         }
