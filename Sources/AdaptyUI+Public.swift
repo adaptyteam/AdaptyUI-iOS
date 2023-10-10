@@ -9,15 +9,24 @@ import Adapty
 import UIKit
 
 extension AdaptyUI {
+    // This enum describes user initiated actions.
     public enum Action {
+        // User pressed Close Button
         case close
+        // User pressed any button with URL
         case openURL(url: URL)
+        // User pressed any button with custom action (e.g. login)
         case custom(id: String)
     }
 }
 
 /// Implement this protocol to respond to different events happening inside the purchase screen.
 public protocol AdaptyPaywallControllerDelegate: NSObject {
+    /// If user performs an action process, this method will be invoked.
+    ///
+    /// - Parameters:
+    ///     - controller: an ``AdaptyPaywallController`` within which the event occurred.
+    ///     - action: an ``AdaptyUI.Action`` value.
     func paywallController(_ controller: AdaptyPaywallController,
                            didPerform action: AdaptyUI.Action)
 
@@ -104,7 +113,7 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
 }
 
 extension AdaptyUI {
-    public static let SDKVersion = "2.0.1"
+    public static let SDKVersion = "2.0.2"
 
     /// If you are using the [Paywall Builder](https://docs.adapty.io/docs/paywall-builder-getting-started), you can use this method to get a configuration object for your paywall.
     ///
@@ -122,7 +131,7 @@ extension AdaptyUI {
                 "paywall_id": paywall.id,
                 "paywall_variation_id": paywall.variationId,
                 "locale": locale,
-                "builder_version": "2.0.0",
+                "builder_version": AdaptyUI.SDKVersion,
             ])
         } catch {
             let encodingError = AdaptyUIError.encoding(error)
