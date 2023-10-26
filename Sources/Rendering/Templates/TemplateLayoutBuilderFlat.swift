@@ -117,9 +117,9 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         contentView.layoutContent(stackView, inset: UIEdgeInsets(top: verticalOverscroll,
-                                                                 left: 24,
+                                                                 left: 20,
                                                                  bottom: 24 + verticalOverscroll,
-                                                                 right: 24))
+                                                                 right: 20))
 
         let imageView = AdaptyTitleImageComponentView(shape: coverImage)
 
@@ -129,9 +129,7 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
                              multiplier: coverImageHeightMultilpyer)
 
         if let titleRows = titleRows {
-            try layoutText(titleRows,
-                           paragraph: .init(paragraphSpacing: 4.0),
-                           in: stackView)
+            try layoutTitleRows(titleRows, in: stackView)
         }
 
         if let featuresBlock = featuresBlock {

@@ -31,7 +31,7 @@ final class HorizontalProductInfoView: UIStackView, ProductInfoView {
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.adjustsFontSizeToFitWidth = true
-        titleLabel.minimumScaleFactor = 0.5
+        titleLabel.minimumScaleFactor = 0.1
         titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         
         if let title = info.title {
@@ -42,8 +42,8 @@ final class HorizontalProductInfoView: UIStackView, ProductInfoView {
 
         let subtitleLabel = UILabel()
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        subtitleLabel.minimumScaleFactor = 0.5
         subtitleLabel.adjustsFontSizeToFitWidth = true
+        subtitleLabel.minimumScaleFactor = 0.1
         subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         switch product.eligibleOffer?.paymentMode {
@@ -63,12 +63,14 @@ final class HorizontalProductInfoView: UIStackView, ProductInfoView {
 
         let priceTitleLabel = UILabel()
         priceTitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-//        priceTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        priceTitleLabel.adjustsFontSizeToFitWidth = true
+        priceTitleLabel.minimumScaleFactor = 0.1
         priceTitleLabel.attributedText = info.secondTitle?.attributedString(tagConverter: tagConverter)
 
         let priceSubtitleLabel = UILabel()
         priceSubtitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-//        priceSubtitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        priceSubtitleLabel.adjustsFontSizeToFitWidth = true
+        priceSubtitleLabel.minimumScaleFactor = 0.1
         priceSubtitleLabel.attributedText = info.secondSubitle?.attributedString(tagConverter: tagConverter)
 
         let titleStack = UIStackView(arrangedSubviews: [titleLabel, priceTitleLabel])

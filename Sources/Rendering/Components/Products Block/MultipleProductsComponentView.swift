@@ -53,7 +53,7 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
 
     private func cleanupView() {
         purchaseButtons.removeAll()
-        
+
         let views = arrangedSubviews
 
         for view in views {
@@ -65,6 +65,8 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
     private func populateProductsButtons(_ products: [ProductInfoModel], selectedId: String?) throws {
         let productsInfos = try productsBlock.productsInfos
 
+        var previousProductInfoView: ProductInfoView?
+
         for i in 0 ..< products.count {
             let product = products[i]
 
@@ -75,7 +77,7 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
             let productView = UIView()
             addArrangedSubview(productView)
 
-            let button = try buildProductItemView(
+            let (button, productInfoView) = try buildProductItemView(
                 on: productView,
                 blockType: productsBlock.type,
                 product: product,
@@ -84,13 +86,24 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
             )
 
             purchaseButtons.append(button)
-            
+
             switch productsBlock.type {
             case .horizontal:
-                addConstraint(productView.heightAnchor.constraint(equalToConstant: 128.0))
+                guard let previousView = previousProductInfoView as? VerticalProductInfoView,
+                      let currentView = productInfoView as? VerticalProductInfoView else { break }
+
+                addConstraints([
+                    currentView.titleLabelYAxisAnchor.constraint(equalTo: previousView.titleLabelYAxisAnchor),
+                    currentView.subtitleLabelYAxisAnchor.constraint(equalTo: previousView.subtitleLabelYAxisAnchor),
+                    currentView.priceTitleLabelYAxisAnchor.constraint(equalTo: previousView.priceTitleLabelYAxisAnchor),
+                    currentView.priceSubtitleLabelYAxisAnchor.constraint(equalTo: previousView.priceSubtitleLabelYAxisAnchor),
+                ])
             default:
+                alignment = .fill
                 addConstraint(productView.heightAnchor.constraint(equalToConstant: 64.0))
             }
+
+            previousProductInfoView = productInfoView
         }
     }
 
@@ -100,17 +113,20 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
         product: ProductInfoModel,
         productInfo: AdaptyUI.ProductInfo,
         isSelected: Bool
-    ) throws -> AdaptyButtonComponentView {
+    ) throws -> (AdaptyButtonComponentView, ProductInfoView) {
         guard let buttonComponent = productInfo.button else {
             throw AdaptyUIError.componentNotFound("product_info.button")
         }
 
         let productInfoView: ProductInfoView
+        let contentViewMargins: UIEdgeInsets
 
         switch blockType {
         case .horizontal:
+            contentViewMargins = .zero
             productInfoView = try VerticalProductInfoView(product: product, info: productInfo)
         default:
+            contentViewMargins = .init(top: 12, left: 20, bottom: 12, right: 20)
             productInfoView = try HorizontalProductInfoView(product: product, info: productInfo)
         }
 
@@ -121,7 +137,7 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
         let button = AdaptyButtonComponentView(
             component: buttonComponent,
             contentView: productInfoView,
-            contentViewMargins: .init(top: 12, left: 20, bottom: 12, right: 20),
+            contentViewMargins: contentViewMargins,
             onTap: { [weak self] _ in self?.onProductSelected?(product) }
         )
         button.isSelected = isSelected
@@ -152,8 +168,8 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
                 ])
             }
         }
-        
-        return button
+
+        return (button, productInfoView)
     }
 
     func updateProducts(_ products: [ProductInfoModel], selectedProductId: String?) {

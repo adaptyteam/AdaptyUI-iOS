@@ -8,7 +8,7 @@
 import Adapty
 import UIKit
 
-final class VerticalProductInfoView: UIStackView, ProductInfoView {
+final class VerticalProductInfoView: UIView, ProductInfoView {
     let product: ProductInfoModel
     let info: AdaptyUI.ProductInfo
 
@@ -24,26 +24,42 @@ final class VerticalProductInfoView: UIStackView, ProductInfoView {
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    private let titleLabel = UILabel()
+    private let subtitleLabel = UILabel()
+    private let priceTitleLabel = UILabel()
+    private let priceSubtitleLabel = UILabel()
+    
+    var titleLabelYAxisAnchor: NSLayoutYAxisAnchor { titleLabel.centerYAnchor }
+    var subtitleLabelYAxisAnchor: NSLayoutYAxisAnchor { subtitleLabel.centerYAnchor }
+    var priceTitleLabelYAxisAnchor: NSLayoutYAxisAnchor { priceTitleLabel.centerYAnchor }
+    var priceSubtitleLabelYAxisAnchor: NSLayoutYAxisAnchor { priceSubtitleLabel.centerYAnchor }
 
     private func setupView() throws {
+        translatesAutoresizingMaskIntoConstraints = false
+        
         let tagConverter = product.tagConverter
 
-        let titleLabel = UILabel()
-        titleLabel.minimumScaleFactor = 0.5
+
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        priceTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        priceSubtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+
+        titleLabel.minimumScaleFactor = 0.1
         titleLabel.adjustsFontSizeToFitWidth = true
-        titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        
         if let title = info.title {
             titleLabel.attributedText = title.attributedString(tagConverter: tagConverter)
+            titleLabel.lineBreakMode = .byTruncatingTail
         } else {
             titleLabel.text = " "
         }
 
-        let subtitleLabel = UILabel()
         subtitleLabel.numberOfLines = 2
-        subtitleLabel.minimumScaleFactor = 0.5
+        subtitleLabel.minimumScaleFactor = 0.1
         subtitleLabel.adjustsFontSizeToFitWidth = true
-        subtitleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-//        subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
 
         switch product.eligibleOffer?.paymentMode {
         case .payAsYouGo:
@@ -60,39 +76,36 @@ final class VerticalProductInfoView: UIStackView, ProductInfoView {
             }
         }
         
-        let topStack = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
-        topStack.translatesAutoresizingMaskIntoConstraints = false
-        topStack.axis = .vertical
-        topStack.alignment = .fill
-        topStack.spacing = 0.0
-
-        let priceTitleLabel = UILabel()
-        priceTitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        priceTitleLabel.minimumScaleFactor = 0.5
+        priceTitleLabel.minimumScaleFactor = 0.1
         priceTitleLabel.adjustsFontSizeToFitWidth = true
-        priceTitleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         priceTitleLabel.attributedText = info.secondTitle?.attributedString(tagConverter: tagConverter)
 
-        let priceSubtitleLabel = UILabel()
-        priceSubtitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        priceSubtitleLabel.minimumScaleFactor = 0.5
+        priceSubtitleLabel.minimumScaleFactor = 0.1
         priceSubtitleLabel.adjustsFontSizeToFitWidth = true
-        priceSubtitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         priceSubtitleLabel.attributedText = info.secondSubitle?.attributedString(tagConverter: tagConverter)
+        
+        addSubview(titleLabel)
+        addSubview(subtitleLabel)
+        addSubview(priceTitleLabel)
+        addSubview(priceSubtitleLabel)
 
-        let bottomStack = UIStackView(arrangedSubviews: [priceTitleLabel, priceSubtitleLabel])
-        bottomStack.translatesAutoresizingMaskIntoConstraints = false
-        bottomStack.axis = .vertical
-        bottomStack.alignment = .fill
-        bottomStack.spacing = 0.0
+        addConstraints([
+            titleLabel.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 16.0),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16.0),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16.0),
 
-        translatesAutoresizingMaskIntoConstraints = false
-        axis = .vertical
-        spacing = 8.0
-        alignment = .fill
-        distribution = .fillProportionally
-
-        addArrangedSubview(topStack)
-        addArrangedSubview(bottomStack)
+            subtitleLabel.topAnchor.constraint(greaterThanOrEqualTo: titleLabel.bottomAnchor, constant: 0.0),
+            subtitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16.0),
+            subtitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16.0),
+            
+            priceTitleLabel.topAnchor.constraint(greaterThanOrEqualTo: subtitleLabel.bottomAnchor, constant: 8.0),
+            priceTitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16.0),
+            priceTitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16.0),
+                        
+            priceSubtitleLabel.topAnchor.constraint(greaterThanOrEqualTo: priceTitleLabel.bottomAnchor, constant: 0.0),
+            priceSubtitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16.0),
+            priceSubtitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16.0),
+            priceSubtitleLabel.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -16.0),
+        ])
     }
 }

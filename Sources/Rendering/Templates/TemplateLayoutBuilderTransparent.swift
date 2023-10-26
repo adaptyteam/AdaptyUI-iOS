@@ -106,15 +106,13 @@ class TemplateLayoutBuilderTransparent: LayoutBuilder {
 
         contentView.layoutContent(stackView,
                                   inset: UIEdgeInsets(top: 48 + verticalOverscroll,
-                                                      left: 24,
+                                                      left: 20,
                                                       bottom: 24 + verticalOverscroll,
-                                                      right: 24),
+                                                      right: 20),
                                   layout: .bottomToTop)
 
         if let titleRows = titleRows {
-            try layoutText(titleRows,
-                           paragraph: .init(paragraphSpacing: 4.0),
-                           in: stackView)
+            try layoutTitleRows(titleRows, in: stackView)
         }
 
         if let featuresBlock = featuresBlock {
