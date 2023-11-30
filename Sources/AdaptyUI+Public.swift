@@ -113,7 +113,8 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
 }
 
 extension AdaptyUI {
-    public static let SDKVersion = "2.0.2"
+    public static let SDKVersion = "2.1.0"
+    public static let BuilderVersion = "1"
 
     /// If you are using the [Paywall Builder](https://docs.adapty.io/docs/paywall-builder-getting-started), you can use this method to get a configuration object for your paywall.
     ///
@@ -128,10 +129,11 @@ extension AdaptyUI {
         let data: Data
         do {
             data = try JSONSerialization.data(withJSONObject: [
-                "paywall_id": paywall.id,
                 "paywall_variation_id": paywall.variationId,
+                "paywall_instance_id": paywall.instanceIdentity,
                 "locale": locale,
-                "builder_version": AdaptyUI.SDKVersion,
+                "ui_sdk_version": AdaptyUI.SDKVersion,
+                "builder_version": AdaptyUI.BuilderVersion,
             ])
         } catch {
             let encodingError = AdaptyUIError.encoding(error)
