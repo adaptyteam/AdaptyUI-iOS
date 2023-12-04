@@ -26,6 +26,7 @@ extension LayoutBuilder {
     }
 
     func layoutTitleRows(_ text: AdaptyUI.CompoundText,
+                         _ tagConverter: AdaptyUI.Text.CustomTagConverter?,
                          in stackView: UIStackView) throws {
         let lines = text.items.filter { !$0.isNewline }
 
@@ -41,7 +42,8 @@ extension LayoutBuilder {
                                                          neighbourItemFont: nil,
                                                          paragraph: .init(),
                                                          kern: nil,
-                                                         tagConverter: nil)
+                                                         tagConverter: tagConverter,
+                                                         productTagConverter: nil)
 
             label.lineBreakMode = .byTruncatingTail
 
@@ -52,6 +54,7 @@ extension LayoutBuilder {
     }
 
     func layoutText(_ text: AdaptyUI.CompoundText,
+                    _ tagConverter: AdaptyUI.Text.CustomTagConverter?,
                     paragraph: AdaptyUI.Text.ParagraphStyle? = nil,
                     numberOfLines: Int = 0,
                     in stackView: UIStackView) throws {
@@ -60,7 +63,8 @@ extension LayoutBuilder {
         label.numberOfLines = numberOfLines
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.3
-        label.attributedText = text.attributedString(paragraph: paragraph ?? .init())
+        label.attributedText = text.attributedString(paragraph: paragraph ?? .init(),
+                                                     tagConverter: tagConverter)
         label.lineBreakMode = .byTruncatingTail
 
         stackView.addArrangedSubview(label)

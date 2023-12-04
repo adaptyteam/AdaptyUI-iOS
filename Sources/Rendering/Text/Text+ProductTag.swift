@@ -44,7 +44,7 @@ extension AdaptyUI.Text.ProductTag {
 extension String {
     private static let productTagPattern = "</[a-zA-Z_0-9-]+/>"
 
-    func replaceAllTags(converter: AdaptyUI.Text.ProductTagConverter) -> String? {
+    func replaceProductTags(converter: AdaptyUI.Text.ProductTagConverter) -> String? {
         guard let regex = try? NSRegularExpression(pattern: Self.productTagPattern) else {
             return self
         }

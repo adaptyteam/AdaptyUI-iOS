@@ -11,10 +11,14 @@ import UIKit
 final class HorizontalProductInfoView: UIStackView, ProductInfoView {
     let product: ProductInfoModel
     let info: AdaptyUI.ProductInfo
-
-    init(product: ProductInfoModel, info: AdaptyUI.ProductInfo) throws {
+    let tagConverter: AdaptyUI.Text.CustomTagConverter?
+    
+    init(product: ProductInfoModel,
+         info: AdaptyUI.ProductInfo,
+         tagConverter: AdaptyUI.Text.CustomTagConverter?) throws {
         self.product = product
         self.info = info
+        self.tagConverter = tagConverter
 
         super.init(frame: .zero)
 
@@ -26,16 +30,17 @@ final class HorizontalProductInfoView: UIStackView, ProductInfoView {
     }
 
     private func setupView() throws {
-        let tagConverter = product.tagConverter
-
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.adjustsFontSizeToFitWidth = true
         titleLabel.minimumScaleFactor = 0.1
         titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        
+
         if let title = info.title {
-            titleLabel.attributedText = title.attributedString(tagConverter: tagConverter)
+            titleLabel.attributedText = title.attributedString(
+                tagConverter: tagConverter,
+                productTagConverter: product.tagConverter
+            )
         } else {
             titleLabel.text = " "
         }
@@ -48,14 +53,26 @@ final class HorizontalProductInfoView: UIStackView, ProductInfoView {
 
         switch product.eligibleOffer?.paymentMode {
         case .payAsYouGo:
-            subtitleLabel.attributedText = info.subtitlePayAsYouGo?.attributedString(tagConverter: tagConverter)
+            subtitleLabel.attributedText = info.subtitlePayAsYouGo?.attributedString(
+                tagConverter: tagConverter,
+                productTagConverter: product.tagConverter
+            )
         case .payUpFront:
-            subtitleLabel.attributedText = info.subtitlePayUpFront?.attributedString(tagConverter: tagConverter)
+            subtitleLabel.attributedText = info.subtitlePayUpFront?.attributedString(
+                tagConverter: tagConverter,
+                productTagConverter: product.tagConverter
+            )
         case .freeTrial:
-            subtitleLabel.attributedText = info.subtitleFreeTrial?.attributedString(tagConverter: tagConverter)
+            subtitleLabel.attributedText = info.subtitleFreeTrial?.attributedString(
+                tagConverter: tagConverter,
+                productTagConverter: product.tagConverter
+            )
         default:
             if let subtitle = info.subtitle {
-                subtitleLabel.attributedText = subtitle.attributedString(tagConverter: tagConverter)
+                subtitleLabel.attributedText = subtitle.attributedString(
+                    tagConverter: tagConverter,
+                    productTagConverter: product.tagConverter
+                )
             } else {
                 subtitleLabel.text = " "
             }
@@ -65,13 +82,19 @@ final class HorizontalProductInfoView: UIStackView, ProductInfoView {
         priceTitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         priceTitleLabel.adjustsFontSizeToFitWidth = true
         priceTitleLabel.minimumScaleFactor = 0.1
-        priceTitleLabel.attributedText = info.secondTitle?.attributedString(tagConverter: tagConverter)
+        priceTitleLabel.attributedText = info.secondTitle?.attributedString(
+            tagConverter: tagConverter,
+            productTagConverter: product.tagConverter
+        )
 
         let priceSubtitleLabel = UILabel()
         priceSubtitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         priceSubtitleLabel.adjustsFontSizeToFitWidth = true
         priceSubtitleLabel.minimumScaleFactor = 0.1
-        priceSubtitleLabel.attributedText = info.secondSubitle?.attributedString(tagConverter: tagConverter)
+        priceSubtitleLabel.attributedText = info.secondSubitle?.attributedString(
+            tagConverter: tagConverter,
+            productTagConverter: product.tagConverter
+        )
 
         let titleStack = UIStackView(arrangedSubviews: [titleLabel, priceTitleLabel])
         titleStack.translatesAutoresizingMaskIntoConstraints = false

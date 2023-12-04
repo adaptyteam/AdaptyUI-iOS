@@ -17,16 +17,19 @@ extension Collection where Indices.Iterator.Element == Index {
 final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
     private var products: [ProductInfoModel]
     private let productsBlock: AdaptyUI.ProductsBlock
+    private let tagConverter: AdaptyUI.Text.CustomTagConverter?
 
     var onProductSelected: ((ProductInfoModel) -> Void)?
 
     init(
         axis: NSLayoutConstraint.Axis,
         products: [ProductInfoModel],
-        productsBlock: AdaptyUI.ProductsBlock
+        productsBlock: AdaptyUI.ProductsBlock,
+        tagConverter: AdaptyUI.Text.CustomTagConverter?
     ) throws {
         self.products = products
         self.productsBlock = productsBlock
+        self.tagConverter = tagConverter
 
         super.init(frame: .zero)
 
@@ -124,10 +127,14 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
         switch blockType {
         case .horizontal:
             contentViewMargins = .zero
-            productInfoView = try VerticalProductInfoView(product: product, info: productInfo)
+            productInfoView = try VerticalProductInfoView(product: product,
+                                                          info: productInfo,
+                                                          tagConverter: tagConverter)
         default:
             contentViewMargins = .init(top: 12, left: 20, bottom: 12, right: 20)
-            productInfoView = try HorizontalProductInfoView(product: product, info: productInfo)
+            productInfoView = try HorizontalProductInfoView(product: product,
+                                                            info: productInfo,
+                                                            tagConverter: tagConverter)
         }
 
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -136,6 +143,7 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
 
         let button = AdaptyButtonComponentView(
             component: buttonComponent,
+            tagConverter: tagConverter,
             contentView: productInfoView,
             contentViewMargins: contentViewMargins,
             onTap: { [weak self] _ in self?.onProductSelected?(product) }
@@ -151,7 +159,9 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
         ])
 
         if let tagText = productInfo.tagText {
-            let tagView = try ProductBadgeView(text: tagText, shape: productInfo.tagShape)
+            let tagView = try ProductBadgeView(text: tagText,
+                                               shape: productInfo.tagShape,
+                                               tagConverter: tagConverter)
 
             containerView.addSubview(tagView)
 

@@ -104,10 +104,19 @@ public class AdaptyPaywallController: UIViewController {
     private func buildInterface() {
         view.backgroundColor = .white
 
+        let tagConverter: AdaptyUI.Text.CustomTagConverter?
+
+        if let registeredConverter = AdaptyUI.tagConverter {
+            tagConverter = { registeredConverter($0) }
+        } else {
+            tagConverter = nil
+        }
+
         do {
             layoutBuilder = try TemplateLayoutBuilderFabric.createLayoutFromConfiguration(
                 presenter.viewConfiguration,
-                products: presenter.products
+                products: presenter.products,
+                tagConverter: tagConverter
             )
 
             try layoutBuilder?.buildInterface(on: view)

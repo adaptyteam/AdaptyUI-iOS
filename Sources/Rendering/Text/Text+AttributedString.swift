@@ -160,28 +160,31 @@ extension AdaptyUI.Text.Item {
         neighbourItemFont: AdaptyUI.Font?,
         paragraph: AdaptyUI.Text.ParagraphStyle,
         kern: CGFloat?,
-        tagConverter: AdaptyUI.Text.ProductTagConverter?
+        tagConverter: AdaptyUI.Text.CustomTagConverter?,
+        productTagConverter: AdaptyUI.Text.ProductTagConverter?
     ) -> NSAttributedString? {
         switch self {
         case let .text(text):
-            guard let initialValue = text.value,
-                  let tagConverter = tagConverter else {
-                return text.attributedString(
-                    paragraph: paragraph,
-                    kern: kern,
-                    trailingPadding: nil
-                )
-            }
-
-            if let convertedText = initialValue.replaceAllTags(converter: tagConverter) {
-                return convertedText.attributedString(using: text,
-                                                      paragraph: paragraph,
-                                                      kern: kern,
-                                                      trailingPadding: nil)
-
-            } else {
+            guard var resultText = text.value else {
                 return nil
             }
+
+            if text.hasTags, let tagConverter = tagConverter {
+                resultText = resultText.replaceCustomTags(converter: tagConverter)
+            }
+
+            if let productTagConverter = productTagConverter {
+                if let convertedText = resultText.replaceProductTags(converter: productTagConverter) {
+                    resultText = convertedText
+                } else {
+                    return nil
+                }
+            }
+
+            return resultText.attributedString(using: text,
+                                               paragraph: paragraph,
+                                               kern: kern,
+                                               trailingPadding: nil)
         case let .textBullet(text):
             return text.attributedString(
                 paragraph: paragraph,
@@ -257,7 +260,8 @@ extension AdaptyUI.CompoundText {
     func attributedString(
         paragraph: AdaptyUI.Text.ParagraphStyle = .init(),
         kern: CGFloat? = nil,
-        tagConverter: AdaptyUI.Text.ProductTagConverter? = nil
+        tagConverter: AdaptyUI.Text.CustomTagConverter?,
+        productTagConverter: AdaptyUI.Text.ProductTagConverter? = nil
     ) -> NSAttributedString {
         let result = NSMutableAttributedString()
 
@@ -275,7 +279,8 @@ extension AdaptyUI.CompoundText {
                 paragraph: paragraph.copyWith(alignment: neighbourAlign?.textAlignment,
                                               headIndent: paragraph.headIndent + CGFloat(bulletSpace ?? 0.0)),
                 kern: kern,
-                tagConverter: tagConverter
+                tagConverter: tagConverter,
+                productTagConverter: productTagConverter
             ) {
                 if i > 0 && item.isBullet && !(previousItem?.isNewline ?? true) {
                     result.append(NSAttributedString(string: "\n"))

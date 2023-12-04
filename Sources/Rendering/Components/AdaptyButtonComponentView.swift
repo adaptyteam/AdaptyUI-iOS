@@ -37,6 +37,7 @@ extension UIEdgeInsets {
 
 final class AdaptyButtonComponentView: UIButton {
     let component: AdaptyUI.Button
+    let tagConverter: AdaptyUI.Text.CustomTagConverter?
     let onTap: (AdaptyUI.ButtonAction?) -> Void
 
     private var gradientLayer: CAGradientLayer?
@@ -44,11 +45,13 @@ final class AdaptyButtonComponentView: UIButton {
     private let contentViewMargins: UIEdgeInsets
     
     init(component: AdaptyUI.Button,
+         tagConverter: AdaptyUI.Text.CustomTagConverter?,
          contentView: UIView? = nil,
          contentViewMargins: UIEdgeInsets = .zero,
          addProgressView: Bool = false,
          onTap: @escaping (AdaptyUI.ButtonAction?) -> Void) {
         self.component = component
+        self.tagConverter = tagConverter
         self.onTap = onTap
         self.contentViewMargins = contentViewMargins
         
@@ -59,7 +62,7 @@ final class AdaptyButtonComponentView: UIButton {
 
         if let contentView {
             setupContentView(contentView, contentViewMargins)
-        } else if let title = component.normal?.title?.attributedString() {
+        } else if let title = component.normal?.title?.attributedString(tagConverter: tagConverter) {
             setAttributedTitle(title, for: .normal)
 
             contentEdgeInsets = contentViewMargins
@@ -139,7 +142,7 @@ final class AdaptyButtonComponentView: UIButton {
         contentView?.removeFromSuperview()
         contentView = nil
 
-        setAttributedTitle(text?.attributedString(), for: .normal)
+        setAttributedTitle(text?.attributedString(tagConverter: tagConverter), for: .normal)
 
         if #available(iOS 15.0, *) {
             var configuration: UIButton.Configuration = .borderless()

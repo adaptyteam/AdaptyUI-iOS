@@ -11,11 +11,15 @@ import UIKit
 final class VerticalProductInfoView: UIView, ProductInfoView {
     let product: ProductInfoModel
     let info: AdaptyUI.ProductInfo
-
-    init(product: ProductInfoModel, info: AdaptyUI.ProductInfo) throws {
+    let tagConverter: AdaptyUI.Text.CustomTagConverter?
+    
+    init(product: ProductInfoModel,
+         info: AdaptyUI.ProductInfo,
+         tagConverter: AdaptyUI.Text.CustomTagConverter?) throws {
         self.product = product
         self.info = info
-
+        self.tagConverter = tagConverter
+        
         super.init(frame: .zero)
 
         try setupView()
@@ -51,7 +55,10 @@ final class VerticalProductInfoView: UIView, ProductInfoView {
         titleLabel.adjustsFontSizeToFitWidth = true
         
         if let title = info.title {
-            titleLabel.attributedText = title.attributedString(tagConverter: tagConverter)
+            titleLabel.attributedText = title.attributedString(
+                tagConverter: tagConverter,
+                productTagConverter: product.tagConverter
+            )
             titleLabel.lineBreakMode = .byTruncatingTail
         } else {
             titleLabel.text = " "
@@ -63,14 +70,26 @@ final class VerticalProductInfoView: UIView, ProductInfoView {
 
         switch product.eligibleOffer?.paymentMode {
         case .payAsYouGo:
-            subtitleLabel.attributedText = info.subtitlePayAsYouGo?.attributedString(tagConverter: tagConverter)
+            subtitleLabel.attributedText = info.subtitlePayAsYouGo?.attributedString(
+                tagConverter: tagConverter,
+                productTagConverter: product.tagConverter
+            )
         case .payUpFront:
-            subtitleLabel.attributedText = info.subtitlePayUpFront?.attributedString(tagConverter: tagConverter)
+            subtitleLabel.attributedText = info.subtitlePayUpFront?.attributedString(
+                tagConverter: tagConverter,
+                productTagConverter: product.tagConverter
+            )
         case .freeTrial:
-            subtitleLabel.attributedText = info.subtitleFreeTrial?.attributedString(tagConverter: tagConverter)
+            subtitleLabel.attributedText = info.subtitleFreeTrial?.attributedString(
+                tagConverter: tagConverter,
+                productTagConverter: product.tagConverter
+            )
         default:
             if let subtitle = info.subtitle {
-                subtitleLabel.attributedText = subtitle.attributedString(tagConverter: tagConverter)
+                subtitleLabel.attributedText = subtitle.attributedString(
+                    tagConverter: tagConverter,
+                    productTagConverter: product.tagConverter
+                )
             } else {
                 subtitleLabel.text = " "
             }
@@ -78,11 +97,17 @@ final class VerticalProductInfoView: UIView, ProductInfoView {
         
         priceTitleLabel.minimumScaleFactor = 0.1
         priceTitleLabel.adjustsFontSizeToFitWidth = true
-        priceTitleLabel.attributedText = info.secondTitle?.attributedString(tagConverter: tagConverter)
+        priceTitleLabel.attributedText = info.secondTitle?.attributedString(
+            tagConverter: tagConverter,
+            productTagConverter: product.tagConverter
+        )
 
         priceSubtitleLabel.minimumScaleFactor = 0.1
         priceSubtitleLabel.adjustsFontSizeToFitWidth = true
-        priceSubtitleLabel.attributedText = info.secondSubitle?.attributedString(tagConverter: tagConverter)
+        priceSubtitleLabel.attributedText = info.secondSubitle?.attributedString(
+            tagConverter: tagConverter,
+            productTagConverter: product.tagConverter
+        )
         
         addSubview(titleLabel)
         addSubview(subtitleLabel)

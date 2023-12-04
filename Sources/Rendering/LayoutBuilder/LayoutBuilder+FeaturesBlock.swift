@@ -9,7 +9,9 @@ import Adapty
 import UIKit
 
 extension LayoutBuilder {
-    func layoutFeaturesBlock(_ block: AdaptyUI.FeaturesBlock, in stackView: UIStackView) throws {
+    func layoutFeaturesBlock(_ block: AdaptyUI.FeaturesBlock,
+                             _ tagConverter: AdaptyUI.Text.CustomTagConverter?,
+                             in stackView: UIStackView) throws {
         switch block.type {
         case .list:
             guard let text = block.items["list"]?.asText else {
@@ -17,10 +19,14 @@ extension LayoutBuilder {
             }
 
             try layoutText(text,
+                           tagConverter,
                            paragraph: .init(paragraphSpacing: 8.0),
                            in: stackView)
         case .timeline:
-            let featuresTimelineView = try AdaptyTimelineComponentView(block: block)
+            let featuresTimelineView = try AdaptyTimelineComponentView(
+                block: block,
+                tagConverter: tagConverter
+            )
             stackView.addArrangedSubview(featuresTimelineView)
         }
     }

@@ -120,13 +120,15 @@ final class AdaptyTimelineEntrySideComponentView: UIView {
 
 final class AdaptyTimelineComponentView: UIStackView {
     let block: AdaptyUI.FeaturesBlock
+    let tagConverter: AdaptyUI.Text.CustomTagConverter?
 
-    init(block: AdaptyUI.FeaturesBlock) throws {
+    init(block: AdaptyUI.FeaturesBlock, tagConverter: AdaptyUI.Text.CustomTagConverter?) throws {
         guard block.type == .timeline else {
             throw AdaptyUIError.wrongComponentType("type")
         }
 
         self.block = block
+        self.tagConverter = tagConverter
 
         super.init(frame: .zero)
         try setupView()
@@ -150,7 +152,8 @@ final class AdaptyTimelineComponentView: UIStackView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.attributedText = entry.text.attributedString(paragraph: .init(lineSpacing: 2.0))
+        label.attributedText = entry.text.attributedString(paragraph: .init(lineSpacing: 2.0),
+                                                           tagConverter: tagConverter)
 
         stack.addArrangedSubview(label)
 
