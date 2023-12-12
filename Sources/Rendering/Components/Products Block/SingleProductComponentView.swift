@@ -81,9 +81,9 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
 
     func updateProducts(_ products: [ProductInfoModel], selectedProductId: String?) {
         guard let product = products.first else { return }
-        let tagConverter = product.tagConverter
 
-        if let title = info.title?.attributedString(tagConverter: tagConverter) {
+        if let title = info.title?.attributedString(tagConverter: tagConverter,
+                                                    productTagConverter: product.tagConverter) {
             titleLabel.attributedText = title
             titleLabel.isHidden = false
         } else {
@@ -92,16 +92,31 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
 
         switch product.eligibleOffer?.paymentMode {
         case .payAsYouGo:
-            subtitleLabel.attributedText = info.subtitlePayAsYouGo?.attributedString(tagConverter: tagConverter)
+            subtitleLabel.attributedText = info.subtitlePayAsYouGo?.attributedString(
+                tagConverter: tagConverter,
+                productTagConverter: product.tagConverter
+            )
         case .payUpFront:
-            subtitleLabel.attributedText = info.subtitlePayUpFront?.attributedString(tagConverter: tagConverter)
+            subtitleLabel.attributedText = info.subtitlePayUpFront?.attributedString(
+                tagConverter: tagConverter,
+                productTagConverter: product.tagConverter
+            )
         case .freeTrial:
-            subtitleLabel.attributedText = info.subtitleFreeTrial?.attributedString(tagConverter: tagConverter)
+            subtitleLabel.attributedText = info.subtitleFreeTrial?.attributedString(
+                tagConverter: tagConverter,
+                productTagConverter: product.tagConverter
+            )
         default:
-            subtitleLabel.attributedText = info.subtitle?.attributedString(tagConverter: tagConverter)
+            subtitleLabel.attributedText = info.subtitle?.attributedString(
+                tagConverter: tagConverter,
+                productTagConverter: product.tagConverter
+            )
         }
 
-        if let secondTitle = info.secondTitle?.attributedString(tagConverter: tagConverter) {
+        if let secondTitle = info.secondTitle?.attributedString(
+            tagConverter: tagConverter,
+            productTagConverter: product.tagConverter
+        ) {
             descriptionLabel.attributedText = secondTitle
             descriptionLabel.isHidden = false
         } else {

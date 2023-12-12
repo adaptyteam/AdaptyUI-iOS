@@ -19,7 +19,7 @@ class MainViewModel: ObservableObject {
     @MainActor
     func loadPaywall(id: String) async {
         do {
-            let paywall = try await Adapty.getPaywall(id)
+            let paywall = try await Adapty.getPaywall(placementId: id)
             self.paywall = paywall
         } catch {
             onError?(error)

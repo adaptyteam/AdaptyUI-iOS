@@ -41,9 +41,6 @@ final class VerticalProductInfoView: UIView, ProductInfoView {
 
     private func setupView() throws {
         translatesAutoresizingMaskIntoConstraints = false
-        
-        let tagConverter = product.tagConverter
-
 
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
