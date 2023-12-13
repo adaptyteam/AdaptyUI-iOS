@@ -13,11 +13,11 @@ extension AdaptyUI.Text {
 }
 
 extension String {
-    private static let customTagPattern = "<|[a-zA-Z_0-9-]+|>"
+    private static let customTagPattern = "</[a-zA-Z_0-9-]+/>"
 
     private func removingCustomTagBrackets() -> Self {
-        replacingOccurrences(of: "<|", with: "")
-            .replacingOccurrences(of: "|>", with: "")
+        replacingOccurrences(of: "</", with: "")
+            .replacingOccurrences(of: "/>", with: "")
     }
 
     func replaceCustomTags(converter: AdaptyUI.Text.CustomTagConverter) -> String {
