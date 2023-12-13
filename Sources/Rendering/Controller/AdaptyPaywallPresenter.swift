@@ -68,7 +68,9 @@ class AdaptyPaywallPresenter {
                                                    products: products,
                                                    eligibilities: nil)
 
-        selectedProductId = self.products[selectedProductIndex].id
+        if selectedProductIndex < self.products.count && selectedProductIndex >= 0 {
+            selectedProductId = self.products[selectedProductIndex].id
+        }
     }
 
     private static func generateProductsInfos(
