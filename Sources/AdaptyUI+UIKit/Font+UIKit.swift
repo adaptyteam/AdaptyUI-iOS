@@ -56,7 +56,7 @@ extension UIFont {
 
 extension AdaptyUI.Font {
     static let systemFontReservedName = "adapty_system"
-    
+
     var uiColor: UIColor? { defaultColor?.uiColor }
 
     var uiFont: UIFont {
@@ -67,16 +67,25 @@ extension AdaptyUI.Font {
         }
 
         if familyName == Self.systemFontReservedName {
-            if italic {
-                return .italicSystemFont(ofSize: size)
-            } else {
-                return .systemFont(ofSize: size, weight: .fromInteger(weight ?? 400))
-            }
+            return .systemFont(ofSize: size, weight: .fromInteger(weight ?? 400), italic: italic)
         }
 
         return .customFont(ofSize: size,
                            name: familyName,
                            weight: weight ?? 400,
                            italic: italic)
+    }
+}
+
+extension UIFont {
+    static func systemFont(ofSize fontSize: CGFloat, weight: UIFont.Weight, italic: Bool) -> UIFont {
+        let font = UIFont.systemFont(ofSize: fontSize, weight: weight)
+
+        guard italic,
+              let italicDescriptor = font.fontDescriptor.withSymbolicTraits([.traitItalic]) else {
+            return font
+        }
+
+        return UIFont(descriptor: italicDescriptor, size: fontSize)
     }
 }
