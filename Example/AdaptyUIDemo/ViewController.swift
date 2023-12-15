@@ -90,7 +90,7 @@ class ViewController: UIViewController {
 
         setInProgress(true)
 
-        Adapty.getPaywall(paywallId) { [weak self] result in
+        Adapty.getPaywall(placementId: paywallId) { [weak self] result in
             self?.setInProgress(false)
 
             switch result {
