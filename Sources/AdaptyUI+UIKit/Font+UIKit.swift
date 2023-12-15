@@ -55,6 +55,8 @@ extension UIFont {
 }
 
 extension AdaptyUI.Font {
+    static let systemFontReservedName = "adapty_system"
+    
     var uiColor: UIColor? { defaultColor?.uiColor }
 
     var uiFont: UIFont {
@@ -62,6 +64,14 @@ extension AdaptyUI.Font {
 
         if !alias.isEmpty, let font = UIFont(name: alias, size: size) {
             return font
+        }
+
+        if familyName == Self.systemFontReservedName {
+            if italic {
+                return .italicSystemFont(ofSize: size)
+            } else {
+                return .systemFont(ofSize: size, weight: .fromInteger(weight ?? 400))
+            }
         }
 
         return .customFont(ofSize: size,
