@@ -140,6 +140,10 @@ extension ViewController: AdaptyPaywallControllerDelegate {
         print("#ExampleUI# paywallControllerDidPressCloseButton")
         controller.dismiss(animated: true)
     }
+    
+    public func paywallControllerDidStartRestore(_ controller: AdaptyPaywallController) {
+        print("#ExampleUI# didStartRestore")
+    }
 
     public func paywallController(_ controller: AdaptyPaywallController,
                                   didFinishRestoreWith profile: AdaptyProfile) {
