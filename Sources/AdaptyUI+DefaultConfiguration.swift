@@ -29,6 +29,9 @@ extension AdaptyPaywallControllerDelegate {
                                   didStartPurchase product: AdaptyPaywallProduct) {
     }
 
+    func paywallControllerDidStartRestore(_ controller: AdaptyPaywallController) {
+    }
+
     public func paywallController(_ controller: AdaptyPaywallController,
                                   didFinishPurchase product: AdaptyPaywallProduct,
                                   purchasedInfo: AdaptyPurchasedInfo) {

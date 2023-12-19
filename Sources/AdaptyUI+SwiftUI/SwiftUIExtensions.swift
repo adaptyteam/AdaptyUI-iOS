@@ -50,17 +50,20 @@ struct AdaptyPaywallView: UIViewControllerRepresentable {
     let configuration: AdaptyUI.LocalizedViewConfiguration
 
     let delegate: AdaptyPaywallDelegate_SwiftUI
+    let tagResolver: AdaptyTagResolver?
 
     init(
         paywall: AdaptyPaywall,
         products: [AdaptyPaywallProduct]?,
         configuration: AdaptyUI.LocalizedViewConfiguration,
+        tagResolver: AdaptyTagResolver? = nil,
         didPerformAction: @escaping (AdaptyUI.Action) -> Void
     ) {
         self.paywall = paywall
         self.products = products
         self.configuration = configuration
-
+        self.tagResolver = tagResolver
+        
         delegate = .init(didPerformAction: didPerformAction)
     }
 
@@ -68,7 +71,8 @@ struct AdaptyPaywallView: UIViewControllerRepresentable {
         AdaptyPaywallController(paywall: paywall,
                                 products: products,
                                 viewConfiguration: configuration,
-                                delegate: delegate)
+                                delegate: delegate,
+                                tagResolver: tagResolver)
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
@@ -107,6 +111,10 @@ class AdaptyPaywallDelegate_SwiftUI: NSObject, AdaptyPaywallControllerDelegate {
 
     func paywallController(_ controller: AdaptyPaywallController,
                            didCancelPurchase product: AdaptyPaywallProduct) {
+    }
+    
+    func paywallControllerDidStartRestore(_ controller: AdaptyPaywallController) {
+        
     }
 
     func paywallController(_ controller: AdaptyPaywallController,

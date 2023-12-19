@@ -76,6 +76,12 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
     func paywallController(_ controller: AdaptyPaywallController,
                            didCancelPurchase product: AdaptyPaywallProduct)
 
+    /// If user initiates the restore process, this method will be invoked.
+    ///
+    /// - Parameters:
+    ///     - controller: an ``AdaptyPaywallController`` within which the event occurred.
+    func paywallControllerDidStartRestore(_ controller: AdaptyPaywallController)
+
     /// This method is invoked when a successful restore is made.
     ///
     /// Check if the ``AdaptyProfile`` object contains the desired access level, and if so, the controller can be dismissed.
@@ -115,12 +121,6 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
 extension AdaptyUI {
     public static let SDKVersion = "2.1.0"
     public static let BuilderVersion = "1"
-
-    static var tagConverter: ((String) -> String?)?
-
-    public static func registerTagConverter(_ converter: @escaping (String) -> String?) {
-        tagConverter = converter
-    }
 
     /// If you are using the [Paywall Builder](https://docs.adapty.io/docs/paywall-builder-getting-started), you can use this method to get a configuration object for your paywall.
     ///
@@ -164,13 +164,15 @@ extension AdaptyUI {
         for paywall: AdaptyPaywall,
         products: [AdaptyPaywallProduct]? = nil,
         viewConfiguration: AdaptyUI.LocalizedViewConfiguration,
-        delegate: AdaptyPaywallControllerDelegate
+        delegate: AdaptyPaywallControllerDelegate,
+        tagResolver: AdaptyTagResolver? = nil
     ) -> AdaptyPaywallController {
         AdaptyPaywallController(
             paywall: paywall,
             products: products,
             viewConfiguration: viewConfiguration,
-            delegate: delegate
+            delegate: delegate,
+            tagResolver: tagResolver
         )
     }
 }

@@ -21,12 +21,14 @@ public class AdaptyPaywallController: UIViewController {
     private var layoutBuilder: LayoutBuilder?
     private let presenter: AdaptyPaywallPresenter
     private var cancellable = Set<AnyCancellable>()
+    private let tagResolver: AdaptyTagResolver?
 
     init(
         paywall: AdaptyPaywall,
         products: [AdaptyPaywallProduct]?,
         viewConfiguration: AdaptyUI.LocalizedViewConfiguration,
-        delegate: AdaptyPaywallControllerDelegate
+        delegate: AdaptyPaywallControllerDelegate,
+        tagResolver: AdaptyTagResolver?
     ) {
         let logId = AdaptyUI.generateLogId()
 
@@ -48,6 +50,8 @@ public class AdaptyPaywallController: UIViewController {
                                            products: products,
                                            selectedProductIndex: selectedProductIndex,
                                            viewConfiguration: viewConfiguration)
+
+        self.tagResolver = tagResolver
 
         super.init(nibName: nil, bundle: nil)
 
@@ -106,8 +110,8 @@ public class AdaptyPaywallController: UIViewController {
 
         let tagConverter: AdaptyUI.Text.CustomTagConverter?
 
-        if let registeredConverter = AdaptyUI.tagConverter {
-            tagConverter = { registeredConverter($0) }
+        if let tagResolver = tagResolver {
+            tagConverter = { tagResolver.replacement(for: $0) }
         } else {
             tagConverter = nil
         }
