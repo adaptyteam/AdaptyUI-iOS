@@ -71,7 +71,12 @@ struct MainView: View {
                         default:
                             break
                         }
-                    }
+                    },
+                    didFinishPurchase: { _, _ in },
+                    didFailPurchase: { _, _ in },
+                    didFinishRestore: { _ in },
+                    didFailRestore: { _ in },
+                    didFailRenderingWith: { _ in paywallPresented = false }
                 )
             } else {
                 list

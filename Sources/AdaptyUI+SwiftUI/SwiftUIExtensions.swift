@@ -16,13 +16,33 @@ extension View {
         products: [AdaptyPaywallProduct]? = nil,
         configuration: AdaptyUI.LocalizedViewConfiguration,
         fullScreen: Bool = true,
-        didPerformAction: @escaping (AdaptyUI.Action) -> Void
+        didPerformAction: @escaping (AdaptyUI.Action) -> Void,
+        didSelectProduct: ((AdaptyPaywallProduct) -> Void)? = nil,
+        didStartPurchase: ((AdaptyPaywallProduct) -> Void)? = nil,
+        didFinishPurchase: @escaping (AdaptyPaywallProduct, AdaptyPurchasedInfo) -> Void,
+        didFailPurchase: @escaping (AdaptyPaywallProduct, AdaptyError) -> Void,
+        didCancelPurchase: ((AdaptyPaywallProduct) -> Void)? = nil,
+        didStartRestore: (() -> Void)? = nil,
+        didFinishRestore: @escaping (AdaptyProfile) -> Void,
+        didFailRestore: @escaping (AdaptyError) -> Void,
+        didFailRenderingWith: @escaping (AdaptyError) -> Void,
+        didFailLoadingProducts: @escaping (AdaptyError) -> Bool = { _ in true }
     ) -> some View {
         let paywallView = AdaptyPaywallView(
             paywall: paywall,
             products: products,
             configuration: configuration,
-            didPerformAction: didPerformAction
+            didPerformAction: didPerformAction,
+            didSelectProduct: didSelectProduct,
+            didStartPurchase: didStartPurchase,
+            didFinishPurchase: didFinishPurchase,
+            didFailPurchase: didFailPurchase,
+            didCancelPurchase: didCancelPurchase,
+            didStartRestore: didStartRestore,
+            didFinishRestore: didFinishRestore,
+            didFailRestore: didFailRestore,
+            didFailRenderingWith: didFailRenderingWith,
+            didFailLoadingProducts: didFailLoadingProducts
         )
 
         if fullScreen, #available(iOS 14.0, *) {
@@ -57,14 +77,36 @@ struct AdaptyPaywallView: UIViewControllerRepresentable {
         products: [AdaptyPaywallProduct]?,
         configuration: AdaptyUI.LocalizedViewConfiguration,
         tagResolver: AdaptyTagResolver? = nil,
-        didPerformAction: @escaping (AdaptyUI.Action) -> Void
+        didPerformAction: @escaping (AdaptyUI.Action) -> Void,
+        didSelectProduct: ((AdaptyPaywallProduct) -> Void)?,
+        didStartPurchase: ((AdaptyPaywallProduct) -> Void)?,
+        didFinishPurchase: @escaping (AdaptyPaywallProduct, AdaptyPurchasedInfo) -> Void,
+        didFailPurchase: @escaping (AdaptyPaywallProduct, AdaptyError) -> Void,
+        didCancelPurchase: ((AdaptyPaywallProduct) -> Void)?,
+        didStartRestore: (() -> Void)?,
+        didFinishRestore: @escaping (AdaptyProfile) -> Void,
+        didFailRestore: @escaping (AdaptyError) -> Void,
+        didFailRenderingWith: @escaping (AdaptyError) -> Void,
+        didFailLoadingProducts: @escaping (AdaptyError) -> Bool
     ) {
         self.paywall = paywall
         self.products = products
         self.configuration = configuration
         self.tagResolver = tagResolver
-        
-        delegate = .init(didPerformAction: didPerformAction)
+
+        delegate = .init(
+            didPerformAction: didPerformAction,
+            didSelectProduct: didSelectProduct,
+            didStartPurchase: didStartPurchase,
+            didFinishPurchase: didFinishPurchase,
+            didFailPurchase: didFailPurchase,
+            didCancelPurchase: didCancelPurchase,
+            didStartRestore: didStartRestore,
+            didFinishRestore: didFinishRestore,
+            didFailRestore: didFailRestore,
+            didFailRenderingWith: didFailRenderingWith,
+            didFailLoadingProducts: didFailLoadingProducts
+        )
     }
 
     func makeUIViewController(context: Context) -> UIViewController {
@@ -80,10 +122,45 @@ struct AdaptyPaywallView: UIViewControllerRepresentable {
 }
 
 class AdaptyPaywallDelegate_SwiftUI: NSObject, AdaptyPaywallControllerDelegate {
-    let didPerformAction: (AdaptyUI.Action) -> Void
+    private let didPerformAction: (AdaptyUI.Action) -> Void
 
-    init(didPerformAction: @escaping (AdaptyUI.Action) -> Void) {
+    private let didSelectProduct: ((AdaptyPaywallProduct) -> Void)?
+    private let didStartPurchase: ((AdaptyPaywallProduct) -> Void)?
+    private let didFinishPurchase: (AdaptyPaywallProduct, AdaptyPurchasedInfo) -> Void
+    private let didFailPurchase: (AdaptyPaywallProduct, AdaptyError) -> Void
+    private let didCancelPurchase: ((AdaptyPaywallProduct) -> Void)?
+
+    private let didStartRestore: (() -> Void)?
+    private let didFinishRestore: (AdaptyProfile) -> Void
+    private let didFailRestore: (AdaptyError) -> Void
+
+    private let didFailRenderingWith: (AdaptyError) -> Void
+    private let didFailLoadingProducts: (AdaptyError) -> Bool
+
+    init(
+        didPerformAction: @escaping (AdaptyUI.Action) -> Void,
+        didSelectProduct: ((AdaptyPaywallProduct) -> Void)?,
+        didStartPurchase: ((AdaptyPaywallProduct) -> Void)?,
+        didFinishPurchase: @escaping (AdaptyPaywallProduct, AdaptyPurchasedInfo) -> Void,
+        didFailPurchase: @escaping (AdaptyPaywallProduct, AdaptyError) -> Void,
+        didCancelPurchase: ((AdaptyPaywallProduct) -> Void)?,
+        didStartRestore: (() -> Void)?,
+        didFinishRestore: @escaping (AdaptyProfile) -> Void,
+        didFailRestore: @escaping (AdaptyError) -> Void,
+        didFailRenderingWith: @escaping (AdaptyError) -> Void,
+        didFailLoadingProducts: @escaping (AdaptyError) -> Bool
+    ) {
         self.didPerformAction = didPerformAction
+        self.didSelectProduct = didSelectProduct
+        self.didStartPurchase = didStartPurchase
+        self.didFinishPurchase = didFinishPurchase
+        self.didFailPurchase = didFailPurchase
+        self.didCancelPurchase = didCancelPurchase
+        self.didStartRestore = didStartRestore
+        self.didFinishRestore = didFinishRestore
+        self.didFailRestore = didFailRestore
+        self.didFailRenderingWith = didFailRenderingWith
+        self.didFailLoadingProducts = didFailLoadingProducts
     }
 
     func paywallController(_ controller: AdaptyPaywallController,
@@ -112,9 +189,8 @@ class AdaptyPaywallDelegate_SwiftUI: NSObject, AdaptyPaywallControllerDelegate {
     func paywallController(_ controller: AdaptyPaywallController,
                            didCancelPurchase product: AdaptyPaywallProduct) {
     }
-    
+
     func paywallControllerDidStartRestore(_ controller: AdaptyPaywallController) {
-        
     }
 
     func paywallController(_ controller: AdaptyPaywallController,
