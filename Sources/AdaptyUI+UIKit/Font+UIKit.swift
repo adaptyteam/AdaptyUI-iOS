@@ -82,10 +82,21 @@ extension UIFont {
         let font = UIFont.systemFont(ofSize: fontSize, weight: weight)
 
         guard italic,
-              let italicDescriptor = font.fontDescriptor.withSymbolicTraits([.traitItalic]) else {
+              let italicDescriptor = font.fontDescriptor.withItalicSymbolicTraits(weight: weight) else {
             return font
         }
 
         return UIFont(descriptor: italicDescriptor, size: fontSize)
+    }
+}
+
+extension UIFontDescriptor {
+    func withItalicSymbolicTraits(weight: UIFont.Weight) -> UIFontDescriptor? {
+        switch weight {
+        case .bold, .heavy, .black:
+            return withSymbolicTraits([.traitItalic, .traitBold])
+        default:
+            return withSymbolicTraits([.traitItalic])
+        }
     }
 }
