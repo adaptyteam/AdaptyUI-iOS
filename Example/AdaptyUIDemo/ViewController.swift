@@ -78,8 +78,12 @@ class ViewController: UIViewController {
             for: paywall,
             products: products,
             viewConfiguration: viewConfiguration,
-            delegate: self
+            delegate: self,
+            tagResolver: [
+                "USERNAME": "John",
+            ]
         )
+
         vc.modalPresentationStyle = .overCurrentContext
 
         present(vc, animated: true)
@@ -140,7 +144,7 @@ extension ViewController: AdaptyPaywallControllerDelegate {
         print("#ExampleUI# paywallControllerDidPressCloseButton")
         controller.dismiss(animated: true)
     }
-    
+
     public func paywallControllerDidStartRestore(_ controller: AdaptyPaywallController) {
         print("#ExampleUI# didStartRestore")
     }

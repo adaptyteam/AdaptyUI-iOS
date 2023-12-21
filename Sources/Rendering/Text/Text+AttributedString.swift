@@ -169,8 +169,8 @@ extension AdaptyUI.Text.Item {
                 return nil
             }
 
-            if text.hasTags, let tagConverter = tagConverter {
-                resultText = resultText.replaceCustomTags(converter: tagConverter)
+            if text.hasTags {
+                resultText = resultText.replaceCustomTags(converter: tagConverter, fallback: text.fallback)
             }
 
             if let productTagConverter = productTagConverter {
