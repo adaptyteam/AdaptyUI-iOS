@@ -195,8 +195,16 @@ class AdaptyPaywallPresenter {
     private func loadProductsIntroductoryEligibilities() {
         guard let products = adaptyProducts else { return }
 
+        log(.verbose, "loadProductsIntroductoryEligibilities begin")
+
         Adapty.getProductsIntroductoryOfferEligibility(products: products) { [weak self] result in
-            self?.introductoryOffersEligibilities = try? result.get()
+            switch result {
+            case let .success(eligibilities):
+                self?.introductoryOffersEligibilities = eligibilities
+                self?.log(.verbose, "loadProductsIntroductoryEligibilities success: \(eligibilities)")
+            case let .failure(error):
+                self?.log(.error, "loadProductsIntroductoryEligibilities fail: \(error)")
+            }
         }
     }
 }

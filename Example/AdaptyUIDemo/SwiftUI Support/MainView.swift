@@ -76,7 +76,7 @@ struct MainView: View {
                     didFailPurchase: { _, _ in },
                     didFinishRestore: { _ in },
                     didFailRestore: { _ in },
-                    didFailRenderingWith: { _ in paywallPresented = false }
+                    didFailRendering: { _ in paywallPresented = false }
                 )
             } else {
                 list

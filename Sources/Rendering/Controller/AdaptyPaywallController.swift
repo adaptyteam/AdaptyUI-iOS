@@ -32,7 +32,7 @@ public class AdaptyPaywallController: UIViewController {
     ) {
         let logId = AdaptyUI.generateLogId()
 
-        AdaptyUI.writeLog(level: .verbose, message: "#Controller_\(logId)# init template: \(viewConfiguration.templateId), products: \(products?.count ?? 0)")
+        AdaptyUI.writeLog(level: .verbose, message: "#\(logId)# init template: \(viewConfiguration.templateId), products: \(products?.count ?? 0)")
 
         self.logId = logId
         self.delegate = delegate
@@ -151,6 +151,7 @@ public class AdaptyPaywallController: UIViewController {
         case .restore:
             log(.verbose, "restore tap")
             presenter.restorePurchases()
+            delegate?.paywallControllerDidStartRestore(self)
         case let .custom(id):
             log(.verbose, "custom (\(id ?? "null") tap")
             guard let id = id else { return }
