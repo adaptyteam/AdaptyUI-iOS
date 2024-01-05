@@ -31,6 +31,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     private let closeButton: AdaptyUI.Button?
     private let footerBlock: AdaptyUI.FooterBlock?
     private let initialProducts: [ProductInfoModel]
+    private let paywall: AdaptyPaywall
     private let tagConverter: AdaptyUI.Text.CustomTagConverter?
 
     private let scrollViewDelegate = AdaptyCompoundScrollViewDelegate()
@@ -47,6 +48,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         footerBlock: AdaptyUI.FooterBlock?,
         closeButton: AdaptyUI.Button?,
         initialProducts: [ProductInfoModel],
+        paywall: AdaptyPaywall,
         tagConverter: AdaptyUI.Text.CustomTagConverter?
     ) {
         self.coverImage = coverImage
@@ -60,6 +62,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         self.footerBlock = footerBlock
         self.closeButton = closeButton
         self.initialProducts = initialProducts
+        self.paywall = paywall
         self.tagConverter = tagConverter
     }
 
@@ -155,7 +158,8 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
 
         productsComponentView = try layoutProductsBlock(
             productsBlock,
-            initialProducts: initialProducts,
+            initialProducts: initialProducts, 
+            paywall: paywall,
             tagConverter: tagConverter,
             in: stackView
         )

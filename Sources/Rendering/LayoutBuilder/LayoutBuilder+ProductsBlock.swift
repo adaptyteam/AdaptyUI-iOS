@@ -12,6 +12,7 @@ extension LayoutBuilder {
     func layoutProductsBlock(
         _ productsBlock: AdaptyUI.ProductsBlock,
         initialProducts: [ProductInfoModel],
+        paywall: AdaptyPaywall,
         tagConverter: AdaptyUI.Text.CustomTagConverter?,
         in stackView: UIStackView
     ) throws -> ProductsComponentView {
@@ -21,6 +22,7 @@ extension LayoutBuilder {
         case .horizontal:
             productsView = try MultipleProductsComponentView(
                 axis: .horizontal,
+                paywall: paywall,
                 products: initialProducts,
                 productsBlock: productsBlock,
                 tagConverter: tagConverter
@@ -28,6 +30,7 @@ extension LayoutBuilder {
         case .vertical:
             productsView = try MultipleProductsComponentView(
                 axis: .vertical,
+                paywall: paywall,
                 products: initialProducts,
                 productsBlock: productsBlock,
                 tagConverter: tagConverter

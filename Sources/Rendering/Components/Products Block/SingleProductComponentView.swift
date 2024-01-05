@@ -27,19 +27,19 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
         self.product = product
         self.tagConverter = tagConverter
 
-        let productsInfos = try productsBlock.productsInfos
-
-        guard let productInfo = productsInfos.first else {
+        if let adaptyProduct = product.adaptyProduct,
+           let productInfo = productsBlock.product(by: adaptyProduct)?.toProductInfo(id: product.id) {
+            info = productInfo
+        } else if let productInfo = productsBlock.products.first?.value.toProductInfo(id: product.id) {
+            info = productInfo
+        } else {
             throw AdaptyUIError.componentNotFound("\(product.id):product_info")
         }
-
-        info = productInfo
 
         super.init(frame: .zero)
 
         try setupView()
-
-        updateProducts([product], selectedProductId: nil)
+        try updateProducts([product], selectedProductId: nil)
     }
 
     required init(coder: NSCoder) {
@@ -79,7 +79,7 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
         self.descriptionLabel = descriptionLabel
     }
 
-    func updateProducts(_ products: [ProductInfoModel], selectedProductId: String?) {
+    func updateProducts(_ products: [ProductInfoModel], selectedProductId: String?) throws {
         guard let product = products.first else { return }
 
         if let title = info.title?.attributedString(tagConverter: tagConverter,

@@ -10,6 +10,7 @@ import UIKit
 
 protocol ProductInfoModel {
     var id: String { get }
+    var adaptyProduct: AdaptyPaywallProduct? { get }
     var eligibleOffer: AdaptyProductDiscount? { get }
     var tagConverter: AdaptyUI.Text.ProductTagConverter { get }
     var isEligibleForFreeTrial: Bool { get }
@@ -17,6 +18,7 @@ protocol ProductInfoModel {
 
 struct EmptyProductInfo: ProductInfoModel {
     let id: String
+    var adaptyProduct: AdaptyPaywallProduct? { nil }
     var eligibleOffer: AdaptyProductDiscount? { nil }
     var tagConverter: AdaptyUI.Text.ProductTagConverter { { _ in nil } }
     var isEligibleForFreeTrial: Bool { false }
@@ -55,6 +57,7 @@ struct RealProductInfo: ProductInfoModel {
     }
 
     var id: String { product.vendorProductId }
+    var adaptyProduct: AdaptyPaywallProduct? { product }
 
     var tagConverter: AdaptyUI.Text.ProductTagConverter {
         { tag in

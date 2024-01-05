@@ -9,8 +9,6 @@ import Adapty
 import Foundation
 
 extension AdaptyUI {
-    typealias ProductsInfos = [ProductInfo]
-
     struct ProductInfo {
         let id: String
         let title: AdaptyUI.CompoundText?
@@ -29,45 +27,20 @@ extension AdaptyUI {
     }
 }
 
-extension AdaptyUI.LocalizedViewItem {
+extension AdaptyUI.ProductObject {
     func toProductInfo(id: String) -> AdaptyUI.ProductInfo? {
-        guard
-            case let .object(customObject) = self,
-            customObject.type == "product_info"
-        else { return nil }
-
-        return .init(
+        .init(
             id: id,
-            title: customObject.properties["title"]?.asText,
-            subtitle: customObject.properties["subtitle"]?.asText,
-            subtitlePayAsYouGo: customObject.properties["subtitle_payasyougo"]?.asText,
-            subtitlePayUpFront: customObject.properties["subtitle_payupfront"]?.asText,
-            subtitleFreeTrial: customObject.properties["subtitle_freetrial"]?.asText,
-            secondTitle: customObject.properties["second_title"]?.asText,
-            secondSubitle: customObject.properties["second_subtitle"]?.asText,
-            button: customObject.properties["button"]?.asButton,
-            tagText: customObject.properties["tag_text"]?.asText,
-            tagShape: customObject.properties["tag_shape"]?.asShape
+            title: properties["title"]?.asText,
+            subtitle: properties["subtitle"]?.asText,
+            subtitlePayAsYouGo: properties["subtitle_payasyougo"]?.asText,
+            subtitlePayUpFront: properties["subtitle_payupfront"]?.asText,
+            subtitleFreeTrial: properties["subtitle_freetrial"]?.asText,
+            secondTitle: properties["second_title"]?.asText,
+            secondSubitle: properties["second_subtitle"]?.asText,
+            button: properties["button"]?.asButton,
+            tagText: properties["tag_text"]?.asText,
+            tagShape: properties["tag_shape"]?.asShape
         )
-    }
-
-    var asProductsInfos: AdaptyUI.ProductsInfos? {
-        guard
-            case let .object(customObject) = self,
-            customObject.type == "products_infos"
-        else { return nil }
-
-        return customObject.orderedProperties.compactMap { $0.value.toProductInfo(id: "123") }
-    }
-}
-
-extension AdaptyUI.ProductsBlock {
-    var productsInfos: AdaptyUI.ProductsInfos {
-        get throws {
-            guard let result = items["infos"]?.asProductsInfos else {
-                throw AdaptyUIError.componentNotFound("infos")
-            }
-            return result
-        }
     }
 }

@@ -15,6 +15,7 @@ extension Collection where Indices.Iterator.Element == Index {
 }
 
 final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
+    private let paywall: AdaptyPaywall
     private var products: [ProductInfoModel]
     private let productsBlock: AdaptyUI.ProductsBlock
     private let tagConverter: AdaptyUI.Text.CustomTagConverter?
@@ -23,10 +24,12 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
 
     init(
         axis: NSLayoutConstraint.Axis,
+        paywall: AdaptyPaywall,
         products: [ProductInfoModel],
         productsBlock: AdaptyUI.ProductsBlock,
         tagConverter: AdaptyUI.Text.CustomTagConverter?
     ) throws {
+        self.paywall = paywall
         self.products = products
         self.productsBlock = productsBlock
         self.tagConverter = tagConverter
@@ -66,15 +69,26 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
     }
 
     private func populateProductsButtons(_ products: [ProductInfoModel], selectedId: String?) throws {
-        let productsInfos = try productsBlock.productsInfos
-
         var previousProductInfoView: ProductInfoView?
+
+        let orderedProducts = productsBlock.products(by: paywall)
 
         for i in 0 ..< products.count {
             let product = products[i]
+            let productInfo: AdaptyUI.ProductInfo
 
-            guard let productInfo = productsInfos[safe: i] else {
-                throw AdaptyUIError.componentNotFound("\(product.id):product_info")
+            if let adaptyProduct = product.adaptyProduct {
+                if let info = productsBlock.product(by: adaptyProduct)?.toProductInfo(id: product.id) {
+                    productInfo = info
+                } else {
+                    throw AdaptyUIError.componentNotFound("\(product.id):product_info")
+                }
+            } else {
+                if let info = orderedProducts[safe: i]?.toProductInfo(id: product.id) {
+                    productInfo = info
+                } else {
+                    throw AdaptyUIError.componentNotFound("\(product.id):product_info")
+                }
             }
 
             let productView = UIView()
@@ -182,11 +196,11 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
         return (button, productInfoView)
     }
 
-    func updateProducts(_ products: [ProductInfoModel], selectedProductId: String?) {
+    func updateProducts(_ products: [ProductInfoModel], selectedProductId: String?) throws {
         self.products = products
 
         cleanupView()
-        try? setupView()
+        try setupView()
     }
 
     func updateSelectedState(_ productId: String) {

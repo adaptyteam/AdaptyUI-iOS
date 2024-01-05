@@ -118,6 +118,7 @@ public class AdaptyPaywallController: UIViewController {
 
         do {
             layoutBuilder = try TemplateLayoutBuilderFabric.createLayoutFromConfiguration(
+                presenter.paywall,
                 presenter.viewConfiguration,
                 products: presenter.products,
                 tagConverter: tagConverter
@@ -126,16 +127,18 @@ public class AdaptyPaywallController: UIViewController {
             try layoutBuilder?.buildInterface(on: view)
 
         } catch {
-            if let error = error as? AdaptyUIError {
-                log(.error, "Rendering Error = \(error)")
-                delegate?.paywallController(self, didFailRenderingWith: AdaptyError(error))
-            } else {
-                log(.error, "Unknown Rendering Error = \(error)")
-                let adaptyError = AdaptyError(AdaptyUIError.rendering(error))
-                delegate?.paywallController(self, didFailRenderingWith: adaptyError)
-            }
+            handleRenderingError(error)
+        }
+    }
 
-            return
+    private func handleRenderingError(_ error: Error) {
+        if let error = error as? AdaptyUIError {
+            log(.error, "Rendering Error = \(error)")
+            delegate?.paywallController(self, didFailRenderingWith: AdaptyError(error))
+        } else {
+            log(.error, "Unknown Rendering Error = \(error)")
+            let adaptyError = AdaptyError(AdaptyUIError.rendering(error))
+            delegate?.paywallController(self, didFailRenderingWith: adaptyError)
         }
     }
 
@@ -165,7 +168,14 @@ public class AdaptyPaywallController: UIViewController {
             .sink { [weak self] value in
                 guard let self = self else { return }
 
-                self.layoutBuilder?.productsView?.updateProducts(value, selectedProductId: self.presenter.selectedProductId)
+                do {
+                    try self.layoutBuilder?.productsView?.updateProducts(
+                        value,
+                        selectedProductId: self.presenter.selectedProductId
+                    )
+                } catch {
+                    self.handleRenderingError(error)
+                }
 
                 if let selectedProductId = self.presenter.selectedProductId,
                    let product = value.first(where: { $0.id == selectedProductId }) {

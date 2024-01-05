@@ -11,6 +11,6 @@ import UIKit
 protocol ProductsComponentView: UIView {
     var onProductSelected: ((ProductInfoModel) -> Void)? { get set }
 
-    func updateProducts(_ products: [ProductInfoModel], selectedProductId: String?)
+    func updateProducts(_ products: [ProductInfoModel], selectedProductId: String?) throws
     func updateSelectedState(_ productId: String)
 }

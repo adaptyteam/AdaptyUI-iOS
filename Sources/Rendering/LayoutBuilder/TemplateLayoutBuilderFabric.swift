@@ -10,6 +10,7 @@ import UIKit
 
 struct TemplateLayoutBuilderFabric {
     static func createBasic(
+        paywall: AdaptyPaywall,
         config: AdaptyUI.LocalizedViewConfiguration,
         products: [ProductInfoModel],
         tagConverter: AdaptyUI.Text.CustomTagConverter?
@@ -32,11 +33,13 @@ struct TemplateLayoutBuilderFabric {
             footerBlock: style.footerBlock,
             closeButton: config.isHard ? nil : try style.closeButton,
             initialProducts: products,
+            paywall: paywall,
             tagConverter: tagConverter
         )
     }
 
     static func createTransparent(
+        paywall: AdaptyPaywall,
         config: AdaptyUI.LocalizedViewConfiguration,
         products: [ProductInfoModel],
         tagConverter: AdaptyUI.Text.CustomTagConverter?
@@ -54,11 +57,13 @@ struct TemplateLayoutBuilderFabric {
             footerBlock: style.footerBlock,
             closeButton: config.isHard ? nil : try style.closeButton,
             initialProducts: products,
+            paywall: paywall,
             tagConverter: tagConverter
         )
     }
 
     static func createFlat(
+        paywall: AdaptyPaywall,
         config: AdaptyUI.LocalizedViewConfiguration,
         products: [ProductInfoModel],
         tagConverter: AdaptyUI.Text.CustomTagConverter?
@@ -82,25 +87,30 @@ struct TemplateLayoutBuilderFabric {
             footerBlock: style.footerBlock,
             closeButton: config.isHard ? nil : try style.closeButton,
             initialProducts: products,
+            paywall: paywall,
             tagConverter: tagConverter)
     }
 
     static func createLayoutFromConfiguration(
+        _ paywall: AdaptyPaywall,
         _ viewConfiguration: AdaptyUI.LocalizedViewConfiguration,
         products: [ProductInfoModel],
         tagConverter: AdaptyUI.Text.CustomTagConverter?
     ) throws -> LayoutBuilder {
         switch viewConfiguration.templateId {
         case "basic":
-            return try createBasic(config: viewConfiguration,
+            return try createBasic(paywall: paywall,
+                                   config: viewConfiguration,
                                    products: products,
                                    tagConverter: tagConverter)
         case "transparent":
-            return try createTransparent(config: viewConfiguration,
+            return try createTransparent(paywall: paywall,
+                                         config: viewConfiguration,
                                          products: products,
                                          tagConverter: tagConverter)
         case "flat":
-            return try createFlat(config: viewConfiguration,
+            return try createFlat(paywall: paywall,
+                                  config: viewConfiguration,
                                   products: products,
                                   tagConverter: tagConverter)
         default:
