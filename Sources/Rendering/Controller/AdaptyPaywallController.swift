@@ -226,8 +226,17 @@ public class AdaptyPaywallController: UIViewController {
 
     private func subscribeForActions() {
         layoutBuilder?.productsView?.onProductSelected = { [weak self] product in
-            self?.presenter.selectProduct(id: product.id)
-            self?.layoutBuilder?.continueButtonShowIntroCallToAction(product.isEligibleForFreeTrial)
+            guard let self = self else { return }
+            
+            guard product.id != self.presenter.selectedProductId else {
+                if self.presenter.initiatePurchaseOnSecondTap {
+                    self.presenter.makePurchase()
+                }
+                return
+            }
+            
+            self.presenter.selectProduct(id: product.id)
+            self.layoutBuilder?.continueButtonShowIntroCallToAction(product.isEligibleForFreeTrial)
         }
 
         layoutBuilder?.addListeners(

@@ -51,6 +51,8 @@ class AdaptyPaywallPresenter {
 
     private var cancellable = Set<AnyCancellable>()
 
+    private(set) var initiatePurchaseOnSecondTap: Bool
+
     var onPurchase: ((AdaptyResult<AdaptyPurchasedInfo>, AdaptyPaywallProduct) -> Void)?
     var onRestore: ((AdaptyResult<AdaptyProfile>) -> Void)?
 
@@ -64,6 +66,13 @@ class AdaptyPaywallPresenter {
         self.logId = logId
         self.paywall = paywall
         self.viewConfiguration = viewConfiguration
+
+        if let style = try? viewConfiguration.extractDefaultStyle() {
+            initiatePurchaseOnSecondTap = style.productBlock.initiatePurchaseOnSecondTap
+        } else {
+            initiatePurchaseOnSecondTap = false
+        }
+
         self.products = Self.generateProductsInfos(paywall: paywall,
                                                    products: products,
                                                    eligibilities: nil)
