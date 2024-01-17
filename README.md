@@ -28,19 +28,19 @@ import Adapty
 Adapty.getPaywall("YOUR_PAYWALL_ID") { result in
     switch result {
     case let .success(paywall):
-        // handle the error
+        // use loaded paywall
     case let .failure(error):
-        self?.paywallsStates[id] = .failed(error)
+        // handle the error
     }
 }
 ```
 
-After fetching the paywall call the `AdaptyUI.getViewConfiguration(paywall:)` method to load the view configuration:
+After fetching the paywall call the `AdaptyUI.getViewConfiguration(paywall:locale:)` method to load the view configuration:
 
 ```swift
 import Adapty
 
-AdaptyUI.getViewConfiguration(paywall: paywall) { result in
+AdaptyUI.getViewConfiguration(paywall: paywall, locale: "en") { result in
     switch result {
     case let .success(viewConfiguration):
         // use loaded configuration
