@@ -9,6 +9,7 @@ import Adapty
 import UIKit
 
 protocol LayoutBuilder {
+    var closeButtonView: AdaptyButtonComponentView? { get }
     var activityIndicator: AdaptyActivityIndicatorView? { get }
     var productsView: ProductsComponentView? { get }
     var continueButton: AdaptyButtonComponentView? { get }

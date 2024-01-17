@@ -66,12 +66,14 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         self.tagConverter = tagConverter
     }
 
+    private weak var closeButtonComponentView: AdaptyButtonComponentView?
     private weak var activityIndicatorComponentView: AdaptyActivityIndicatorView?
     private weak var contentViewComponentView: AdaptyBaseContentView?
     private weak var productsComponentView: ProductsComponentView?
     private weak var continueButtonComponentView: AdaptyButtonComponentView?
     private weak var scrollView: AdaptyBaseScrollView?
 
+    var closeButtonView: AdaptyButtonComponentView? { closeButtonComponentView }
     var activityIndicator: AdaptyActivityIndicatorView? { activityIndicatorComponentView }
     var productsView: ProductsComponentView? { productsComponentView }
     var continueButton: AdaptyButtonComponentView? { continueButtonComponentView }
@@ -213,6 +215,7 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
             )
 
             layoutCloseButton(closeButtonView, on: view)
+            closeButtonComponentView = closeButtonView
         }
 
         let progressView = AdaptyActivityIndicatorView(backgroundColor: .black.withAlphaComponent(0.6),

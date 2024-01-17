@@ -91,6 +91,7 @@ public class AdaptyPaywallController: UIViewController {
         super.viewDidAppear(animated)
 
         log(.verbose, "viewDidAppear")
+        layoutBuilder?.closeButtonView?.performTransitionIn()
     }
 
     override public func viewDidDisappear(_ animated: Bool) {
