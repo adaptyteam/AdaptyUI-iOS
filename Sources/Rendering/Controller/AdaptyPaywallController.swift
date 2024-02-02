@@ -87,6 +87,13 @@ public class AdaptyPaywallController: UIViewController {
         log(.verbose, "viewDidLoad end")
     }
 
+    override public func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        log(.verbose, "viewWillAppear")
+        layoutBuilder?.closeButtonView?.prepareTransitionIn()
+    }
+
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
@@ -228,10 +235,10 @@ public class AdaptyPaywallController: UIViewController {
     private func subscribeForActions() {
         layoutBuilder?.productsView?.onProductSelected = { [weak self] product in
             guard let self = self else { return }
-            
+
             self.presenter.selectProduct(id: product.id)
             self.layoutBuilder?.continueButtonShowIntroCallToAction(product.isEligibleForFreeTrial)
-            
+
             if self.presenter.initiatePurchaseOnTap {
                 self.presenter.makePurchase()
             }
