@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7448E5462B73BF790086069C /* SwiftUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7448E5452B73BF790086069C /* SwiftUIViewController.swift */; };
 		7455E4DA29881CB400F97FEF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7455E4D929881CB400F97FEF /* AppDelegate.swift */; };
 		7455E4DC29881CB400F97FEF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7455E4DB29881CB400F97FEF /* SceneDelegate.swift */; };
-		7455E4DE29881CB400F97FEF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7455E4DD29881CB400F97FEF /* ViewController.swift */; };
+		7455E4DE29881CB400F97FEF /* UIKitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7455E4DD29881CB400F97FEF /* UIKitViewController.swift */; };
 		7455E4E129881CB400F97FEF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7455E4DF29881CB400F97FEF /* Main.storyboard */; };
 		7455E4E329881CB400F97FEF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7455E4E229881CB400F97FEF /* Assets.xcassets */; };
 		7455E4E629881CB400F97FEF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7455E4E429881CB400F97FEF /* LaunchScreen.storyboard */; };
@@ -24,10 +25,11 @@
 		74118CEA2AC573B600C6B129 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		7436147C2ACC2A9B00D3EFF6 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Main.strings"; sourceTree = "<group>"; };
 		7436147D2ACC2A9B00D3EFF6 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		7448E5452B73BF790086069C /* SwiftUIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIViewController.swift; sourceTree = "<group>"; };
 		7455E4D629881CB400F97FEF /* AdaptyUIDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdaptyUIDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7455E4D929881CB400F97FEF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7455E4DB29881CB400F97FEF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		7455E4DD29881CB400F97FEF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		7455E4DD29881CB400F97FEF /* UIKitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKitViewController.swift; sourceTree = "<group>"; };
 		7455E4E029881CB400F97FEF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7455E4E229881CB400F97FEF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7455E4E529881CB400F97FEF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -50,6 +52,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7448E5442B73BF450086069C /* UIKit Example */ = {
+			isa = PBXGroup;
+			children = (
+				7455E4DD29881CB400F97FEF /* UIKitViewController.swift */,
+			);
+			path = "UIKit Example";
+			sourceTree = "<group>";
+		};
 		7455E4CD29881CB400F97FEF = {
 			isa = PBXGroup;
 			children = (
@@ -73,8 +83,8 @@
 			children = (
 				7455E4D929881CB400F97FEF /* AppDelegate.swift */,
 				7455E4DB29881CB400F97FEF /* SceneDelegate.swift */,
-				7455E4DD29881CB400F97FEF /* ViewController.swift */,
-				747602012B18B19900801629 /* SwiftUI Support */,
+				7448E5442B73BF450086069C /* UIKit Example */,
+				747602012B18B19900801629 /* SwiftUI Example */,
 				7455E4DF29881CB400F97FEF /* Main.storyboard */,
 				7455E4E229881CB400F97FEF /* Assets.xcassets */,
 				7455E4E429881CB400F97FEF /* LaunchScreen.storyboard */,
@@ -98,14 +108,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		747602012B18B19900801629 /* SwiftUI Support */ = {
+		747602012B18B19900801629 /* SwiftUI Example */ = {
 			isa = PBXGroup;
 			children = (
+				7448E5452B73BF790086069C /* SwiftUIViewController.swift */,
 				747602022B18B1A900801629 /* UIViewController+SwiftUI.swift */,
 				747602082B18B33A00801629 /* MainViewModel.swift */,
 				747602062B18B1D900801629 /* MainView.swift */,
 			);
-			path = "SwiftUI Support";
+			path = "SwiftUI Example";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -185,7 +196,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				747602032B18B1A900801629 /* UIViewController+SwiftUI.swift in Sources */,
-				7455E4DE29881CB400F97FEF /* ViewController.swift in Sources */,
+				7448E5462B73BF790086069C /* SwiftUIViewController.swift in Sources */,
+				7455E4DE29881CB400F97FEF /* UIKitViewController.swift in Sources */,
 				7455E4DA29881CB400F97FEF /* AppDelegate.swift in Sources */,
 				747602072B18B1D900801629 /* MainView.swift in Sources */,
 				7455E4DC29881CB400F97FEF /* SceneDelegate.swift in Sources */,
