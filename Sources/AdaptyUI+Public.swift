@@ -159,6 +159,7 @@ extension AdaptyUI {
     ///   - products: optional ``AdaptyPaywallProducts`` array. Pass this value in order to optimize the display time of the products on the screen. If you pass `nil`, ``AdaptyUI`` will automatically fetch the required products.
     ///   - viewConfiguration: an ``AdaptyUI.LocalizedViewConfiguration`` object containing information about the visual part of the paywall. To load it, use the ``AdaptyUI.getViewConfiguration(paywall:locale:)`` method.
     ///   - delegate: the object that implements the ``AdaptyPaywallControllerDelegate`` protocol. Use it to respond to different events happening inside the purchase screen.
+    ///   - tagResolver: if you are going to use custom tags functionality, pass the resolver function here.
     /// - Returns: an ``AdaptyPaywallController`` object, representing the requested paywall screen.
     public static func paywallController(
         for paywall: AdaptyPaywall,

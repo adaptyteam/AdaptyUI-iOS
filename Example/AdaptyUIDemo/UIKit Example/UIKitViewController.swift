@@ -9,7 +9,7 @@ import Adapty
 import AdaptyUI
 import UIKit
 
-class ViewController: UIViewController {
+class UIKitViewController: UIViewController {
     @IBOutlet var textField: UITextField!
 
     @IBOutlet var spinner: UIActivityIndicatorView!
@@ -125,7 +125,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: AdaptyPaywallControllerDelegate {
+extension UIKitViewController: AdaptyPaywallControllerDelegate {
     func paywallController(_ controller: AdaptyPaywallController,
                            didPerform action: AdaptyUI.Action) {
         print("#ExampleUI# paywallController didPerform \(action)")
