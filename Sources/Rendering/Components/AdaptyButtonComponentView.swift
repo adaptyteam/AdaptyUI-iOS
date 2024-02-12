@@ -162,6 +162,13 @@ final class AdaptyButtonComponentView: UIButton {
         setupContentView(view, margins)
     }
 
+    func prepareTransitionIn() {
+        guard let transition = component.transitionIn.first(where: { $0.isFade }),
+              case let .fade(animation) = transition else { return }
+
+        prepareFadeInAnimation()
+    }
+    
     func performTransitionIn() {
         guard let transition = component.transitionIn.first(where: { $0.isFade }),
               case let .fade(animation) = transition else { return }
@@ -272,6 +279,11 @@ extension AdaptyUI.TransitionFade {
 }
 
 extension UIView {
+    func prepareFadeInAnimation() {
+        alpha = 0.0
+        isHidden = true
+    }
+    
     func performFadeAnimation(_ animation: AdaptyUI.TransitionFade) {
         alpha = 0.0
         isHidden = false
