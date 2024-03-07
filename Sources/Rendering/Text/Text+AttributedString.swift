@@ -91,7 +91,7 @@ extension AdaptyUI.Text {
 
 extension AdaptyUI.Text.Image {
     func formAttachment(font: AdaptyUI.Font?) -> NSTextAttachment? {
-        guard let data, var image = UIImage(data: data) else { return nil }
+        guard case .raster(let data) = src, var image = UIImage(data: data) else { return nil }
 
         if let tint {
             image = image
