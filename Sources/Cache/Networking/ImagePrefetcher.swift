@@ -86,149 +86,10 @@ class ImagePrefetcher: CustomStringConvertible {
         return totalFinished == prefetchSources.count && tasks.isEmpty
     }
 
-    /// Creates an image prefetcher with an array of URLs.
-    ///
-    /// The prefetcher should be initiated with a list of prefetching targets. The URLs list is immutable.
-    /// After you get a valid `ImagePrefetcher` object, you call `start()` on it to begin the prefetching process.
-    /// The images which are already cached will be skipped without downloading again.
-    ///
-    /// - Parameters:
-    ///   - urls: The URLs which should be prefetched.
-    ///   - options: Options could control some behaviors. See `KingfisherOptionsInfo` for more.
-    ///   - progressBlock: Called every time an resource is downloaded, skipped or cancelled.
-    ///   - completionHandler: Called when the whole prefetching process finished.
-    ///
-    /// - Note:
-    /// By default, the `ImageDownloader.defaultDownloader` and `ImageCache.defaultCache` will be used as
-    /// the downloader and cache target respectively. You can specify another downloader or cache by using
-    /// a customized `KingfisherOptionsInfo`. Both the progress and completion block will be invoked in
-    /// main thread. The `.callbackQueue` value in `optionsInfo` will be ignored in this method.
-    convenience init(
-        urls: [URL],
-        options: KingfisherOptionsInfo? = nil,
-        progressBlock: PrefetcherProgressBlock? = nil,
-        completionHandler: PrefetcherCompletionHandler? = nil) {
-        let resources: [Resource] = urls.map { $0 }
-        self.init(
-            resources: resources,
-            options: options,
-            progressBlock: progressBlock,
-            completionHandler: completionHandler)
-    }
-
-    /// Creates an image prefetcher with an array of URLs.
-    ///
-    /// The prefetcher should be initiated with a list of prefetching targets. The URLs list is immutable.
-    /// After you get a valid `ImagePrefetcher` object, you call `start()` on it to begin the prefetching process.
-    /// The images which are already cached will be skipped without downloading again.
-    ///
-    /// - Parameters:
-    ///   - urls: The URLs which should be prefetched.
-    ///   - options: Options could control some behaviors. See `KingfisherOptionsInfo` for more.
-    ///   - completionHandler: Called when the whole prefetching process finished.
-    ///
-    /// - Note:
-    /// By default, the `ImageDownloader.defaultDownloader` and `ImageCache.defaultCache` will be used as
-    /// the downloader and cache target respectively. You can specify another downloader or cache by using
-    /// a customized `KingfisherOptionsInfo`. Both the progress and completion block will be invoked in
-    /// main thread. The `.callbackQueue` value in `optionsInfo` will be ignored in this method.
-    convenience init(
-        urls: [URL],
-        options: KingfisherOptionsInfo? = nil,
-        completionHandler: PrefetcherCompletionHandler? = nil) {
-        let resources: [Resource] = urls.map { $0 }
-        self.init(
-            resources: resources,
-            options: options,
-            progressBlock: nil,
-            completionHandler: completionHandler)
-    }
-
-    /// Creates an image prefetcher with an array of resources.
-    ///
-    /// - Parameters:
-    ///   - resources: The resources which should be prefetched. See `Resource` type for more.
-    ///   - options: Options could control some behaviors. See `KingfisherOptionsInfo` for more.
-    ///   - progressBlock: Called every time an resource is downloaded, skipped or cancelled.
-    ///   - completionHandler: Called when the whole prefetching process finished.
-    ///
-    /// - Note:
-    /// By default, the `ImageDownloader.defaultDownloader` and `ImageCache.defaultCache` will be used as
-    /// the downloader and cache target respectively. You can specify another downloader or cache by using
-    /// a customized `KingfisherOptionsInfo`. Both the progress and completion block will be invoked in
-    /// main thread. The `.callbackQueue` value in `optionsInfo` will be ignored in this method.
-    convenience init(
-        resources: [Resource],
-        options: KingfisherOptionsInfo? = nil,
-        progressBlock: PrefetcherProgressBlock? = nil,
-        completionHandler: PrefetcherCompletionHandler? = nil) {
-        self.init(sources: resources.map { $0.convertToSource() }, options: options)
-        self.progressBlock = progressBlock
-        self.completionHandler = completionHandler
-    }
-
-    /// Creates an image prefetcher with an array of resources.
-    ///
-    /// - Parameters:
-    ///   - resources: The resources which should be prefetched. See `Resource` type for more.
-    ///   - options: Options could control some behaviors. See `KingfisherOptionsInfo` for more.
-    ///   - completionHandler: Called when the whole prefetching process finished.
-    ///
-    /// - Note:
-    /// By default, the `ImageDownloader.defaultDownloader` and `ImageCache.defaultCache` will be used as
-    /// the downloader and cache target respectively. You can specify another downloader or cache by using
-    /// a customized `KingfisherOptionsInfo`. Both the progress and completion block will be invoked in
-    /// main thread. The `.callbackQueue` value in `optionsInfo` will be ignored in this method.
-    convenience init(
-        resources: [Resource],
-        options: KingfisherOptionsInfo? = nil,
-        completionHandler: PrefetcherCompletionHandler? = nil) {
-        self.init(sources: resources.map { $0.convertToSource() }, options: options)
-        self.completionHandler = completionHandler
-    }
-
-    /// Creates an image prefetcher with an array of sources.
-    ///
-    /// - Parameters:
-    ///   - sources: The sources which should be prefetched. See `Source` type for more.
-    ///   - options: Options could control some behaviors. See `KingfisherOptionsInfo` for more.
-    ///   - progressBlock: Called every time an source fetching successes, fails, is skipped.
-    ///   - completionHandler: Called when the whole prefetching process finished.
-    ///
-    /// - Note:
-    /// By default, the `ImageDownloader.defaultDownloader` and `ImageCache.defaultCache` will be used as
-    /// the downloader and cache target respectively. You can specify another downloader or cache by using
-    /// a customized `KingfisherOptionsInfo`. Both the progress and completion block will be invoked in
-    /// main thread. The `.callbackQueue` value in `optionsInfo` will be ignored in this method.
-    convenience init(sources: [Source],
-                     options: KingfisherOptionsInfo? = nil,
-                     progressBlock: PrefetcherSourceProgressBlock? = nil,
-                     completionHandler: PrefetcherSourceCompletionHandler? = nil) {
-        self.init(sources: sources, options: options)
-        progressSourceBlock = progressBlock
-        completionSourceHandler = completionHandler
-    }
-
-    /// Creates an image prefetcher with an array of sources.
-    ///
-    /// - Parameters:
-    ///   - sources: The sources which should be prefetched. See `Source` type for more.
-    ///   - options: Options could control some behaviors. See `KingfisherOptionsInfo` for more.
-    ///   - completionHandler: Called when the whole prefetching process finished.
-    ///
-    /// - Note:
-    /// By default, the `ImageDownloader.defaultDownloader` and `ImageCache.defaultCache` will be used as
-    /// the downloader and cache target respectively. You can specify another downloader or cache by using
-    /// a customized `KingfisherOptionsInfo`. Both the progress and completion block will be invoked in
-    /// main thread. The `.callbackQueue` value in `optionsInfo` will be ignored in this method.
-    convenience init(sources: [Source],
-                     options: KingfisherOptionsInfo? = nil,
-                     completionHandler: PrefetcherSourceCompletionHandler? = nil) {
-        self.init(sources: sources, options: options)
-        completionSourceHandler = completionHandler
-    }
-
-    init(sources: [Source], options: KingfisherOptionsInfo?) {
+    init(sources: [Source],
+         options: KingfisherOptionsInfo?,
+         manager: KingfisherManager,
+         completionHandler: @escaping PrefetcherCompletionHandler) {
         var options = KingfisherParsedOptionsInfo(options)
         prefetchSources = sources
         pendingSources = ArraySlice(sources)
@@ -239,7 +100,8 @@ class ImagePrefetcher: CustomStringConvertible {
         options.callbackQueue = .dispatch(prefetchQueue)
         optionsInfo = options
 
-        manager = KingfisherManager(downloader: .default, cache: .default)
+        self.manager = manager
+        self.completionHandler = completionHandler
     }
 
     /// Starts to download the resources and cache them. This can be useful for background downloading
