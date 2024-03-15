@@ -1,5 +1,5 @@
 //
-//  AdaptyImageCache.swift
+//  AdaptyMediaCache.swift
 //
 //
 //  Created by Aleksey Goncharov on 11.3.24..
@@ -12,7 +12,7 @@ extension AdaptyUI {
     static let imageCache = ImageCache(name: "Adapty")
     static let imageDownloader = ImageDownloader(name: "Adapty")
 
-    public struct CacheConfiguration {
+    public struct MediaCacheConfiguration {
         /// Total cost limit of the storage in bytes.
         public var memoryStorageTotalCostLimit: Int
 
@@ -33,24 +33,26 @@ extension AdaptyUI {
         }
     }
     
-    static var currentCacheConfiguration: CacheConfiguration?
+    static var currentCacheConfiguration: MediaCacheConfiguration?
 
-    static func configureImageCacheIfNeeded() {
+    static func configureMediaCacheIfNeeded() {
         if currentCacheConfiguration == nil {
-            configureImageCache(.init())
+            configureMediaCache(.init())
         }
     }
     
-    public static func configureImageCache(_ configuration: CacheConfiguration) {
+    public static func configureMediaCache(_ configuration: MediaCacheConfiguration) {
         imageCache.memoryStorage.config.totalCostLimit = configuration.memoryStorageTotalCostLimit
         imageCache.memoryStorage.config.countLimit = configuration.memoryStorageCountLimit
         imageCache.diskStorage.config.sizeLimit = configuration.diskStorageSizeLimit
+        
+        imageCache.memoryStorage.config.expiration = .never
         imageCache.diskStorage.config.expiration = .never
         
         currentCacheConfiguration = configuration
     }
 
-    public static func clearImageCache() {
+    public static func clearMediaCache() {
         imageCache.clearMemoryCache()
         imageCache.clearDiskCache()
     }
@@ -58,7 +60,7 @@ extension AdaptyUI {
 
 extension AdaptyUI {
     static func chacheImagesIfNeeded(viewConfiguration: AdaptyUI.ViewConfiguration, locale: String) {
-        configureImageCacheIfNeeded()
+        configureMediaCacheIfNeeded()
         
         let urls = viewConfiguration.extractImageUrls(locale)
 
