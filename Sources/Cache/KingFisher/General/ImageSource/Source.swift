@@ -34,13 +34,13 @@ import Foundation
 ///            value defines detail information like image URL and cache key.
 /// - provider: The target image should be provided in a data format. Normally, it can be an image
 ///             from local storage or in any other encoding format (like Base64).
-public enum Source {
+enum Source {
 
     /// Represents the source task identifier when setting an image to a view with extension methods.
-    public enum Identifier {
+    enum Identifier {
 
         /// The underlying value type of source identifier.
-        public typealias Value = UInt
+        typealias Value = UInt
         static private(set) var current: Value = 0
         static func next() -> Value {
             current += 1
@@ -61,7 +61,7 @@ public enum Source {
     // MARK: Getting Properties
 
     /// The cache key defined for this source value.
-    public var cacheKey: String {
+    var cacheKey: String {
         switch self {
         case .network(let resource): return resource.cacheKey
         case .provider(let provider): return provider.cacheKey
@@ -72,7 +72,7 @@ public enum Source {
     ///
     /// For a `.network` source, it is the `downloadURL` of associated `Resource` instance.
     /// For a `.provider` value, it is always `nil`.
-    public var url: URL? {
+    var url: URL? {
         switch self {
         case .network(let resource): return resource.downloadURL
         case .provider(let provider): return provider.contentURL
@@ -81,7 +81,7 @@ public enum Source {
 }
 
 extension Source: Hashable {
-    public static func == (lhs: Source, rhs: Source) -> Bool {
+    static func == (lhs: Source, rhs: Source) -> Bool {
         switch (lhs, rhs) {
         case (.network(let r1), .network(let r2)):
             return r1.cacheKey == r2.cacheKey && r1.downloadURL == r2.downloadURL
@@ -94,7 +94,7 @@ extension Source: Hashable {
         }
     }
 
-    public func hash(into hasher: inout Hasher) {
+    func hash(into hasher: inout Hasher) {
         switch self {
         case .network(let r):
             hasher.combine(r.cacheKey)

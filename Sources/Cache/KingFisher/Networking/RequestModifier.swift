@@ -27,7 +27,7 @@
 import Foundation
 
 /// Represents and wraps a method for modifying request before an image download request starts in an asynchronous way.
-public protocol AsyncImageDownloadRequestModifier {
+protocol AsyncImageDownloadRequestModifier {
 
     /// This method will be called just before the `request` being sent.
     /// This is the last chance you can modify the image download request. You can modify the request for some
@@ -55,7 +55,7 @@ public protocol AsyncImageDownloadRequestModifier {
 }
 
 /// Represents and wraps a method for modifying request before an image download request starts.
-public protocol ImageDownloadRequestModifier: AsyncImageDownloadRequestModifier {
+protocol ImageDownloadRequestModifier: AsyncImageDownloadRequestModifier {
 
     /// This method will be called just before the `request` being sent.
     /// This is the last chance you can modify the image download request. You can modify the request for some
@@ -75,24 +75,24 @@ public protocol ImageDownloadRequestModifier: AsyncImageDownloadRequestModifier 
 }
 
 extension ImageDownloadRequestModifier {
-    public func modified(for request: URLRequest, reportModified: @escaping (URLRequest?) -> Void) {
+    func modified(for request: URLRequest, reportModified: @escaping (URLRequest?) -> Void) {
         let request = modified(for: request)
         reportModified(request)
     }
 
     /// This is `nil` for a sync `ImageDownloadRequestModifier` by default. You can get the `DownloadTask` from the
     /// return value of downloader method.
-    public var onDownloadTaskStarted: ((DownloadTask?) -> Void)? { return nil }
+    var onDownloadTaskStarted: ((DownloadTask?) -> Void)? { return nil }
 }
 
 /// A wrapper for creating an `ImageDownloadRequestModifier` easier.
 /// This type conforms to `ImageDownloadRequestModifier` and wraps an image modify block.
-public struct AnyModifier: ImageDownloadRequestModifier {
+struct AnyModifier: ImageDownloadRequestModifier {
     
     let block: (URLRequest) -> URLRequest?
 
     /// For `ImageDownloadRequestModifier` conformation.
-    public func modified(for request: URLRequest) -> URLRequest? {
+    func modified(for request: URLRequest) -> URLRequest? {
         return block(request)
     }
     
@@ -102,7 +102,7 @@ public struct AnyModifier: ImageDownloadRequestModifier {
     ///                     The return `URLRequest?` value of this block will be used as the image download request.
     ///                     If `nil` returned, a `KingfisherError.requestError` with `.emptyRequest` as its
     ///                     reason will occur.
-    public init(modify: @escaping (URLRequest) -> URLRequest?) {
+    init(modify: @escaping (URLRequest) -> URLRequest?) {
         block = modify
     }
 }

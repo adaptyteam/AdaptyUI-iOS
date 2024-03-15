@@ -33,14 +33,14 @@ import UIKit
 
 /// KingfisherOptionsInfo is a typealias for [KingfisherOptionsInfoItem].
 /// You can use the enum of option item with value to control some behaviors of Kingfisher.
-public typealias KingfisherOptionsInfo = [KingfisherOptionsInfoItem]
+typealias KingfisherOptionsInfo = [KingfisherOptionsInfoItem]
 
 extension Array where Element == KingfisherOptionsInfoItem {
     static let empty: KingfisherOptionsInfo = []
 }
 
 /// Represents the available option items could be used in `KingfisherOptionsInfo`.
-public enum KingfisherOptionsInfoItem {
+enum KingfisherOptionsInfoItem {
     
     /// Kingfisher will use the associated `ImageCache` object when handling related operations,
     /// including trying to retrieve the cached images and store the downloaded image to it.
@@ -269,48 +269,48 @@ public enum KingfisherOptionsInfoItem {
 /// The parsed options info used across Kingfisher methods. Each property in this type corresponds a case member
 /// in `KingfisherOptionsInfoItem`. When a `KingfisherOptionsInfo` sent to Kingfisher related methods, it will be
 /// parsed and converted to a `KingfisherParsedOptionsInfo` first, and pass through the internal methods.
-public struct KingfisherParsedOptionsInfo {
+struct KingfisherParsedOptionsInfo {
 
-    public var targetCache: ImageCache? = nil
-    public var originalCache: ImageCache? = nil
-    public var downloader: ImageDownloader? = nil
-    public var transition: ImageTransition = .none
-    public var downloadPriority: Float = URLSessionTask.defaultPriority
-    public var forceRefresh = false
-    public var fromMemoryCacheOrRefresh = false
-    public var forceTransition = false
-    public var cacheMemoryOnly = false
-    public var waitForCache = false
-    public var onlyFromCache = false
-    public var backgroundDecode = false
-    public var preloadAllAnimationData = false
-    public var callbackQueue: CallbackQueue = .mainCurrentOrAsync
-    public var scaleFactor: CGFloat = 1.0
-    public var requestModifier: AsyncImageDownloadRequestModifier? = nil
-    public var redirectHandler: ImageDownloadRedirectHandler? = nil
-    public var processor: ImageProcessor = DefaultImageProcessor.default
-    public var imageModifier: ImageModifier? = nil
-    public var cacheSerializer: CacheSerializer = DefaultCacheSerializer.default
-    public var keepCurrentImageWhileLoading = false
-    public var onlyLoadFirstFrame = false
-    public var cacheOriginalImage = false
-    public var onFailureImage: Optional<KFCrossPlatformImage?> = .none
-    public var alsoPrefetchToMemory = false
-    public var loadDiskFileSynchronously = false
-    public var diskStoreWriteOptions: Data.WritingOptions = []
-    public var memoryCacheExpiration: StorageExpiration? = nil
-    public var memoryCacheAccessExtendingExpiration: ExpirationExtending = .cacheTime
-    public var diskCacheExpiration: StorageExpiration? = nil
-    public var diskCacheAccessExtendingExpiration: ExpirationExtending = .cacheTime
-    public var processingQueue: CallbackQueue? = nil
-    public var progressiveJPEG: ImageProgressive? = nil
-    public var alternativeSources: [Source]? = nil
-    public var retryStrategy: RetryStrategy? = nil
-    public var lowDataModeSource: Source? = nil
+    var targetCache: ImageCache? = nil
+    var originalCache: ImageCache? = nil
+    var downloader: ImageDownloader? = nil
+    var transition: ImageTransition = .none
+    var downloadPriority: Float = URLSessionTask.defaultPriority
+    var forceRefresh = false
+    var fromMemoryCacheOrRefresh = false
+    var forceTransition = false
+    var cacheMemoryOnly = false
+    var waitForCache = false
+    var onlyFromCache = false
+    var backgroundDecode = false
+    var preloadAllAnimationData = false
+    var callbackQueue: CallbackQueue = .mainCurrentOrAsync
+    var scaleFactor: CGFloat = 1.0
+    var requestModifier: AsyncImageDownloadRequestModifier? = nil
+    var redirectHandler: ImageDownloadRedirectHandler? = nil
+    var processor: ImageProcessor = DefaultImageProcessor.default
+    var imageModifier: ImageModifier? = nil
+    var cacheSerializer: CacheSerializer = DefaultCacheSerializer.default
+    var keepCurrentImageWhileLoading = false
+    var onlyLoadFirstFrame = false
+    var cacheOriginalImage = false
+    var onFailureImage: Optional<KFCrossPlatformImage?> = .none
+    var alsoPrefetchToMemory = false
+    var loadDiskFileSynchronously = false
+    var diskStoreWriteOptions: Data.WritingOptions = []
+    var memoryCacheExpiration: StorageExpiration? = nil
+    var memoryCacheAccessExtendingExpiration: ExpirationExtending = .cacheTime
+    var diskCacheExpiration: StorageExpiration? = nil
+    var diskCacheAccessExtendingExpiration: ExpirationExtending = .cacheTime
+    var processingQueue: CallbackQueue? = nil
+    var progressiveJPEG: ImageProgressive? = nil
+    var alternativeSources: [Source]? = nil
+    var retryStrategy: RetryStrategy? = nil
+    var lowDataModeSource: Source? = nil
 
     var onDataReceived: [DataReceivingSideEffect]? = nil
     
-    public init(_ info: KingfisherOptionsInfo?) {
+    init(_ info: KingfisherOptionsInfo?) {
         guard let info = info else { return }
         for option in info {
             switch option {

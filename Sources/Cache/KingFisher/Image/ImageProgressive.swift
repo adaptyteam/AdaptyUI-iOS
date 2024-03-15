@@ -35,7 +35,7 @@ import UIKit
 private let sharedProcessingQueue: CallbackQueue =
     .dispatch(DispatchQueue(label: "com.onevcat.Kingfisher.ImageDownloader.Process"))
 
-public struct ImageProgressive {
+struct ImageProgressive {
     
     /// The updating strategy when an intermediate progressive image is generated and about to be set to the hosting view.
     ///
@@ -43,7 +43,7 @@ public struct ImageProgressive {
     /// - keepCurrent: Discard this progressive image and keep the current displayed one.
     /// - replace: Replace the image to a new one. If the progressive loading is initialized by a view extension in
     ///            Kingfisher, the replacing image will be used to update the view.
-    public enum UpdatingStrategy {
+    enum UpdatingStrategy {
         case `default`
         case keepCurrent
         case replace(KFCrossPlatformImage?)
@@ -52,7 +52,7 @@ public struct ImageProgressive {
     /// A default `ImageProgressive` could be used across. It blurs the progressive loading with the fastest
     /// scan enabled and scan interval as 0.
     @available(*, deprecated, message: "Getting a default `ImageProgressive` is deprecated due to its syntax symatic is not clear. Use `ImageProgressive.init` instead.", renamed: "init()")
-    public static let `default` = ImageProgressive(
+    static let `default` = ImageProgressive(
         isBlur: true,
         isFastestScan: true,
         scanInterval: 0
@@ -68,11 +68,11 @@ public struct ImageProgressive {
     /// Called when an intermediate image is prepared and about to be set to the image view. The return value of this
     /// delegate will be used to update the hosting view, if any. Otherwise, if there is no hosting view (a.k.a the
     /// image retrieving is not happening from a view extension method), the returned `UpdatingStrategy` is ignored.
-    public let onImageUpdated = Delegate<KFCrossPlatformImage, UpdatingStrategy>()
+    let onImageUpdated = Delegate<KFCrossPlatformImage, UpdatingStrategy>()
     
     /// Creates an `ImageProgressive` value with default sets. It blurs the progressive loading with the fastest
     /// scan enabled and scan interval as 0.
-    public init() {
+    init() {
         self.init(isBlur: true, isFastestScan: true, scanInterval: 0)
     }
     
@@ -81,7 +81,7 @@ public struct ImageProgressive {
     ///   - isBlur: Whether to enable blur effect processing.
     ///   - isFastestScan: Whether to enable the fastest scan.
     ///   - scanInterval: Minimum time interval for each scan.
-    public init(isBlur: Bool,
+    init(isBlur: Bool,
                 isFastestScan: Bool,
                 scanInterval: TimeInterval
     )

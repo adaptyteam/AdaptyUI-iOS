@@ -36,7 +36,7 @@ extension KFImageProtocol {
     /// - Parameters:
     ///   - source: The `Source` object defines data information from network or a data provider.
     /// - Returns: A `KFImage` for future configuration or embedding to a `SwiftUI.View`.
-    public static func source(
+    static func source(
         _ source: Source?
     ) -> Self
     {
@@ -47,7 +47,7 @@ extension KFImageProtocol {
     /// - Parameters:
     ///   - source: The `Resource` object defines data information like key or URL.
     /// - Returns: A `KFImage` for future configuration or embedding to a `SwiftUI.View`.
-    public static func resource(
+    static func resource(
         _ resource: Resource?
     ) -> Self
     {
@@ -60,7 +60,7 @@ extension KFImageProtocol {
     ///   - cacheKey: The key used to store the downloaded image in cache.
     ///               If `nil`, the `absoluteString` of `url` is used as the cache key.
     /// - Returns: A `KFImage` for future configuration or embedding to a `SwiftUI.View`.
-    public static func url(
+    static func url(
         _ url: URL?, cacheKey: String? = nil
     ) -> Self
     {
@@ -71,7 +71,7 @@ extension KFImageProtocol {
     /// - Parameters:
     ///   - provider: The `ImageDataProvider` object contains information about the data.
     /// - Returns: A `KFImage` for future configuration or embedding to a `SwiftUI.View`.
-    public static func dataProvider(
+    static func dataProvider(
         _ provider: ImageDataProvider?
     ) -> Self
     {
@@ -83,7 +83,7 @@ extension KFImageProtocol {
     ///   - data: The data object from which the image should be created.
     ///   - cacheKey: The key used to store the downloaded image in cache.
     /// - Returns: A `KFImage` for future configuration or embedding to a `SwiftUI.View`.
-    public static func data(
+    static func data(
         _ data: Data?, cacheKey: String
     ) -> Self
     {
@@ -100,7 +100,7 @@ extension KFImageProtocol {
     /// Sets a placeholder `View` which shows when loading the image, with a progress parameter as input.
     /// - Parameter content: A view that describes the placeholder.
     /// - Returns: A `KFImage` view that contains `content` as its placeholder.
-    public func placeholder<P: View>(@ViewBuilder _ content: @escaping (Progress) -> P) -> Self {
+    func placeholder<P: View>(@ViewBuilder _ content: @escaping (Progress) -> P) -> Self {
         context.placeholder = { progress in
             return AnyView(content(progress))
         }
@@ -110,14 +110,14 @@ extension KFImageProtocol {
     /// Sets a placeholder `View` which shows when loading the image.
     /// - Parameter content: A view that describes the placeholder.
     /// - Returns: A `KFImage` view that contains `content` as its placeholder.
-    public func placeholder<P: View>(@ViewBuilder _ content: @escaping () -> P) -> Self {
+    func placeholder<P: View>(@ViewBuilder _ content: @escaping () -> P) -> Self {
         placeholder { _ in content() }
     }
 
     /// Sets cancelling the download task bound to `self` when the view disappearing.
     /// - Parameter flag: Whether cancel the task or not.
     /// - Returns: A `KFImage` view that cancels downloading task when disappears.
-    public func cancelOnDisappear(_ flag: Bool) -> Self {
+    func cancelOnDisappear(_ flag: Bool) -> Self {
         context.cancelOnDisappear = flag
         return self
     }
@@ -130,7 +130,7 @@ extension KFImageProtocol {
     /// The transition will not happen when the
     /// image is retrieved from either memory or disk cache by default. If you need to do the transition even when
     /// the image being retrieved from cache, also call `forceRefresh()` on the returned `KFImage`.
-    public func fade(duration: TimeInterval) -> Self {
+    func fade(duration: TimeInterval) -> Self {
         context.options.transition = .fade(duration)
         return self
     }
@@ -150,7 +150,7 @@ extension KFImageProtocol {
     /// See [#1988](https://github.com/onevcat/Kingfisher/issues/1988). It may cause performance regression, especially
     /// if you have a lot of images to load in the view. Use it as your own risk.
     ///
-    public func startLoadingBeforeViewAppear(_ flag: Bool = true) -> Self {
+    func startLoadingBeforeViewAppear(_ flag: Bool = true) -> Self {
         context.startLoadingBeforeViewAppear = flag
         return self
     }

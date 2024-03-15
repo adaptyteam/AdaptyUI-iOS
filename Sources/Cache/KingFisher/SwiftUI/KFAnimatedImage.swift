@@ -29,10 +29,10 @@ import SwiftUI
 import Combine
 
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
-public struct KFAnimatedImage: KFImageProtocol {
-    public typealias HoldingView = KFAnimatedImageViewRepresenter
-    public var context: Context<HoldingView>
-    public init(context: KFImage.Context<HoldingView>) {
+struct KFAnimatedImage: KFImageProtocol {
+    typealias HoldingView = KFAnimatedImageViewRepresenter
+    var context: Context<HoldingView>
+    init(context: KFImage.Context<HoldingView>) {
         self.context = context
     }
     
@@ -41,7 +41,7 @@ public struct KFAnimatedImage: KFImageProtocol {
     ///
     /// - Parameter block: The block applies to the animated image view.
     /// - Returns: A `KFAnimatedImage` view that being configured by the `block`.
-    public func configure(_ block: @escaping (HoldingView.RenderingView) -> Void) -> Self {
+    func configure(_ block: @escaping (HoldingView.RenderingView) -> Void) -> Self {
         context.renderConfigurations.append(block)
         return self
     }
@@ -57,9 +57,9 @@ typealias KFCrossPlatformViewRepresentable = UIViewRepresentable
 
 /// A wrapped `UIViewRepresentable` of `AnimatedImageView`
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
-public struct KFAnimatedImageViewRepresenter: KFCrossPlatformViewRepresentable, KFImageHoldingView {
-    public typealias RenderingView = AnimatedImageView
-    public static func created(from image: KFCrossPlatformImage?, context: KFImage.Context<Self>) -> KFAnimatedImageViewRepresenter {
+struct KFAnimatedImageViewRepresenter: KFCrossPlatformViewRepresentable, KFImageHoldingView {
+    typealias RenderingView = AnimatedImageView
+    static func created(from image: KFCrossPlatformImage?, context: KFImage.Context<Self>) -> KFAnimatedImageViewRepresenter {
         KFAnimatedImageViewRepresenter(image: image, context: context)
     }
     
@@ -67,19 +67,19 @@ public struct KFAnimatedImageViewRepresenter: KFCrossPlatformViewRepresentable, 
     let context: KFImage.Context<KFAnimatedImageViewRepresenter>
     
     #if os(macOS)
-    public func makeNSView(context: Context) -> AnimatedImageView {
+    func makeNSView(context: Context) -> AnimatedImageView {
         return makeImageView()
     }
     
-    public func updateNSView(_ nsView: AnimatedImageView, context: Context) {
+    func updateNSView(_ nsView: AnimatedImageView, context: Context) {
         updateImageView(nsView)
     }
     #else
-    public func makeUIView(context: Context) -> AnimatedImageView {
+    func makeUIView(context: Context) -> AnimatedImageView {
         return makeImageView()
     }
     
-    public func updateUIView(_ uiView: AnimatedImageView, context: Context) {
+    func updateUIView(_ uiView: AnimatedImageView, context: Context) {
         updateImageView(uiView)
     }
     #endif

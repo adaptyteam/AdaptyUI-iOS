@@ -29,17 +29,17 @@ import SwiftUI
 import Combine
 
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
-public struct KFImage: KFImageProtocol {
-    public var context: Context<Image>
-    public init(context: Context<Image>) {
+struct KFImage: KFImageProtocol {
+    var context: Context<Image>
+    init(context: Context<Image>) {
         self.context = context
     }
 }
 
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 extension Image: KFImageHoldingView {
-    public typealias RenderingView = Image
-    public static func created(from image: KFCrossPlatformImage?, context: KFImage.Context<Self>) -> Image {
+    typealias RenderingView = Image
+    static func created(from image: KFCrossPlatformImage?, context: KFImage.Context<Self>) -> Image {
         Image(crossPlatformImage: image)
     }
 }
@@ -48,22 +48,22 @@ extension Image: KFImageHoldingView {
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 extension KFImage {
 
-    public func resizable(
+    func resizable(
         capInsets: EdgeInsets = EdgeInsets(),
         resizingMode: Image.ResizingMode = .stretch) -> KFImage
     {
         configure { $0.resizable(capInsets: capInsets, resizingMode: resizingMode) }
     }
 
-    public func renderingMode(_ renderingMode: Image.TemplateRenderingMode?) -> KFImage {
+    func renderingMode(_ renderingMode: Image.TemplateRenderingMode?) -> KFImage {
         configure { $0.renderingMode(renderingMode) }
     }
 
-    public func interpolation(_ interpolation: Image.Interpolation) -> KFImage {
+    func interpolation(_ interpolation: Image.Interpolation) -> KFImage {
         configure { $0.interpolation(interpolation) }
     }
 
-    public func antialiased(_ isAntialiased: Bool) -> KFImage {
+    func antialiased(_ isAntialiased: Bool) -> KFImage {
         configure { $0.antialiased(isAntialiased) }
     }
     
@@ -79,7 +79,7 @@ extension KFImage {
     ///
     /// - Returns: The `Self` value with changes applied.
     @available(*, deprecated, message: "This is not necessary anymore since `@StateObject` is used. It does nothing now and please just remove it.")
-    public func loadImmediately(_ start: Bool = true) -> KFImage {
+    func loadImmediately(_ start: Bool = true) -> KFImage {
         return self
     }
 }

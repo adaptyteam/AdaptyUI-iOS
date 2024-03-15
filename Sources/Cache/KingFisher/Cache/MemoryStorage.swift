@@ -29,7 +29,7 @@ import Foundation
 /// Represents a set of conception related to storage which stores a certain type of value in memory.
 /// This is a namespace for the memory storage types. A `Backend` with a certain `Config` will be used to describe the
 /// storage. See these composed types for more information.
-public enum MemoryStorage {
+enum MemoryStorage {
 
     /// Represents a storage which stores a certain type of value in memory. It provides fast access,
     /// but limited storing size. The stored value type needs to conform to `CacheCostCalculable`,
@@ -41,7 +41,7 @@ public enum MemoryStorage {
     /// date. When retrieved, if the target item is already expired, it will be recognized as it does not
     /// exist in the storage. The `MemoryStorage` also contains a scheduled self clean task, to evict expired
     /// items from memory.
-    public class Backend<T: CacheCostCalculable> {
+    class Backend<T: CacheCostCalculable> {
         let storage = NSCache<NSString, StorageObject<T>>()
 
         // Keys trackes the objects once inside the storage. For object removing triggered by user, the corresponding
@@ -57,7 +57,7 @@ public enum MemoryStorage {
 
         /// The config used in this storage. It is a value you can set and
         /// use to config the storage in air.
-        public var config: Config {
+        var config: Config {
             didSet {
                 storage.totalCostLimit = config.totalCostLimit
                 storage.countLimit = config.countLimit
@@ -68,7 +68,7 @@ public enum MemoryStorage {
         ///
         /// - Parameter config: The config used to create the storage. It determines the max size limitation,
         ///                     default expiration setting and more.
-        public init(config: Config) {
+        init(config: Config) {
             self.config = config
             storage.totalCostLimit = config.totalCostLimit
             storage.countLimit = config.countLimit
@@ -80,7 +80,7 @@ public enum MemoryStorage {
         }
 
         /// Removes the expired values from the storage.
-        public func removeExpired() {
+        func removeExpired() {
             lock.lock()
             defer { lock.unlock() }
             for key in keys {
@@ -105,7 +105,7 @@ public enum MemoryStorage {
         ///   - key: The key to which the `value` will be stored.
         ///   - expiration: The expiration policy used by this store action.
         /// - Throws: No error will
-        public func store(
+        func store(
             value: T,
             forKey key: String,
             expiration: StorageExpiration? = nil)
@@ -142,7 +142,7 @@ public enum MemoryStorage {
         ///   - key: The cache key of value.
         ///   - extendingExpiration: The expiration policy used by this getting action.
         /// - Returns: The value under `key` if it is valid and found in the storage. Otherwise, `nil`.
-        public func value(forKey key: String, extendingExpiration: ExpirationExtending = .cacheTime) -> T? {
+        func value(forKey key: String, extendingExpiration: ExpirationExtending = .cacheTime) -> T? {
             guard let object = storage.object(forKey: key as NSString) else {
                 return nil
             }
@@ -156,7 +156,7 @@ public enum MemoryStorage {
         /// Whether there is valid cached data under a given key.
         /// - Parameter key: The cache key of value.
         /// - Returns: If there is valid data under the key, `true`. Otherwise, `false`.
-        public func isCached(forKey key: String) -> Bool {
+        func isCached(forKey key: String) -> Bool {
             guard let _ = value(forKey: key, extendingExpiration: .none) else {
                 return false
             }
@@ -165,7 +165,7 @@ public enum MemoryStorage {
 
         /// Removes a value from a specified key.
         /// - Parameter key: The cache key of value.
-        public func remove(forKey key: String) {
+        func remove(forKey key: String) {
             lock.lock()
             defer { lock.unlock() }
             storage.removeObject(forKey: key as NSString)
@@ -173,7 +173,7 @@ public enum MemoryStorage {
         }
 
         /// Removes all values in this storage.
-        public func removeAll() {
+        func removeAll() {
             lock.lock()
             defer { lock.unlock() }
             storage.removeAllObjects()
@@ -184,20 +184,20 @@ public enum MemoryStorage {
 
 extension MemoryStorage {
     /// Represents the config used in a `MemoryStorage`.
-    public struct Config {
+    struct Config {
 
         /// Total cost limit of the storage in bytes.
-        public var totalCostLimit: Int
+        var totalCostLimit: Int
 
         /// The item count limit of the memory storage.
-        public var countLimit: Int = .max
+        var countLimit: Int = .max
 
         /// The `StorageExpiration` used in this memory storage. Default is `.seconds(300)`,
         /// means that the memory cache would expire in 5 minutes.
-        public var expiration: StorageExpiration = .seconds(300)
+        var expiration: StorageExpiration = .seconds(300)
 
         /// The time interval between the storage do clean work for swiping expired items.
-        public var cleanInterval: TimeInterval
+        var cleanInterval: TimeInterval
         
         /// Whether the newly added items to memory cache should be purged when the app goes to background.
         ///
@@ -208,7 +208,7 @@ extension MemoryStorage {
         /// Default is `false`. After setting `true`, only the newly added cache objects are affected. Existing
         /// objects which are already in the cache while this value was `false` will be still be purged when entering
         /// background.
-        public var keepWhenEnteringBackground: Bool = false
+        var keepWhenEnteringBackground: Bool = false
 
         /// Creates a config from a given `totalCostLimit` value.
         ///
@@ -219,7 +219,7 @@ extension MemoryStorage {
         ///
         /// - Note:
         /// Other members of `MemoryStorage.Config` will use their default values when created.
-        public init(totalCostLimit: Int, cleanInterval: TimeInterval = 120) {
+        init(totalCostLimit: Int, cleanInterval: TimeInterval = 120) {
             self.totalCostLimit = totalCostLimit
             self.cleanInterval = cleanInterval
         }

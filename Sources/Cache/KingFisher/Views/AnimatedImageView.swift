@@ -42,7 +42,7 @@ typealias KFCrossPlatformContentMode = NSImageScaling
 #endif
 
 /// Protocol of `AnimatedImageView`.
-public protocol AnimatedImageViewDelegate: AnyObject {
+protocol AnimatedImageViewDelegate: AnyObject {
 
     /// Called after the animatedImageView has finished each animation loop.
     ///
@@ -58,8 +58,8 @@ public protocol AnimatedImageViewDelegate: AnyObject {
 }
 
 extension AnimatedImageViewDelegate {
-    public func animatedImageView(_ imageView: AnimatedImageView, didPlayAnimationLoops count: UInt) {}
-    public func animatedImageViewDidFinishAnimating(_ imageView: AnimatedImageView) {}
+    func animatedImageView(_ imageView: AnimatedImageView, didPlayAnimationLoops count: UInt) {}
+    func animatedImageViewDidFinishAnimating(_ imageView: AnimatedImageView) {}
 }
 
 let KFRunLoopModeCommon = RunLoop.Mode.common
@@ -72,7 +72,7 @@ let KFRunLoopModeCommon = RunLoop.Mode.common
 ///
 /// Kingfisher supports setting GIF animated data to either `UIImageView` and `AnimatedImageView` out of box. So
 /// it would be fairly easy to switch between them.
-open class AnimatedImageView: KFCrossPlatformImageView {
+class AnimatedImageView: KFCrossPlatformImageView {
     /// Proxy object for preventing a reference cycle between the `CADDisplayLink` and `AnimatedImageView`.
     class TargetProxy {
         private weak var target: AnimatedImageView?
@@ -87,12 +87,12 @@ open class AnimatedImageView: KFCrossPlatformImageView {
     }
 
     /// Enumeration that specifies repeat count of GIF
-    public enum RepeatCount: Equatable {
+    enum RepeatCount: Equatable {
         case once
         case finite(count: UInt)
         case infinite
 
-        public static func ==(lhs: RepeatCount, rhs: RepeatCount) -> Bool {
+        static func ==(lhs: RepeatCount, rhs: RepeatCount) -> Bool {
             switch (lhs, rhs) {
             case let (.finite(l), .finite(r)):
                 return l == r
@@ -110,17 +110,17 @@ open class AnimatedImageView: KFCrossPlatformImageView {
         }
     }
     
-    // MARK: - Public property
+    // MARK: - property
     /// Whether automatically play the animation when the view become visible. Default is `true`.
-    public var autoPlayAnimatedImage = true
+    var autoPlayAnimatedImage = true
     
     /// The count of the frames should be preloaded before shown.
-    public var framePreloadCount = 10
+    var framePreloadCount = 10
     
     /// Specifies whether the GIF frames should be pre-scaled to the image view's size or not.
     /// If the downloaded image is larger than the image view's size, it will help to reduce some memory use.
     /// Default is `true`.
-    public var needsPrescaling = true
+    var needsPrescaling = true
 
     /// Decode the GIF frames in background thread before using. It will decode frames data and do a off-screen
     /// rendering to extract pixel information in background. This can reduce the main thread CPU usage.
@@ -129,11 +129,11 @@ open class AnimatedImageView: KFCrossPlatformImageView {
         This property does not perform as declared and may lead to performance degradation.
         It is currently obsolete and scheduled for removal in a future version.
     """)
-    public var backgroundDecode = true
+    var backgroundDecode = true
 
     /// The animation timer's run loop mode. Default is `RunLoop.Mode.common`.
     /// Set this property to `RunLoop.Mode.default` will make the animation pause during UIScrollView scrolling.
-    public var runLoopMode = KFRunLoopModeCommon {
+    var runLoopMode = KFRunLoopModeCommon {
         willSet {
             guard runLoopMode != newValue else { return }
             stopAnimating()
@@ -147,7 +147,7 @@ open class AnimatedImageView: KFCrossPlatformImageView {
     /// Setting this value to another one will reset current animation.
     ///
     /// Default is `.infinite`, which means the animation will last forever.
-    public var repeatCount = RepeatCount.infinite {
+    var repeatCount = RepeatCount.infinite {
         didSet {
             if oldValue != repeatCount {
                 reset()
@@ -163,10 +163,10 @@ open class AnimatedImageView: KFCrossPlatformImageView {
     }
 
     /// Delegate of this `AnimatedImageView` object. See `AnimatedImageViewDelegate` protocol for more.
-    public weak var delegate: AnimatedImageViewDelegate?
+    weak var delegate: AnimatedImageViewDelegate?
 
     /// The `Animator` instance that holds the frames of a specific image in memory.
-    public private(set) var animator: Animator?
+    private(set) var animator: Animator?
 
     // MARK: - Private property
     // Dispatch queue used for preloading images.
@@ -187,7 +187,7 @@ open class AnimatedImageView: KFCrossPlatformImageView {
     }()
     
     // MARK: - Override
-    override open var image: KFCrossPlatformImage? {
+    override var image: KFCrossPlatformImage? {
         didSet {
             if image != oldValue {
                 reset()
@@ -202,7 +202,7 @@ open class AnimatedImageView: KFCrossPlatformImageView {
         }
     }
     
-    open override var isHighlighted: Bool {
+    override var isHighlighted: Bool {
         get {
             super.isHighlighted
         }
@@ -218,11 +218,11 @@ open class AnimatedImageView: KFCrossPlatformImageView {
 // Workaround for Apple xcframework creating issue on Apple TV in Swift 5.8.
 // https://github.com/apple/swift/issues/66015
 #if os(tvOS)
-    public override init(image: UIImage?, highlightedImage: UIImage?) {
+    override init(image: UIImage?, highlightedImage: UIImage?) {
         super.init(image: image, highlightedImage: highlightedImage)
     }
     
-    required public init?(coder: NSCoder) {
+    required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
     
@@ -238,12 +238,12 @@ open class AnimatedImageView: KFCrossPlatformImageView {
     }
     
 #if os(macOS)
-    public override init(frame frameRect: NSRect) {
+    override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         commonInit()
     }
     
-    public required init?(coder: NSCoder) {
+    required init?(coder: NSCoder) {
         super.init(coder: coder)
         commonInit()
     }
@@ -253,7 +253,7 @@ open class AnimatedImageView: KFCrossPlatformImageView {
         wantsLayer = true
     }
     
-    open override var animates: Bool {
+    override var animates: Bool {
         get {
             if isDisplayLinkInitialized {
                 return !displayLink.isPaused
@@ -270,24 +270,24 @@ open class AnimatedImageView: KFCrossPlatformImageView {
         }
     }
     
-    open func startAnimating() {
+    func startAnimating() {
         guard let animator = animator else { return }
         guard !animator.isReachMaxRepeatCount else { return }
 
         displayLink.isPaused = false
     }
     
-    open func stopAnimating() {
+    func stopAnimating() {
         if isDisplayLinkInitialized {
             displayLink.isPaused = true
         }
     }
     
-    open override var wantsUpdateLayer: Bool {
+    override var wantsUpdateLayer: Bool {
         return true
     }
     
-    open override func updateLayer() {
+    override func updateLayer() {
         if let frame = animator?.currentFrameImage ?? currentFrame, let layer = layer {
             layer.contents = frame.kf.cgImage
             layer.contentsScale = frame.kf.scale
@@ -315,17 +315,17 @@ open class AnimatedImageView: KFCrossPlatformImageView {
         }
     }
     
-    open override func viewDidMoveToWindow() {
+    override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
         didMove()
     }
     
-    open override func viewDidMoveToSuperview() {
+    override func viewDidMoveToSuperview() {
         super.viewDidMoveToSuperview()
         didMove()
     }
 #else
-    override open var isAnimating: Bool {
+    override var isAnimating: Bool {
         if isDisplayLinkInitialized {
             return !displayLink.isPaused
         } else {
@@ -334,7 +334,7 @@ open class AnimatedImageView: KFCrossPlatformImageView {
     }
     
     /// Starts the animation.
-    override open func startAnimating() {
+    override func startAnimating() {
         guard !isAnimating else { return }
         guard let animator = animator else { return }
         guard !animator.isReachMaxRepeatCount else { return }
@@ -343,23 +343,23 @@ open class AnimatedImageView: KFCrossPlatformImageView {
     }
     
     /// Stops the animation.
-    override open func stopAnimating() {
+    override func stopAnimating() {
         super.stopAnimating()
         if isDisplayLinkInitialized {
             displayLink.isPaused = true
         }
     }
     
-    override open func display(_ layer: CALayer) {
+    override func display(_ layer: CALayer) {
         layer.contents = animator?.currentFrameImage?.cgImage ?? image?.cgImage
     }
     
-    override open func didMoveToWindow() {
+    override func didMoveToWindow() {
         super.didMoveToWindow()
         didMove()
     }
     
-    override open func didMoveToSuperview() {
+    override func didMoveToSuperview() {
         super.didMoveToSuperview()
         didMove()
     }
@@ -508,14 +508,14 @@ extension AnimatedImageView {
     // MARK: - Animator
 
     /// An animator which used to drive the data behind `AnimatedImageView`.
-    public class Animator {
+    class Animator {
         private let size: CGSize
 
         private let imageSize: CGSize
         private let imageScale: CGFloat
 
         /// The maximum count of image frames that needs preload.
-        public let maxFrameCount: Int
+        let maxFrameCount: Int
 
         private let frameSource: ImageFrameSource
         private let maxRepeatCount: RepeatCount
@@ -536,17 +536,17 @@ extension AnimatedImageView {
         var loopDuration: TimeInterval = 0
 
         /// The image of the current frame.
-        public var currentFrameImage: KFCrossPlatformImage? {
+        var currentFrameImage: KFCrossPlatformImage? {
             return frame(at: currentFrameIndex)
         }
 
         /// The duration of the current active frame duration.
-        public var currentFrameDuration: TimeInterval {
+        var currentFrameDuration: TimeInterval {
             return duration(at: currentFrameIndex)
         }
 
         /// The index of the current animation frame.
-        public internal(set) var currentFrameIndex = 0 {
+        internal(set) var currentFrameIndex = 0 {
             didSet {
                 previousFrameIndex = oldValue
             }
@@ -572,7 +572,7 @@ extension AnimatedImageView {
         }
 
         /// Whether the current frame is the last frame or not in the animation sequence.
-        public var isLastFrame: Bool {
+        var isLastFrame: Bool {
             return currentFrameIndex == frameCount - 1
         }
 
@@ -656,11 +656,11 @@ extension AnimatedImageView {
         /// Gets the image frame of a given index.
         /// - Parameter index: The index of desired image.
         /// - Returns: The decoded image at the frame. `nil` if the index is out of bound or the image is not yet loaded.
-        public func frame(at index: Int) -> KFCrossPlatformImage? {
+        func frame(at index: Int) -> KFCrossPlatformImage? {
             return animatedFrames[index]?.image
         }
 
-        public func duration(at index: Int) -> TimeInterval {
+        func duration(at index: Int) -> TimeInterval {
             return animatedFrames[index]?.duration  ?? .infinity
         }
 

@@ -36,24 +36,24 @@ import UIKit
 /// The parameter value is the `receivedSize` of current response.
 /// The second parameter is the total expected data length from response's "Content-Length" header.
 /// If the expected length is not available, this block will not be called.
-public typealias DownloadProgressBlock = ((_ receivedSize: Int64, _ totalSize: Int64) -> Void)
+typealias DownloadProgressBlock = ((_ receivedSize: Int64, _ totalSize: Int64) -> Void)
 
 /// Represents the result of a Kingfisher retrieving image task.
-public struct RetrieveImageResult {
+struct RetrieveImageResult {
     /// Gets the image object of this result.
-    public let image: KFCrossPlatformImage
+    let image: KFCrossPlatformImage
 
     /// Gets the cache source of the image. It indicates from which layer of cache this image is retrieved.
     /// If the image is just downloaded from network, `.none` will be returned.
-    public let cacheType: CacheType
+    let cacheType: CacheType
 
     /// The `Source` which this result is related to. This indicated where the `image` of `self` is referring.
-    public let source: Source
+    let source: Source
 
     /// The original `Source` from which the retrieve task begins. It can be different from the `source` property.
     /// When an alternative source loading happened, the `source` will be the replacing loading target, while the
     /// `originalSource` will be kept as the initial `source` which issued the image loading process.
-    public let originalSource: Source
+    let originalSource: Source
     
     /// Gets the data behind the result.
     ///
@@ -64,52 +64,52 @@ public struct RetrieveImageResult {
     /// - Note:
     /// This can be a time-consuming action, so if you need to use the data for multiple times, it is suggested to hold
     /// it and prevent keeping calling this too frequently.
-    public let data: () -> Data?
+    let data: () -> Data?
 }
 
 /// A struct that stores some related information of an `KingfisherError`. It provides some context information for
 /// a pure error so you can identify the error easier.
-public struct PropagationError {
+struct PropagationError {
 
     /// The `Source` to which current `error` is bound.
-    public let source: Source
+    let source: Source
 
     /// The actual error happens in framework.
-    public let error: KingfisherError
+    let error: KingfisherError
 }
 
 
 /// The downloading task updated block type. The parameter `newTask` is the updated new task of image setting process.
 /// It is a `nil` if the image loading does not require an image downloading process. If an image downloading is issued,
 /// this value will contain the actual `DownloadTask` for you to keep and cancel it later if you need.
-public typealias DownloadTaskUpdatedBlock = ((_ newTask: DownloadTask?) -> Void)
+typealias DownloadTaskUpdatedBlock = ((_ newTask: DownloadTask?) -> Void)
 
 /// Main manager class of Kingfisher. It connects Kingfisher downloader and cache,
 /// to provide a set of convenience methods to use Kingfisher for tasks.
 /// You can use this class to retrieve an image via a specified URL from web or cache.
-public class KingfisherManager {
+class KingfisherManager {
 
     /// Represents a shared manager used across Kingfisher.
     /// Use this instance for getting or storing images with Kingfisher.
-    public static let shared = KingfisherManager()
+    static let shared = KingfisherManager()
 
-    // Mark: Public Properties
+    // Mark: Properties
     /// The `ImageCache` used by this manager. It is `ImageCache.default` by default.
     /// If a cache is specified in `KingfisherManager.defaultOptions`, the value in `defaultOptions` will be
     /// used instead.
-    public var cache: ImageCache
+    var cache: ImageCache
     
     /// The `ImageDownloader` used by this manager. It is `ImageDownloader.default` by default.
     /// If a downloader is specified in `KingfisherManager.defaultOptions`, the value in `defaultOptions` will be
     /// used instead.
-    public var downloader: ImageDownloader
+    var downloader: ImageDownloader
     
     /// Default options used by the manager. This option will be used in
     /// Kingfisher manager related methods, as well as all view extension methods.
     /// You can also passing other options for each image task by sending an `options` parameter
     /// to Kingfisher's APIs. The per image options will overwrite the default ones,
     /// if the option exists in both.
-    public var defaultOptions = KingfisherOptionsInfo.empty
+    var defaultOptions = KingfisherOptionsInfo.empty
     
     // Use `defaultOptions` to overwrite the `downloader` and `cache`.
     private var currentDefaultOptions: KingfisherOptionsInfo {
@@ -127,7 +127,7 @@ public class KingfisherManager {
     /// - Parameters:
     ///   - downloader: The image downloader used to download images.
     ///   - cache: The image cache which stores memory and disk images.
-    public init(downloader: ImageDownloader, cache: ImageCache) {
+    init(downloader: ImageDownloader, cache: ImageCache) {
         self.downloader = downloader
         self.cache = cache
 
@@ -158,7 +158,7 @@ public class KingfisherManager {
     ///    it returns `nil` and invoke the `completionHandler` after the cached image retrieved. Otherwise, it
     ///    will download the `resource`, store it in cache, then call `completionHandler`.
     @discardableResult
-    public func retrieveImage(
+    func retrieveImage(
         with resource: Resource,
         options: KingfisherOptionsInfo? = nil,
         progressBlock: DownloadProgressBlock? = nil,
@@ -197,7 +197,7 @@ public class KingfisherManager {
     ///    will try to load the `source`, store it in cache, then call `completionHandler`.
     ///
     @discardableResult
-    public func retrieveImage(
+    func retrieveImage(
         with source: Source,
         options: KingfisherOptionsInfo? = nil,
         progressBlock: DownloadProgressBlock? = nil,

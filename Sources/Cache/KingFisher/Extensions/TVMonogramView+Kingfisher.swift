@@ -53,7 +53,7 @@ extension KingfisherWrapper where Base: TVMonogramView {
     /// Both `progressBlock` and `completionHandler` will be also executed in the main thread.
     ///
     @discardableResult
-    public func setImage(
+    func setImage(
         with source: Source?,
         placeholder: KFCrossPlatformImage? = nil,
         options: KingfisherOptionsInfo? = nil,
@@ -158,7 +158,7 @@ extension KingfisherWrapper where Base: TVMonogramView {
     /// Both `progressBlock` and `completionHandler` will be also executed in the main thread.
     ///
     @discardableResult
-    public func setImage(
+    func setImage(
         with resource: Resource?,
         placeholder: KFCrossPlatformImage? = nil,
         options: KingfisherOptionsInfo? = nil,
@@ -177,7 +177,7 @@ extension KingfisherWrapper where Base: TVMonogramView {
 
     /// Cancel the image download task bounded to the image view if it is running.
     /// Nothing will happen if the downloading has already finished.
-    public func cancelDownloadTask() {
+    func cancelDownloadTask() {
         imageTask?.cancel()
     }
 }
@@ -189,7 +189,7 @@ private var imageTaskKey: Void?
 @available(tvOS 12.0, *)
 extension KingfisherWrapper where Base: TVMonogramView {
     
-    public private(set) var taskIdentifier: Source.Identifier.Value? {
+    private(set) var taskIdentifier: Source.Identifier.Value? {
         get {
             let box: Box<Source.Identifier.Value>? = getAssociatedObject(base, &taskIdentifierKey)
             return box?.value

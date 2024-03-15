@@ -37,7 +37,7 @@ extension Never {}
 /// Kingfisher related methods always throw a `KingfisherError` or invoke the callback with `KingfisherError`
 /// as its error type. To handle errors from Kingfisher, you switch over the error to get a reason catalog,
 /// then switch over the reason to know error detail.
-public enum KingfisherError: Error {
+enum KingfisherError: Error {
 
     // MARK: Error Reason Types
 
@@ -46,7 +46,7 @@ public enum KingfisherError: Error {
     /// - emptyRequest: The request is empty. Code 1001.
     /// - invalidURL: The URL of request is invalid. Code 1002.
     /// - taskCancelled: The downloading task is cancelled by user. Code 1003.
-    public enum RequestErrorReason {
+    enum RequestErrorReason {
         
         /// The request is empty. Code 1001.
         case emptyRequest
@@ -68,7 +68,7 @@ public enum KingfisherError: Error {
     /// - URLSessionError: An error happens in the system URL session. Code 2003.
     /// - dataModifyingFailed: Data modifying fails on returning a valid data. Code 2004.
     /// - noURLResponse: The task is done but no URL response found. Code 2005.
-    public enum ResponseErrorReason {
+    enum ResponseErrorReason {
         
         /// The response is not a valid URL response. Code 2001.
         /// - response: The received invalid URL response.
@@ -111,7 +111,7 @@ public enum KingfisherError: Error {
     /// - cannotSerializeImage: Cannot serialize an image to data for storing. Code 3008.
     /// - cannotCreateCacheFile: Cannot create the cache file at a certain fileURL under a key. Code 3009.
     /// - cannotSetCacheFileAttribute: Cannot set file attributes to a cached file. Code 3010.
-    public enum CacheErrorReason {
+    enum CacheErrorReason {
         
         /// Cannot create a file enumerator for a certain disk URL. Code 3001.
         /// - url: The target disk URL from which the file enumerator should be created.
@@ -180,7 +180,7 @@ public enum KingfisherError: Error {
     /// Represents the error reason during image processing phase.
     ///
     /// - processingFailed: Image processing fails. There is no valid output image from the processor. Code 4001.
-    public enum ProcessorErrorReason {
+    enum ProcessorErrorReason {
         /// Image processing fails. There is no valid output image from the processor. Code 4001.
         /// - processor: The `ImageProcessor` used to process the image or its data in `item`.
         /// - item: The image or its data content.
@@ -192,7 +192,7 @@ public enum KingfisherError: Error {
     /// - emptySource: The input resource is empty or `nil`. Code 5001.
     /// - notCurrentSourceTask: The source task is finished, but it is not the one expected now. Code 5002.
     /// - dataProviderError: An error happens during getting data from an `ImageDataProvider`. Code 5003.
-    public enum ImageSettingErrorReason {
+    enum ImageSettingErrorReason {
         
         /// The input resource is empty or `nil`. Code 5001.
         case emptySource
@@ -236,7 +236,7 @@ public enum KingfisherError: Error {
     // MARK: Helper Properties & Methods
 
     /// Helper property to check whether this error is a `RequestErrorReason.taskCancelled` or not.
-    public var isTaskCancelled: Bool {
+    var isTaskCancelled: Bool {
         if case .requestError(reason: .taskCancelled) = self {
             return true
         }
@@ -249,14 +249,14 @@ public enum KingfisherError: Error {
     /// - Parameter code: The given status code.
     /// - Returns: If `self` is a `ResponseErrorReason.invalidHTTPStatusCode` error
     ///            and its status code equals to `code`, `true` is returned. Otherwise, `false`.
-    public func isInvalidResponseStatusCode(_ code: Int) -> Bool {
+    func isInvalidResponseStatusCode(_ code: Int) -> Bool {
         if case .responseError(reason: .invalidHTTPStatusCode(let response)) = self {
             return response.statusCode == code
         }
         return false
     }
 
-    public var isInvalidResponseStatusCode: Bool {
+    var isInvalidResponseStatusCode: Bool {
         if case .responseError(reason: .invalidHTTPStatusCode) = self {
             return true
         }
@@ -267,7 +267,7 @@ public enum KingfisherError: Error {
     /// When a new image setting task starts while the old one is still running, the new task identifier will be
     /// set and the old one is overwritten. A `.notCurrentSourceTask` error will be raised when the old task finishes
     /// to let you know the setting process finishes with a certain result, but the image view or button is not set.
-    public var isNotCurrentTask: Bool {
+    var isNotCurrentTask: Bool {
         if case .imageSettingError(reason: .notCurrentSourceTask(_, _, _)) = self {
             return true
         }
@@ -291,7 +291,7 @@ public enum KingfisherError: Error {
 extension KingfisherError: LocalizedError {
     
     /// A localized message describing what error occurred.
-    public var errorDescription: String? {
+    var errorDescription: String? {
         switch self {
         case .requestError(let reason): return reason.errorDescription
         case .responseError(let reason): return reason.errorDescription
@@ -307,10 +307,10 @@ extension KingfisherError: LocalizedError {
 extension KingfisherError: CustomNSError {
 
     /// The error domain of `KingfisherError`. All errors from Kingfisher is under this domain.
-    public static let domain = "com.onevcat.Kingfisher.Error"
+    static let domain = "com.onevcat.Kingfisher.Error"
 
     /// The error code within the given domain.
-    public var errorCode: Int {
+    var errorCode: Int {
         switch self {
         case .requestError(let reason): return reason.errorCode
         case .responseError(let reason): return reason.errorCode

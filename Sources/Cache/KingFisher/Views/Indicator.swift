@@ -28,10 +28,10 @@
 
 #if canImport(AppKit) && !targetEnvironment(macCatalyst)
 import AppKit
-public typealias IndicatorView = NSView
+typealias IndicatorView = NSView
 #else
 import UIKit
-public typealias IndicatorView = UIView
+typealias IndicatorView = UIView
 #endif
 
 /// Represents the activity indicator type which should be added to
@@ -41,7 +41,7 @@ public typealias IndicatorView = UIView
 /// - activity: Uses the system activity indicator.
 /// - image: Uses an image as indicator. GIF is supported.
 /// - custom: Uses a custom indicator. The type of associated value should conform to the `Indicator` protocol.
-public enum IndicatorType {
+enum IndicatorType {
     /// No indicator.
     case none
     /// Uses the system activity indicator.
@@ -53,7 +53,7 @@ public enum IndicatorType {
 }
 
 /// An indicator type which can be used to show the download task is in progress.
-public protocol Indicator {
+protocol Indicator {
     
     /// Called when the indicator should start animating.
     func startAnimatingView()
@@ -73,7 +73,7 @@ public protocol Indicator {
     func sizeStrategy(in imageView: KFCrossPlatformImageView) -> IndicatorSizeStrategy
 }
 
-public enum IndicatorSizeStrategy {
+enum IndicatorSizeStrategy {
     case intrinsicSize
     case full
     case size(CGSize)
@@ -83,11 +83,11 @@ extension Indicator {
     
     /// Default implementation of `centerOffset` of `Indicator`. The default value is `.zero`, means that there is
     /// no offset for the indicator view.
-    public var centerOffset: CGPoint { return .zero }
+    var centerOffset: CGPoint { return .zero }
 
     /// Default implementation of `centerOffset` of `Indicator`. The default value is `.full`, means that the indicator
     /// will pin to the same height and width as the image view.
-    public func sizeStrategy(in imageView: KFCrossPlatformImageView) -> IndicatorSizeStrategy {
+    func sizeStrategy(in imageView: KFCrossPlatformImageView) -> IndicatorSizeStrategy {
         return .full
     }
 }

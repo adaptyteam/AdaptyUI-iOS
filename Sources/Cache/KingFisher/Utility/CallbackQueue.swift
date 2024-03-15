@@ -26,7 +26,7 @@
 
 import Foundation
 
-public typealias ExecutionQueue = CallbackQueue
+typealias ExecutionQueue = CallbackQueue
 
 /// Represents callback queue behaviors when an calling of closure be dispatched.
 ///
@@ -35,7 +35,7 @@ public typealias ExecutionQueue = CallbackQueue
 ///                       `.main`. Otherwise, call the closure immediately in current main queue.
 /// - untouch: Do not change the calling queue for closure.
 /// - dispatch: Dispatches to a specified `DispatchQueue`.
-public enum CallbackQueue {
+enum CallbackQueue {
     /// Dispatch the calling to `DispatchQueue.main` with an `async` behavior.
     case mainAsync
     /// Dispatch the calling to `DispatchQueue.main` with an `async` behavior if current queue is not
@@ -46,7 +46,7 @@ public enum CallbackQueue {
     /// Dispatches to a specified `DispatchQueue`.
     case dispatch(DispatchQueue)
     
-    public func execute(_ block: @escaping () -> Void) {
+    func execute(_ block: @escaping () -> Void) {
         switch self {
         case .mainAsync:
             DispatchQueue.main.async { block() }

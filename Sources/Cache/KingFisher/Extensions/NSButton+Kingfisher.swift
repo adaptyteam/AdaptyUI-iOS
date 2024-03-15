@@ -49,7 +49,7 @@ extension KingfisherWrapper where Base: NSButton {
     /// Both `progressBlock` and `completionHandler` will be also executed in the main thread.
     ///
     @discardableResult
-    public func setImage(
+    func setImage(
         with source: Source?,
         placeholder: KFCrossPlatformImage? = nil,
         options: KingfisherOptionsInfo? = nil,
@@ -83,7 +83,7 @@ extension KingfisherWrapper where Base: NSButton {
     /// Both `progressBlock` and `completionHandler` will be also executed in the main thread.
     ///
     @discardableResult
-    public func setImage(
+    func setImage(
         with resource: Resource?,
         placeholder: KFCrossPlatformImage? = nil,
         options: KingfisherOptionsInfo? = nil,
@@ -172,14 +172,14 @@ extension KingfisherWrapper where Base: NSButton {
 
     /// Cancels the image download task of the button if it is running.
     /// Nothing will happen if the downloading has already finished.
-    public func cancelImageDownloadTask() {
+    func cancelImageDownloadTask() {
         imageTask?.cancel()
     }
 
     // MARK: Setting Alternate Image
 
     @discardableResult
-    public func setAlternateImage(
+    func setAlternateImage(
         with source: Source?,
         placeholder: KFCrossPlatformImage? = nil,
         options: KingfisherOptionsInfo? = nil,
@@ -213,7 +213,7 @@ extension KingfisherWrapper where Base: NSButton {
     /// Both `progressBlock` and `completionHandler` will be also executed in the main thread.
     ///
     @discardableResult
-    public func setAlternateImage(
+    func setAlternateImage(
         with resource: Resource?,
         placeholder: KFCrossPlatformImage? = nil,
         options: KingfisherOptionsInfo? = nil,
@@ -310,7 +310,7 @@ extension KingfisherWrapper where Base: NSButton {
 
     /// Cancels the alternate image download task of the button if it is running.
     /// Nothing will happen if the downloading has already finished.
-    public func cancelAlternateImageDownloadTask() {
+    func cancelAlternateImageDownloadTask() {
         alternateImageTask?.cancel()
     }
 }
@@ -327,7 +327,7 @@ extension KingfisherWrapper where Base: NSButton {
 
     // MARK: Properties
     
-    public private(set) var taskIdentifier: Source.Identifier.Value? {
+    private(set) var taskIdentifier: Source.Identifier.Value? {
         get {
             let box: Box<Source.Identifier.Value>? = getAssociatedObject(base, &taskIdentifierKey)
             return box?.value
@@ -343,7 +343,7 @@ extension KingfisherWrapper where Base: NSButton {
         set { setRetainedAssociatedObject(base, &imageTaskKey, newValue)}
     }
 
-    public private(set) var alternateTaskIdentifier: Source.Identifier.Value? {
+    private(set) var alternateTaskIdentifier: Source.Identifier.Value? {
         get {
             let box: Box<Source.Identifier.Value>? = getAssociatedObject(base, &alternateTaskIdentifierKey)
             return box?.value

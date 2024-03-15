@@ -30,7 +30,7 @@ import Foundation
 /// Represents a set of conception related to storage which stores a certain type of value in disk.
 /// This is a namespace for the disk storage types. A `Backend` with a certain `Config` will be used to describe the
 /// storage. See these composed types for more information.
-public enum DiskStorage {
+enum DiskStorage {
 
     /// Represents a storage back-end for the `DiskStorage`. The value is serialized to data
     /// and stored as file in the file system under a specified location.
@@ -38,12 +38,12 @@ public enum DiskStorage {
     /// You can config a `DiskStorage.Backend` in its initializer by passing a `DiskStorage.Config` value.
     /// or modifying the `config` property after it being created. `DiskStorage` will use file's attributes to keep
     /// track of a file for its expiration or size limitation.
-    public class Backend<T: DataTransformable> {
+    class Backend<T: DataTransformable> {
         /// The config used for this disk storage.
-        public var config: Config
+        var config: Config
 
         // The final storage URL on disk, with `name` and `cachePathBlock` considered.
-        public let directoryURL: URL
+        let directoryURL: URL
 
         let metaChangingQueue: DispatchQueue
 
@@ -58,7 +58,7 @@ public enum DiskStorage {
         ///
         /// - Parameter config: The config used for this disk storage.
         /// - Throws: An error if the folder for storage cannot be got or created.
-        public convenience init(config: Config) throws {
+        convenience init(config: Config) throws {
             self.init(noThrowConfig: config, creatingDirectory: false)
             try prepareDirectory()
         }
@@ -124,7 +124,7 @@ public enum DiskStorage {
         ///   - expiration: The expiration policy used by this store action.
         ///   - writeOptions: Data writing options used the new files.
         /// - Throws: An error during converting the value to a data format or during writing it to disk.
-        public func store(
+        func store(
             value: T,
             forKey key: String,
             expiration: StorageExpiration? = nil,
@@ -197,7 +197,7 @@ public enum DiskStorage {
         ///   - extendingExpiration: The expiration policy used by this getting action.
         /// - Throws: An error during converting the data to a value or during operation of disk files.
         /// - Returns: The value under `key` if it is valid and found in the storage. Otherwise, `nil`.
-        public func value(forKey key: String, extendingExpiration: ExpirationExtending = .cacheTime) throws -> T? {
+        func value(forKey key: String, extendingExpiration: ExpirationExtending = .cacheTime) throws -> T? {
             return try value(forKey: key, referenceDate: Date(), actuallyLoad: true, extendingExpiration: extendingExpiration)
         }
 
@@ -259,7 +259,7 @@ public enum DiskStorage {
         /// This method does not actually load the data from disk, so it is faster than directly loading the cached value
         /// by checking the nullability of `value(forKey:extendingExpiration:)` method.
         ///
-        public func isCached(forKey key: String) -> Bool {
+        func isCached(forKey key: String) -> Bool {
             return isCached(forKey: key, referenceDate: Date())
         }
 
@@ -272,7 +272,7 @@ public enum DiskStorage {
         /// - Note:
         /// If you pass `Date()` to `referenceDate`, this method is identical to `isCached(forKey:)`. Use the
         /// `referenceDate` to determine whether the cache is still valid for a future date.
-        public func isCached(forKey key: String, referenceDate: Date) -> Bool {
+        func isCached(forKey key: String, referenceDate: Date) -> Bool {
             do {
                 let result = try value(
                     forKey: key,
@@ -289,7 +289,7 @@ public enum DiskStorage {
         /// Removes a value from a specified key.
         /// - Parameter key: The cache key of value.
         /// - Throws: An error during removing the value.
-        public func remove(forKey key: String) throws {
+        func remove(forKey key: String) throws {
             let fileURL = cacheFileURL(forKey: key)
             try removeFile(at: fileURL)
         }
@@ -300,7 +300,7 @@ public enum DiskStorage {
 
         /// Removes all values in this storage.
         /// - Throws: An error during removing the values.
-        public func removeAll() throws {
+        func removeAll() throws {
             try removeAll(skipCreatingDirectory: false)
         }
 
@@ -320,7 +320,7 @@ public enum DiskStorage {
         /// This method does not guarantee there is an image already cached in the returned URL. It just gives your
         /// the URL that the image should be if it exists in disk storage, with the give key.
         ///
-        public func cacheFileURL(forKey key: String) -> URL {
+        func cacheFileURL(forKey key: String) -> URL {
             let fileName = cacheFileName(forKey: key)
             return directoryURL.appendingPathComponent(fileName, isDirectory: false)
         }
@@ -361,7 +361,7 @@ public enum DiskStorage {
         /// Removes all expired values from this storage.
         /// - Throws: A file manager error during removing the file.
         /// - Returns: The URLs for removed files.
-        public func removeExpiredValues() throws -> [URL] {
+        func removeExpiredValues() throws -> [URL] {
             return try removeExpiredValues(referenceDate: Date())
         }
 
@@ -430,7 +430,7 @@ public enum DiskStorage {
         }
 
         /// Gets the total file size of the folder in bytes.
-        public func totalSize() throws -> UInt {
+        func totalSize() throws -> UInt {
             let propertyKeys: [URLResourceKey] = [.fileSizeKey]
             let urls = try allFileURLs(for: propertyKeys)
             let keys = Set(propertyKeys)
@@ -449,30 +449,30 @@ public enum DiskStorage {
 
 extension DiskStorage {
     /// Represents the config used in a `DiskStorage`.
-    public struct Config {
+    struct Config {
 
         /// The file size limit on disk of the storage in bytes. 0 means no limit.
-        public var sizeLimit: UInt
+        var sizeLimit: UInt
 
         /// The `StorageExpiration` used in this disk storage. Default is `.days(7)`,
         /// means that the disk cache would expire in one week.
-        public var expiration: StorageExpiration = .days(7)
+        var expiration: StorageExpiration = .days(7)
 
         /// The preferred extension of cache item. It will be appended to the file name as its extension.
         /// Default is `nil`, means that the cache file does not contain a file extension.
-        public var pathExtension: String? = nil
+        var pathExtension: String? = nil
 
         /// Default is `true`, means that the cache file name will be hashed before storing.
-        public var usesHashedFileName = true
+        var usesHashedFileName = true
 
         /// Default is `false`
         /// If set to `true`, image extension will be extracted from original file name and append to
         /// the hased file name and used as the cache key on disk.
-        public var autoExtAfterHashedFileName = false
+        var autoExtAfterHashedFileName = false
         
         /// Closure that takes in initial directory path and generates
         /// the final disk cache path. You can use it to fully customize your cache path.
-        public var cachePathBlock: ((_ directory: URL, _ cacheName: String) -> URL)! = {
+        var cachePathBlock: ((_ directory: URL, _ cacheName: String) -> URL)! = {
             (directory, cacheName) in
             return directory.appendingPathComponent(cacheName, isDirectory: true)
         }
@@ -492,7 +492,7 @@ extension DiskStorage {
         ///   - directory: The URL where the disk storage should live. The storage will use this as the root folder,
         ///                and append a path which is constructed by input `name`. Default is `nil`, indicates that
         ///                the cache directory under user domain mask will be used.
-        public init(
+        init(
             name: String,
             sizeLimit: UInt,
             fileManager: FileManager = .default,

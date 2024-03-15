@@ -35,7 +35,7 @@ extension KingfisherWrapper where Base == CGSize {
     ///   - size: The target size to resize to.
     ///   - contentMode: Content mode of the target size should be when resizing.
     /// - Returns: The resized size under the given `ContentMode`.
-    public func resize(to size: CGSize, for contentMode: ContentMode) -> CGSize {
+    func resize(to size: CGSize, for contentMode: ContentMode) -> CGSize {
         switch contentMode {
         case .aspectFit:
             return constrained(size)
@@ -50,7 +50,7 @@ extension KingfisherWrapper where Base == CGSize {
     ///
     /// - Parameter size: The size in which the `base` should fit in.
     /// - Returns: The size fitted in by the input `size`, while keeps `base` aspect.
-    public func constrained(_ size: CGSize) -> CGSize {
+    func constrained(_ size: CGSize) -> CGSize {
         let aspectWidth = round(aspectRatio * size.height)
         let aspectHeight = round(size.width / aspectRatio)
         
@@ -63,7 +63,7 @@ extension KingfisherWrapper where Base == CGSize {
     ///
     /// - Parameter size: The size in which the `base` should fill.
     /// - Returns: The size be filled by the input `size`, while keeps `base` aspect.
-    public func filling(_ size: CGSize) -> CGSize {
+    func filling(_ size: CGSize) -> CGSize {
         let aspectWidth = round(aspectRatio * size.height)
         let aspectHeight = round(size.width / aspectRatio)
         
@@ -78,7 +78,7 @@ extension KingfisherWrapper where Base == CGSize {
     ///   - size: The size in which the `base` should be constrained to.
     ///   - anchor: An anchor point in which the size constraint should happen.
     /// - Returns: The result `CGRect` for the constraint operation.
-    public func constrainedRect(for size: CGSize, anchor: CGPoint) -> CGRect {
+    func constrainedRect(for size: CGSize, anchor: CGPoint) -> CGRect {
         
         let unifiedAnchor = CGPoint(x: anchor.x.clamped(to: 0.0...1.0),
                                     y: anchor.y.clamped(to: 0.0...1.0))

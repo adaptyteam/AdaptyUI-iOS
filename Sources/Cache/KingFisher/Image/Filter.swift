@@ -38,11 +38,11 @@ import CoreImage
 private let ciContext = CIContext(options: nil)
 
 /// Represents the type of transformer method, which will be used in to provide a `Filter`.
-public typealias Transformer = (CIImage) -> CIImage?
+typealias Transformer = (CIImage) -> CIImage?
 
 /// Represents a processor based on a `CIImage` `Filter`.
 /// It requires a filter to create an `ImageProcessor`.
-public protocol CIImageProcessor: ImageProcessor {
+protocol CIImageProcessor: ImageProcessor {
     var filter: Filter { get }
 }
 
@@ -56,7 +56,7 @@ extension CIImageProcessor {
     /// - Returns: The processed image.
     ///
     /// - Note: See documentation of `ImageProcessor` protocol for more.
-    public func process(item: ImageProcessItem, options: KingfisherParsedOptionsInfo) -> KFCrossPlatformImage? {
+    func process(item: ImageProcessItem, options: KingfisherParsedOptionsInfo) -> KFCrossPlatformImage? {
         switch item {
         case .image(let image):
             return image.kf.apply(filter)
@@ -68,16 +68,16 @@ extension CIImageProcessor {
 
 /// A wrapper struct for a `Transformer` of CIImage filters. A `Filter`
 /// value could be used to create a `CIImage` processor.
-public struct Filter {
+struct Filter {
     
     let transform: Transformer
 
-    public init(transform: @escaping Transformer) {
+    init(transform: @escaping Transformer) {
         self.transform = transform
     }
     
     /// Tint filter which will apply a tint color to images.
-    public static var tint: (KFCrossPlatformColor) -> Filter = {
+    static var tint: (KFCrossPlatformColor) -> Filter = {
         color in
         Filter {
             input in
@@ -97,10 +97,10 @@ public struct Filter {
     
     /// Represents color control elements. It is a tuple of
     /// `(brightness, contrast, saturation, inputEV)`
-    public typealias ColorElement = (CGFloat, CGFloat, CGFloat, CGFloat)
+    typealias ColorElement = (CGFloat, CGFloat, CGFloat, CGFloat)
     
     /// Color control filter which will apply color control change to images.
-    public static var colorControl: (ColorElement) -> Filter = { arg -> Filter in
+    static var colorControl: (ColorElement) -> Filter = { arg -> Filter in
         let (brightness, contrast, saturation, inputEV) = arg
         return Filter { input in
             let paramsColor = [kCIInputBrightnessKey: brightness,
@@ -123,7 +123,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImage {
     /// - Note:
     ///    Only CG-based images are supported. If any error happens
     ///    during transforming, `self` will be returned.
-    public func apply(_ filter: Filter) -> KFCrossPlatformImage {
+    func apply(_ filter: Filter) -> KFCrossPlatformImage {
         
         guard let cgImage = cgImage else {
             assertionFailure("[Kingfisher] Tint image only works for CG-based image.")

@@ -80,7 +80,7 @@ extension KingfisherWrapper where Base: NSTextAttachment {
     /// ```
     ///
     @discardableResult
-    public func setImage(
+    func setImage(
         with source: Source?,
         attributedView: @autoclosure @escaping () -> KFCrossPlatformView,
         placeholder: KFCrossPlatformImage? = nil,
@@ -143,7 +143,7 @@ extension KingfisherWrapper where Base: NSTextAttachment {
     /// ```
     ///
     @discardableResult
-    public func setImage(
+    func setImage(
         with resource: Resource?,
         attributedView: @autoclosure @escaping () -> KFCrossPlatformView,
         placeholder: KFCrossPlatformImage? = nil,
@@ -240,7 +240,7 @@ extension KingfisherWrapper where Base: NSTextAttachment {
 
     /// Cancel the image download task bounded to the text attachment if it is running.
     /// Nothing will happen if the downloading has already finished.
-    public func cancelDownloadTask() {
+    func cancelDownloadTask() {
         imageTask?.cancel()
     }
 }
@@ -251,7 +251,7 @@ private var imageTaskKey: Void?
 // MARK: Properties
 extension KingfisherWrapper where Base: NSTextAttachment {
 
-    public private(set) var taskIdentifier: Source.Identifier.Value? {
+    private(set) var taskIdentifier: Source.Identifier.Value? {
         get {
             let box: Box<Source.Identifier.Value>? = getAssociatedObject(base, &taskIdentifierKey)
             return box?.value

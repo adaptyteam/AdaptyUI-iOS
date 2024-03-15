@@ -74,7 +74,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
     /// Both `progressBlock` and `completionHandler` will be also executed in the main thread.
     ///
     @discardableResult
-    public func setImage(
+    func setImage(
         with source: Source?,
         placeholder: Placeholder? = nil,
         options: KingfisherOptionsInfo? = nil,
@@ -121,7 +121,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
     /// The `completionHandler` will be also executed in the main thread.
     ///
     @discardableResult
-    public func setImage(
+    func setImage(
         with source: Source?,
         placeholder: Placeholder? = nil,
         options: KingfisherOptionsInfo? = nil,
@@ -161,7 +161,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
     /// Both `progressBlock` and `completionHandler` will be also executed in the main thread.
     ///
     @discardableResult
-    public func setImage(
+    func setImage(
         with resource: Resource?,
         placeholder: Placeholder? = nil,
         options: KingfisherOptionsInfo? = nil,
@@ -199,7 +199,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
     /// The `completionHandler` will be also executed in the main thread.
     ///
     @discardableResult
-    public func setImage(
+    func setImage(
         with resource: Resource?,
         placeholder: Placeholder? = nil,
         options: KingfisherOptionsInfo? = nil,
@@ -230,7 +230,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
     /// Both `progressBlock` and `completionHandler` will be also executed in the main thread.
     ///
     @discardableResult
-    public func setImage(
+    func setImage(
         with provider: ImageDataProvider?,
         placeholder: Placeholder? = nil,
         options: KingfisherOptionsInfo? = nil,
@@ -259,7 +259,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
     /// The `completionHandler` will be also executed in the main thread.
     ///
     @discardableResult
-    public func setImage(
+    func setImage(
         with provider: ImageDataProvider?,
         placeholder: Placeholder? = nil,
         options: KingfisherOptionsInfo? = nil,
@@ -368,7 +368,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
 
     /// Cancels the image download task of the image view if it is running.
     /// Nothing will happen if the downloading has already finished.
-    public func cancelDownloadTask() {
+    func cancelDownloadTask() {
         imageTask?.cancel()
     }
 
@@ -427,7 +427,7 @@ private var imageTaskKey: Void?
 extension KingfisherWrapper where Base: KFCrossPlatformImageView {
 
     // MARK: Properties
-    public private(set) var taskIdentifier: Source.Identifier.Value? {
+    private(set) var taskIdentifier: Source.Identifier.Value? {
         get {
             let box: Box<Source.Identifier.Value>? = getAssociatedObject(base, &taskIdentifierKey)
             return box?.value
@@ -440,7 +440,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
 
     /// Holds which indicator type is going to be used.
     /// Default is `.none`, means no indicator will be shown while downloading.
-    public var indicatorType: IndicatorType {
+    var indicatorType: IndicatorType {
         get {
             return getAssociatedObject(base, &indicatorTypeKey) ?? .none
         }
@@ -460,7 +460,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
     /// Holds any type that conforms to the protocol `Indicator`.
     /// The protocol `Indicator` has a `view` property that will be shown when loading an image.
     /// It will be `nil` if `indicatorType` is `.none`.
-    public private(set) var indicator: Indicator? {
+    private(set) var indicator: Indicator? {
         get {
             let box: Box<Indicator>? = getAssociatedObject(base, &indicatorKey)
             return box?.value
@@ -512,7 +512,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
 
     /// Represents the `Placeholder` used for this image view. A `Placeholder` will be shown in the view while
     /// it is downloading an image.
-    public private(set) var placeholder: Placeholder? {
+    private(set) var placeholder: Placeholder? {
         get { return getAssociatedObject(base, &placeholderKey) }
         set {
             if let previousPlaceholder = placeholder {

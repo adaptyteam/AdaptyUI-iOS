@@ -43,7 +43,7 @@ import UIKit
 /// - flipFromTop: Flip from top transition.
 /// - flipFromBottom: Flip from bottom transition.
 /// - custom: Custom transition.
-public enum ImageTransition {
+enum ImageTransition {
     /// No animation transition.
     case none
     /// Fade in the loaded image in a given duration.
@@ -110,7 +110,7 @@ public enum ImageTransition {
 }
 #else
 // Just a placeholder for compiling on macOS.
-public enum ImageTransition {
+enum ImageTransition {
     case none
     /// This is a placeholder on macOS now. It is for SwiftUI (KFImage) to identify the fade option only.
     case fade(TimeInterval)

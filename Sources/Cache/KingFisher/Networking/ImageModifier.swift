@@ -34,7 +34,7 @@ import UIKit
 /// the image. The `modify(_:)` method will be called after the image retrieved from its source and before it returned
 /// to the caller. This modified image is expected to be only used for rendering purpose, any changes applied by the
 /// `ImageModifier` will not be serialized or cached.
-public protocol ImageModifier {
+protocol ImageModifier {
     /// Modify an input `Image`.
     ///
     /// - parameter image:   Image which will be modified by `self`
@@ -50,19 +50,19 @@ public protocol ImageModifier {
 /// A wrapper for creating an `ImageModifier` easier.
 /// This type conforms to `ImageModifier` and wraps an image modify block.
 /// If the `block` throws an error, the original image will be used.
-public struct AnyImageModifier: ImageModifier {
+struct AnyImageModifier: ImageModifier {
 
     /// A block which modifies images, or returns the original image
     /// if modification cannot be performed with an error.
     let block: (KFCrossPlatformImage) throws -> KFCrossPlatformImage
 
     /// Creates an `AnyImageModifier` with a given `modify` block.
-    public init(modify: @escaping (KFCrossPlatformImage) throws -> KFCrossPlatformImage) {
+    init(modify: @escaping (KFCrossPlatformImage) throws -> KFCrossPlatformImage) {
         block = modify
     }
 
     /// Modify an input `Image`. See `ImageModifier` protocol for more.
-    public func modify(_ image: KFCrossPlatformImage) -> KFCrossPlatformImage {
+    func modify(_ image: KFCrossPlatformImage) -> KFCrossPlatformImage {
         return (try? block(image)) ?? image
     }
 }
@@ -71,49 +71,49 @@ public struct AnyImageModifier: ImageModifier {
 import UIKit
 
 /// Modifier for setting the rendering mode of images.
-public struct RenderingModeImageModifier: ImageModifier {
+struct RenderingModeImageModifier: ImageModifier {
 
     /// The rendering mode to apply to the image.
-    public let renderingMode: UIImage.RenderingMode
+    let renderingMode: UIImage.RenderingMode
 
     /// Creates a `RenderingModeImageModifier`.
     ///
     /// - Parameter renderingMode: The rendering mode to apply to the image. Default is `.automatic`.
-    public init(renderingMode: UIImage.RenderingMode = .automatic) {
+    init(renderingMode: UIImage.RenderingMode = .automatic) {
         self.renderingMode = renderingMode
     }
 
     /// Modify an input `Image`. See `ImageModifier` protocol for more.
-    public func modify(_ image: KFCrossPlatformImage) -> KFCrossPlatformImage {
+    func modify(_ image: KFCrossPlatformImage) -> KFCrossPlatformImage {
         return image.withRenderingMode(renderingMode)
     }
 }
 
 /// Modifier for setting the `flipsForRightToLeftLayoutDirection` property of images.
-public struct FlipsForRightToLeftLayoutDirectionImageModifier: ImageModifier {
+struct FlipsForRightToLeftLayoutDirectionImageModifier: ImageModifier {
 
     /// Creates a `FlipsForRightToLeftLayoutDirectionImageModifier`.
-    public init() {}
+    init() {}
 
     /// Modify an input `Image`. See `ImageModifier` protocol for more.
-    public func modify(_ image: KFCrossPlatformImage) -> KFCrossPlatformImage {
+    func modify(_ image: KFCrossPlatformImage) -> KFCrossPlatformImage {
         return image.imageFlippedForRightToLeftLayoutDirection()
     }
 }
 
 /// Modifier for setting the `alignmentRectInsets` property of images.
-public struct AlignmentRectInsetsImageModifier: ImageModifier {
+struct AlignmentRectInsetsImageModifier: ImageModifier {
 
     /// The alignment insets to apply to the image
-    public let alignmentInsets: UIEdgeInsets
+    let alignmentInsets: UIEdgeInsets
 
     /// Creates an `AlignmentRectInsetsImageModifier`.
-    public init(alignmentInsets: UIEdgeInsets) {
+    init(alignmentInsets: UIEdgeInsets) {
         self.alignmentInsets = alignmentInsets
     }
 
     /// Modify an input `Image`. See `ImageModifier` protocol for more.
-    public func modify(_ image: KFCrossPlatformImage) -> KFCrossPlatformImage {
+    func modify(_ image: KFCrossPlatformImage) -> KFCrossPlatformImage {
         return image.withAlignmentRectInsets(alignmentInsets)
     }
 }

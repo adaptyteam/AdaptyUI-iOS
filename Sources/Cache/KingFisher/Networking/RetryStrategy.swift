@@ -27,21 +27,21 @@
 import Foundation
 
 /// Represents a retry context which could be used to determine the current retry status.
-public class RetryContext {
+class RetryContext {
 
     /// The source from which the target image should be retrieved.
-    public let source: Source
+    let source: Source
 
     /// The last error which caused current retry behavior.
-    public let error: KingfisherError
+    let error: KingfisherError
 
     /// The retried count before current retry happens. This value is `0` if the current retry is for the first time.
-    public var retriedCount: Int
+    var retriedCount: Int
 
     /// A user set value for passing any other information during the retry. If you choose to use `RetryDecision.retry`
     /// as the retry decision for `RetryStrategy.retry(context:retryHandler:)`, the associated value of
     /// `RetryDecision.retry` will be delivered to you in the next retry.
-    public internal(set) var userInfo: Any? = nil
+    internal(set) var userInfo: Any? = nil
 
     init(source: Source, error: KingfisherError) {
         self.source = source
@@ -57,7 +57,7 @@ public class RetryContext {
 }
 
 /// Represents decision of behavior on the current retry.
-public enum RetryDecision {
+enum RetryDecision {
     /// A retry should happen. The associated `userInfo` will be pass to the next retry in the `RetryContext` parameter.
     case retry(userInfo: Any?)
     /// There should be no more retry attempt. The image retrieving process will fail with an error.
@@ -65,7 +65,7 @@ public enum RetryDecision {
 }
 
 /// Defines a retry strategy can be applied to a `.retryStrategy` option.
-public protocol RetryStrategy {
+protocol RetryStrategy {
 
     /// Kingfisher calls this method if an error happens during the image retrieving process from a `KingfisherManager`.
     /// You implement this method to provide necessary logic based on the `context` parameter. Then you need to call
@@ -79,10 +79,10 @@ public protocol RetryStrategy {
 
 /// A retry strategy that guides Kingfisher to retry when a `.responseError` happens, with a specified max retry count
 /// and a certain interval mechanism.
-public struct DelayRetryStrategy: RetryStrategy {
+struct DelayRetryStrategy: RetryStrategy {
 
     /// Represents the interval mechanism which used in a `DelayRetryStrategy`.
-    public enum Interval {
+    enum Interval {
         /// The next retry attempt should happen in fixed seconds. For example, if the associated value is 3, the
         /// attempts happens after 3 seconds after the previous decision is made.
         case seconds(TimeInterval)
@@ -107,22 +107,22 @@ public struct DelayRetryStrategy: RetryStrategy {
     }
 
     /// The max retry count defined for the retry strategy
-    public let maxRetryCount: Int
+    let maxRetryCount: Int
 
     /// The retry interval mechanism defined for the retry strategy.
-    public let retryInterval: Interval
+    let retryInterval: Interval
 
     /// Creates a delay retry strategy.
     /// - Parameters:
     ///   - maxRetryCount: The max retry count.
     ///   - retryInterval: The retry interval mechanism. By default, `.seconds(3)` is used to provide a constant retry
     ///   interval.
-    public init(maxRetryCount: Int, retryInterval: Interval = .seconds(3)) {
+    init(maxRetryCount: Int, retryInterval: Interval = .seconds(3)) {
         self.maxRetryCount = maxRetryCount
         self.retryInterval = retryInterval
     }
 
-    public func retry(context: RetryContext, retryHandler: @escaping (RetryDecision) -> Void) {
+    func retry(context: RetryContext, retryHandler: @escaping (RetryDecision) -> Void) {
         // Retry count exceeded.
         guard context.retriedCount < maxRetryCount else {
             retryHandler(.stop)

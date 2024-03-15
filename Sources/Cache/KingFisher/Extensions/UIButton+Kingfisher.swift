@@ -50,7 +50,7 @@ extension KingfisherWrapper where Base: UIButton {
     /// Both `progressBlock` and `completionHandler` will be also executed in the main thread.
     ///
     @discardableResult
-    public func setImage(
+    func setImage(
         with source: Source?,
         for state: UIControl.State,
         placeholder: UIImage? = nil,
@@ -87,7 +87,7 @@ extension KingfisherWrapper where Base: UIButton {
     /// Both `progressBlock` and `completionHandler` will be also executed in the main thread.
     ///
     @discardableResult
-    public func setImage(
+    func setImage(
         with resource: Resource?,
         for state: UIControl.State,
         placeholder: UIImage? = nil,
@@ -105,7 +105,7 @@ extension KingfisherWrapper where Base: UIButton {
     }
 
     @discardableResult
-    public func setImage(
+    func setImage(
         with source: Source?,
         for state: UIControl.State,
         placeholder: UIImage? = nil,
@@ -180,7 +180,7 @@ extension KingfisherWrapper where Base: UIButton {
     
     /// Cancels the image download task of the button if it is running.
     /// Nothing will happen if the downloading has already finished.
-    public func cancelImageDownloadTask() {
+    func cancelImageDownloadTask() {
         imageTask?.cancel()
     }
 
@@ -204,7 +204,7 @@ extension KingfisherWrapper where Base: UIButton {
     /// Both `progressBlock` and `completionHandler` will be also executed in the main thread.
     ///
     @discardableResult
-    public func setBackgroundImage(
+    func setBackgroundImage(
         with source: Source?,
         for state: UIControl.State,
         placeholder: UIImage? = nil,
@@ -241,7 +241,7 @@ extension KingfisherWrapper where Base: UIButton {
     /// Both `progressBlock` and `completionHandler` will be also executed in the main thread.
     ///
     @discardableResult
-    public func setBackgroundImage(
+    func setBackgroundImage(
         with resource: Resource?,
         for state: UIControl.State,
         placeholder: UIImage? = nil,
@@ -333,7 +333,7 @@ extension KingfisherWrapper where Base: UIButton {
     
     /// Cancels the background image download task of the button if it is running.
     /// Nothing will happen if the downloading has already finished.
-    public func cancelBackgroundImageDownloadTask() {
+    func cancelBackgroundImageDownloadTask() {
         backgroundImageTask?.cancel()
     }
 }
@@ -347,7 +347,7 @@ extension KingfisherWrapper where Base: UIButton {
 
     private typealias TaskIdentifier = Box<[UInt: Source.Identifier.Value]>
     
-    public func taskIdentifier(for state: UIControl.State) -> Source.Identifier.Value? {
+    func taskIdentifier(for state: UIControl.State) -> Source.Identifier.Value? {
         return taskIdentifierInfo.value[state.rawValue]
     }
 
@@ -375,7 +375,7 @@ private var backgroundImageTaskKey: Void?
 // MARK: Background Properties
 extension KingfisherWrapper where Base: UIButton {
     
-    public func backgroundTaskIdentifier(for state: UIControl.State) -> Source.Identifier.Value? {
+    func backgroundTaskIdentifier(for state: UIControl.State) -> Source.Identifier.Value? {
         return backgroundTaskIdentifierInfo.value[state.rawValue]
     }
     

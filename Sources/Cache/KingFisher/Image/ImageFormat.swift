@@ -32,7 +32,7 @@ import Foundation
 /// - PNG: PNG image format.
 /// - JPEG: JPEG image format.
 /// - GIF: GIF image format.
-public enum ImageFormat {
+enum ImageFormat {
     /// The format cannot be recognized or not supported yet.
     case unknown
     /// PNG image format.
@@ -50,7 +50,7 @@ public enum ImageFormat {
     }
     
     /// https://en.wikipedia.org/wiki/JPEG
-    public enum JPEGMarker {
+    enum JPEGMarker {
         case SOF0           //baseline
         case SOF2           //progressive
         case DHT            //Huffman Table
@@ -85,7 +85,7 @@ extension Data: KingfisherCompatibleValue {}
 // MARK: - Misc Helpers
 extension KingfisherWrapper where Base == Data {
     /// Gets the image format corresponding to the data.
-    public var imageFormat: ImageFormat {
+    var imageFormat: ImageFormat {
         guard base.count > 8 else { return .unknown }
         
         var buffer = [UInt8](repeating: 0, count: 8)
@@ -110,7 +110,7 @@ extension KingfisherWrapper where Base == Data {
         return .unknown
     }
     
-    public func contains(jpeg marker: ImageFormat.JPEGMarker) -> Bool {
+    func contains(jpeg marker: ImageFormat.JPEGMarker) -> Bool {
         guard imageFormat == .JPEG else {
             return false
         }

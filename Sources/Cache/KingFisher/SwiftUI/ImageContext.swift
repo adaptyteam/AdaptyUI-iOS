@@ -30,7 +30,7 @@ import Combine
 
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 extension KFImage {
-    public class Context<HoldingView: KFImageHoldingView> {
+    class Context<HoldingView: KFImageHoldingView> {
         let source: Source?
         var options = KingfisherParsedOptionsInfo(
             KingfisherManager.shared.defaultOptions + [.loadDiskFileSynchronously]
@@ -80,12 +80,12 @@ extension ImageTransition {
 
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 extension KFImage.Context: Hashable {
-    public static func == (lhs: KFImage.Context<HoldingView>, rhs: KFImage.Context<HoldingView>) -> Bool {
+    static func == (lhs: KFImage.Context<HoldingView>, rhs: KFImage.Context<HoldingView>) -> Bool {
         lhs.source == rhs.source &&
         lhs.options.processor.identifier == rhs.options.processor.identifier
     }
 
-    public func hash(into hasher: inout Hasher) {
+    func hash(into hasher: inout Hasher) {
         hasher.combine(source)
         hasher.combine(options.processor.identifier)
     }
@@ -94,7 +94,7 @@ extension KFImage.Context: Hashable {
 #if !os(watchOS)
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 extension KFAnimatedImage {
-    public typealias Context = KFImage.Context
+    typealias Context = KFImage.Context
     typealias ImageBinder = KFImage.ImageBinder
 }
 #endif
