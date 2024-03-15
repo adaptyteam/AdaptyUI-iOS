@@ -14,12 +14,14 @@ public class AdaptyImageCache {
     static func chacheImagesIfNeeded(viewConfiguration: AdaptyUI.ViewConfiguration, locale: String) {
         let urls = viewConfiguration.extractImageUrls(locale)
 
-        let prefetcher = ImagePrefetcher(sources: urls.map { .network($0) },
-                                         options: .empty,
-                                         manager: Self.manager) { _, _, _ in
-            print("")
-        }
-
+        let prefetcher = ImagePrefetcher(
+            sources: urls.map { .network($0) },
+            options: [
+                .targetCache(.default),
+                .downloader(.default),
+            ]
+        )
+        
         prefetcher.start()
     }
 }
@@ -31,13 +33,25 @@ extension AdaptyImageCache {
     static let url2 = URL(string: "https://i.pinimg.com/564x/08/cc/57/08cc57559adcbdf6d70426101511befb.jpg")!
 
     public static func runTest() {
-        let prefetcher = ImagePrefetcher(sources: [url1, url2].map { .network($0) },
-                                         options: .empty,
-                                         manager: Self.manager) { skip, fail, complete in
+        let prefetcher = ImagePrefetcher(
+            sources: [url1, url2].map { .network($0) },
+            options: [
+                .targetCache(.default),
+                .downloader(.default),
+            ]
+        ) { skip, fail, complete in
             print("#TEST# skip: \(skip), fail: \(fail), complete: \(complete)")
 
             Self.checkImages()
         }
+        
+//        let prefetcher = ImagePrefetcher(sources: [url1, url2].map { .network($0) },
+//                                         options: .empty,
+//                                         manager: Self.manager) { skip, fail, complete in
+//            print("#TEST# skip: \(skip), fail: \(fail), complete: \(complete)")
+//
+//            Self.checkImages()
+//        }
 
         prefetcher.start()
     }
