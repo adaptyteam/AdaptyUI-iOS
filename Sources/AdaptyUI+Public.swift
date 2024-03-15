@@ -150,7 +150,8 @@ extension AdaptyUI {
         AdaptyUI.getViewConfiguration(data: data) { result in
             switch result {
             case let .success(viewConfiguration):
-                AdaptyImageCache.chacheImagesIfNeeded(viewConfiguration: viewConfiguration, locale: locale)
+                AdaptyUI.chacheImagesIfNeeded(viewConfiguration: viewConfiguration, locale: locale)
+                
                 completion(.success(viewConfiguration.extractLocale(locale)))
             case let .failure(error):
                 completion(.failure(error))

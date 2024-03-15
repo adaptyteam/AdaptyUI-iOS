@@ -207,7 +207,7 @@ final class AdaptyButtonComponentView: UIButton {
             backgroundColor = color.uiColor
         case let .image(image):
             if currentBackgroundImage == nil {
-                setBackgroundImage(image.uiImage, for: .normal)
+                setBackgroundImage(image, for: .normal)
             }
             backgroundColor = .clear
         case let .colorGradient(gradient):

@@ -30,7 +30,7 @@ final class AdaptyTitleImageComponentView: UIImageView {
         
         switch shape.background {
         case .image(let img):
-            image = img.uiImage
+            setImage(img)
         case .color(let color):
             backgroundColor = color.uiColor
         case .colorGradient(let gradient):

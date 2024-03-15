@@ -8,17 +8,48 @@
 import Adapty
 import UIKit
 
-extension AdaptyUI.Image {
-    var uiImage: UIImage? {
-        switch self {
+extension UIImageView {
+    func setImage(_ img: AdaptyUI.Image,
+                  renderingMode: UIImage.RenderingMode = .automatic) {
+        switch img {
         case let .raster(data):
-            return UIImage(data: data)
-        case let .url(_, previewData):
-            if let previewData = previewData {
-                return UIImage(data: previewData)
-            } else {
-                return nil
-            }
+            image = UIImage(data: data)?.withRenderingMode(renderingMode)
+        case let .url(url, previewData):
+            let previewImage: UIImage? = if let previewData { UIImage(data: previewData) } else { nil }
+
+            kf.setImage(
+                with: .network(url),
+                placeholder: previewImage?.withRenderingMode(renderingMode),
+                options: [
+                    .targetCache(AdaptyUI.imageCache),
+                    .downloader(AdaptyUI.imageDownloader),
+                    .imageModifier(RenderingModeImageModifier(renderingMode: renderingMode)),
+                ]
+            )
+        }
+    }
+}
+
+extension UIButton {
+    func setBackgroundImage(_ img: AdaptyUI.Image,
+                            for state: UIControl.State,
+                            renderingMode: UIImage.RenderingMode = .automatic) {
+        switch img {
+        case let .raster(data):
+            setBackgroundImage(UIImage(data: data), for: state)
+        case let .url(url, previewData):
+            let previewImage: UIImage? = if let previewData { UIImage(data: previewData) } else { nil }
+
+            kf.setBackgroundImage(
+                with: .network(url),
+                for: state,
+                placeholder: previewImage?.withRenderingMode(renderingMode),
+                options: [
+                    .targetCache(AdaptyUI.imageCache),
+                    .downloader(AdaptyUI.imageDownloader),
+                    .imageModifier(RenderingModeImageModifier(renderingMode: renderingMode)),
+                ]
+            )
         }
     }
 }

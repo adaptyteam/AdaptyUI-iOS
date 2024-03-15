@@ -73,10 +73,10 @@ final class AdaptyTimelineEntrySideComponentView: UIView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         if let imageColor = timelineEntry.imageColor?.uiColor {
-            imageView.image = timelineEntry.image.uiImage?.withRenderingMode(.alwaysTemplate)
+            imageView.setImage(timelineEntry.image, renderingMode: .alwaysTemplate)
             imageView.tintColor = imageColor
         } else {
-            imageView.image = timelineEntry.image.uiImage
+            imageView.setImage(timelineEntry.image)
         }
 
         let gradientView = UIView()
