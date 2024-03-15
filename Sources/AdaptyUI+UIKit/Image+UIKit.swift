@@ -17,6 +17,10 @@ extension UIImageView {
         case let .url(url, previewData):
             let previewImage: UIImage? = if let previewData { UIImage(data: previewData) } else { nil }
 
+            let logId = AdaptyUI.generateLogId()
+
+            AdaptyUI.writeLog(level: .verbose, message: "#AdaptyMediaCache# setImage START (\(url)) [\(logId)]")
+
             kf.setImage(
                 with: .network(url),
                 placeholder: previewImage?.withRenderingMode(renderingMode),
@@ -28,9 +32,9 @@ extension UIImageView {
                 completionHandler: { result in
                     switch result {
                     case let .success(imgResult):
-                        AdaptyUI.writeLog(level: .verbose, message: "#AdaptyMediaCache# setImage (\(url)) success: cacheType = \(imgResult.cacheType)")
+                        AdaptyUI.writeLog(level: .verbose, message: "#AdaptyMediaCache# setImage SUCCESS, cacheType = \(imgResult.cacheType) [\(logId)]")
                     case let .failure(error):
-                        AdaptyUI.writeLog(level: .error, message: "#AdaptyMediaCache# setImage (\(url)) error: \(error)")
+                        AdaptyUI.writeLog(level: .error, message: "#AdaptyMediaCache# setImage ERROR: \(error) [\(logId)]")
                     }
                 }
             )
@@ -48,6 +52,10 @@ extension UIButton {
         case let .url(url, previewData):
             let previewImage: UIImage? = if let previewData { UIImage(data: previewData) } else { nil }
 
+            let logId = AdaptyUI.generateLogId()
+
+            AdaptyUI.writeLog(level: .verbose, message: "#AdaptyMediaCache# setBackgroundImage START (\(url)) [\(logId)]")
+
             kf.setBackgroundImage(
                 with: .network(url),
                 for: state,
@@ -60,9 +68,9 @@ extension UIButton {
                 completionHandler: { result in
                     switch result {
                     case let .success(imgResult):
-                        AdaptyUI.writeLog(level: .verbose, message: "#AdaptyMediaCache# setBackgroundImage (\(url)) success: cacheType = \(imgResult.cacheType)")
+                        AdaptyUI.writeLog(level: .verbose, message: "#AdaptyMediaCache# setBackgroundImage SUCCESS, cacheType = \(imgResult.cacheType) [\(logId)]")
                     case let .failure(error):
-                        AdaptyUI.writeLog(level: .error, message: "#AdaptyMediaCache# setBackgroundImage (\(url)) error: \(error)")
+                        AdaptyUI.writeLog(level: .error, message: "#AdaptyMediaCache# setBackgroundImage ERROR: \(error) [\(logId)]")
                     }
                 }
             )

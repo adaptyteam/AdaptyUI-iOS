@@ -60,6 +60,8 @@ extension AdaptyUI {
     }
 
     public static func clearMediaCache() {
+        AdaptyUI.writeLog(level: .verbose, message: "#AdaptyMediaCache# clearMediaCache")
+
         imageCache.clearMemoryCache()
         imageCache.clearDiskCache()
     }
@@ -70,8 +72,10 @@ extension AdaptyUI {
         configureMediaCacheIfNeeded()
 
         let urls = viewConfiguration.extractImageUrls(locale)
-        
-        AdaptyUI.writeLog(level: .verbose, message: "#AdaptyMediaCache# chacheImagesIfNeeded: urls = \(urls)")
+
+        let logId = AdaptyUI.generateLogId()
+
+        AdaptyUI.writeLog(level: .verbose, message: "#AdaptyMediaCache# chacheImagesIfNeeded: \(urls) [\(logId)]")
 
         let prefetcher = ImagePrefetcher(
             sources: urls.map { .network($0) },
@@ -80,7 +84,7 @@ extension AdaptyUI {
                 .downloader(imageDownloader),
             ],
             completionHandler: { skipped, failed, completed in
-                AdaptyUI.writeLog(level: .verbose, message: "#AdaptyMediaCache# chacheImagesIfNeeded: skipped = \(skipped), failed = \(failed), completed = \(completed)")
+                AdaptyUI.writeLog(level: .verbose, message: "#AdaptyMediaCache# chacheImagesIfNeeded: skipped = \(skipped), failed = \(failed), completed = \(completed) [\(logId)]")
             }
         )
 
