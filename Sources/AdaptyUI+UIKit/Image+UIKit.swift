@@ -24,7 +24,15 @@ extension UIImageView {
                     .targetCache(AdaptyUI.imageCache),
                     .downloader(AdaptyUI.imageDownloader),
                     .imageModifier(RenderingModeImageModifier(renderingMode: renderingMode)),
-                ]
+                ],
+                completionHandler: { result in
+                    switch result {
+                    case let .success(imgResult):
+                        AdaptyUI.writeLog(level: .verbose, message: "#AdaptyMediaCache# setImage (\(url)) success: cacheType = \(imgResult.cacheType)")
+                    case let .failure(error):
+                        AdaptyUI.writeLog(level: .error, message: "#AdaptyMediaCache# setImage (\(url)) error: \(error)")
+                    }
+                }
             )
         }
     }
@@ -48,7 +56,15 @@ extension UIButton {
                     .targetCache(AdaptyUI.imageCache),
                     .downloader(AdaptyUI.imageDownloader),
                     .imageModifier(RenderingModeImageModifier(renderingMode: renderingMode)),
-                ]
+                ],
+                completionHandler: { result in
+                    switch result {
+                    case let .success(imgResult):
+                        AdaptyUI.writeLog(level: .verbose, message: "#AdaptyMediaCache# setBackgroundImage (\(url)) success: cacheType = \(imgResult.cacheType)")
+                    case let .failure(error):
+                        AdaptyUI.writeLog(level: .error, message: "#AdaptyMediaCache# setBackgroundImage (\(url)) error: \(error)")
+                    }
+                }
             )
         }
     }

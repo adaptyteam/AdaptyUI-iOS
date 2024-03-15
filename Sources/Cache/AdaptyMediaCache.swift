@@ -32,7 +32,7 @@ extension AdaptyUI {
             self.diskStorageSizeLimit = diskStorageSizeLimit
         }
     }
-    
+
     static var currentCacheConfiguration: MediaCacheConfiguration?
 
     static func configureMediaCacheIfNeeded() {
@@ -40,15 +40,22 @@ extension AdaptyUI {
             configureMediaCache(.init())
         }
     }
-    
+
     public static func configureMediaCache(_ configuration: MediaCacheConfiguration) {
+        AdaptyUI.writeLog(
+            level: .verbose,
+            message: """
+            #AdaptyMediaCache# configure: memoryStorageTotalCostLimit = \(configuration.memoryStorageTotalCostLimit), memoryStorageCountLimit = \(configuration.memoryStorageCountLimit), diskStorageSizeLimit = \(configuration.diskStorageSizeLimit)
+            """
+        )
+
         imageCache.memoryStorage.config.totalCostLimit = configuration.memoryStorageTotalCostLimit
         imageCache.memoryStorage.config.countLimit = configuration.memoryStorageCountLimit
         imageCache.diskStorage.config.sizeLimit = configuration.diskStorageSizeLimit
-        
+
         imageCache.memoryStorage.config.expiration = .never
         imageCache.diskStorage.config.expiration = .never
-        
+
         currentCacheConfiguration = configuration
     }
 
@@ -61,15 +68,20 @@ extension AdaptyUI {
 extension AdaptyUI {
     static func chacheImagesIfNeeded(viewConfiguration: AdaptyUI.ViewConfiguration, locale: String) {
         configureMediaCacheIfNeeded()
-        
+
         let urls = viewConfiguration.extractImageUrls(locale)
+        
+        AdaptyUI.writeLog(level: .verbose, message: "#AdaptyMediaCache# chacheImagesIfNeeded: urls = \(urls)")
 
         let prefetcher = ImagePrefetcher(
             sources: urls.map { .network($0) },
             options: [
                 .targetCache(imageCache),
                 .downloader(imageDownloader),
-            ]
+            ],
+            completionHandler: { skipped, failed, completed in
+                AdaptyUI.writeLog(level: .verbose, message: "#AdaptyMediaCache# chacheImagesIfNeeded: skipped = \(skipped), failed = \(failed), completed = \(completed)")
+            }
         )
 
         prefetcher.start()
