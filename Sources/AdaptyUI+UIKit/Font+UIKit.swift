@@ -59,9 +59,11 @@ extension AdaptyUI.Font {
 
     var uiColor: UIColor? { defaultColor?.uiColor }
 
-    var uiFont: UIFont {
-        let size = defaultSize ?? 15.0
-
+    var uiFont: UIFont { uiFont(size: nil) }
+    
+    func uiFont(size: Double?) -> UIFont {
+        let size = size ?? defaultSize ?? 15.0
+        
         if !alias.isEmpty, let font = UIFont(name: alias, size: size) {
             return font
         }

@@ -28,37 +28,12 @@ extension LayoutBuilder {
     func layoutTitleRows(_ text: AdaptyUI.RichText,
                          _ tagConverter: AdaptyUI.CustomTagConverter?,
                          in stackView: UIStackView) throws {
-        // TODO: inspect this
-        let lines = text.items.filter { item in
-            switch item {
-            case .text, .tag: true
-            default: false
-            }
-        }
-//            .filter { !$0.isNewline }
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        label.attributedText = text.attributedString(tagConverter: tagConverter)
 
-        let rowsStackView = UIStackView()
-        rowsStackView.axis = .vertical
-        rowsStackView.spacing = 4.0
-
-        for i in 0 ..< lines.count {
-            let line = lines[i]
-
-            // TODO: inspect this
-            let label = i == 0 ? Self.createTitleLabel() : Self.createSubtitleLabel()
-//            label.attributedText = line.attributedString(bulletSpace: 0.0,
-//                                                         neighbourItemFont: nil,
-//                                                         paragraph: .init(),
-//                                                         kern: nil,
-//                                                         tagConverter: tagConverter,
-//                                                         productTagConverter: nil)
-
-            label.lineBreakMode = .byTruncatingTail
-
-            rowsStackView.addArrangedSubview(label)
-        }
-
-        stackView.addArrangedSubview(rowsStackView)
+        stackView.addArrangedSubview(label)
     }
 
     func layoutText(_ text: AdaptyUI.RichText,

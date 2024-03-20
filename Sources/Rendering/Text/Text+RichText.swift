@@ -17,43 +17,33 @@ extension AdaptyUI.RichText {
     ) -> NSAttributedString {
         guard !isEmpty else { return NSAttributedString() }
 
-        var result = NSMutableAttributedString(string: "")
-        var paragraph = NSMutableAttributedString(string: "")
+        let result = NSMutableAttributedString(string: "")
+        var paragraphStyle: NSParagraphStyle?
 
         for item in items {
             switch item {
             case let .text(value, attributes):
-                paragraph.append(.fromText(value, attributes: attributes))
+                result.append(.fromText(value,
+                                        attributes: attributes,
+                                        paragraphStyle: paragraphStyle))
             case let .tag(value, attributes):
                 let replacementValue = tagConverter?(value) ?? value
-//                if text.hasTags {
-//                    resultText = resultText.replaceCustomTags(converter: tagConverter, fallback: text.fallback)
-//                }
-//
-//                if let productTagConverter = productTagConverter {
-//                    if let convertedText = resultText.replaceProductTags(converter: productTagConverter) {
-//                        resultText = convertedText
-//                    } else {
-//                        return nil
-//                    }
-//                }
-                
                 // TODO: replace tag
-                paragraph.append(.fromText(replacementValue, attributes: attributes))
+                result.append(.fromText(replacementValue,
+                                        attributes: attributes,
+                                        paragraphStyle: paragraphStyle))
             case let .paragraph(attr):
-
-                if let paragraphStyle = attr?.paragraphStyle {
-                    paragraph.addAttributes(
-                        [NSAttributedString.Key.paragraphStyle: paragraphStyle],
-                        range: NSRange(location: 0, length: paragraph.length)
-                    )
+                if result.length > 0 {
+                    result.append(.newLine(paragraphStyle: paragraphStyle))
                 }
-                // TODO: add newline?
-                result.append(paragraph)
-                paragraph = NSMutableAttributedString(string: "")
-            case let .image(image, imageInTextAttributes):
-                // TODO: support image
-                break
+
+                paragraphStyle = attr?.paragraphStyle
+            case let .image(value, attributes):
+                if let value {
+                    result.append(.fromImage(value,
+                                             attributes: attributes,
+                                             paragraphStyle: paragraphStyle))
+                }
             }
         }
 
@@ -62,41 +52,109 @@ extension AdaptyUI.RichText {
 }
 
 extension NSAttributedString {
+    static func newLine(paragraphStyle: NSParagraphStyle?) -> NSAttributedString {
+        NSMutableAttributedString(
+            string: "\n",
+            attributes: [
+                .paragraphStyle: paragraphStyle ?? NSParagraphStyle(),
+            ]
+        )
+    }
+
     static func fromText(
         _ value: String,
-        attributes: AdaptyUI.RichText.TextAttributes?
+        attributes: AdaptyUI.RichText.TextAttributes?,
+        paragraphStyle: NSParagraphStyle?
     ) -> NSAttributedString {
         let foregroundColor = attributes?.uiColor ?? .darkText
 
         let result = NSMutableAttributedString(
             string: value,
             attributes: [
-                NSAttributedString.Key.foregroundColor: foregroundColor,
-                NSAttributedString.Key.font: attributes?.font?.uiFont ?? .systemFont(ofSize: 15),
+                .foregroundColor: foregroundColor,
+                .font: attributes?.font?.uiFont(size: attributes?.size) ?? .systemFont(ofSize: 15),
             ]
         )
 
-        if let background = attributes?.background?.asColor {
-            result.addAttributes([
-                NSAttributedString.Key.backgroundColor: background.uiColor,
-            ], range: NSRange(location: 0, length: result.length))
-        }
-
-        if let strike = attributes?.strike, strike {
-            result.addAttributes([
-                NSAttributedString.Key.strikethroughColor: foregroundColor,
-                NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single,
-            ], range: NSRange(location: 0, length: result.length))
-        }
-
-        if let underline = attributes?.underline, underline {
-            result.addAttributes([
-                NSAttributedString.Key.underlineColor: foregroundColor,
-                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single,
-            ], range: NSRange(location: 0, length: result.length))
-        }
+        result.addAttributes(
+            paragraphStyle: paragraphStyle,
+            background: attributes?.background,
+            strike: attributes?.strike,
+            underline: attributes?.underline
+        )
 
         return result
+    }
+
+    static func fromImage(
+        _ value: AdaptyUI.Image,
+        attributes: AdaptyUI.RichText.ImageInTextAttributes?,
+        paragraphStyle: NSParagraphStyle?
+    ) -> NSAttributedString {
+        guard let attachment = value.formAttachment(attributes: attributes) else { return NSAttributedString(string: "") }
+
+        let result = NSMutableAttributedString()
+        result.append(NSAttributedString(attachment: attachment))
+
+        result.addAttributes(
+            paragraphStyle: paragraphStyle,
+            background: attributes?.background,
+            strike: attributes?.strike,
+            underline: attributes?.underline
+        )
+
+        return result
+    }
+}
+
+extension NSMutableAttributedString {
+    func addAttributes(
+        paragraphStyle: NSParagraphStyle?,
+        background: AdaptyUI.Filling?,
+        strike: Bool?,
+        underline: Bool?
+    ) {
+        if let paragraphStyle {
+            addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: length))
+        }
+
+        if let background = background?.asColor {
+            addAttribute(.backgroundColor, value: background.uiColor, range: NSRange(location: 0, length: length))
+        }
+
+        if let strike, strike {
+            addAttribute(.strikethroughStyle, value: NSUnderlineStyle.single.rawValue, range: NSRange(location: 0, length: length))
+        }
+
+        if let underline, underline {
+            addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: NSRange(location: 0, length: length))
+        }
+    }
+}
+
+extension AdaptyUI.Image {
+    func formAttachment(attributes: AdaptyUI.RichText.ImageInTextAttributes?) -> NSTextAttachment? {
+        guard case let .raster(data) = self, var image = UIImage(data: data) else {
+            return nil
+        }
+
+        if let tint = attributes?.tint?.asColor {
+            image = image
+                .withRenderingMode(.alwaysOriginal)
+                .withTintColor(tint.uiColor, renderingMode: .alwaysOriginal)
+        }
+
+        let height = attributes?.size ?? image.size.height
+        let width = height / image.size.height * image.size.width
+
+//        let font = font?.uiFont ?? .systemFont(ofSize: 17.0)
+        let imageAttachment = NSTextAttachment()
+        imageAttachment.image = image
+        imageAttachment.bounds = .init(x: 0,
+                                       y: 0, // (font.capHeight - size.height).rounded(.down) / 2.0,
+                                       width: width,
+                                       height: height)
+        return imageAttachment
     }
 }
 
