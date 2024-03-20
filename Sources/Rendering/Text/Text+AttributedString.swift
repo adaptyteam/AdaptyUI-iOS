@@ -8,17 +8,8 @@
 import Adapty
 import UIKit
 
-//extension AdaptyUI.HorizontalAlign {
-//    var textAlignment: NSTextAlignment {
-//        switch self {
-//        case .left: return .natural
-//        case .center: return .center
-//        case .right: return .right
-//        case .fill: return .center // TODO: inspect
-//        }
-//    }
-//}
-//
+
+
 extension AdaptyUI.RichText {
     struct ParagraphStyle {
         let alignment: NSTextAlignment

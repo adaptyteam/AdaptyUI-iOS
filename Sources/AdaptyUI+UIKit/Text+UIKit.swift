@@ -20,4 +20,5 @@ extension AdaptyUI.RichText.TextAttributes {
     }
 
     var uiColor: UIColor? { color?.asColor?.uiColor }
+    var backgroundUIColor: UIColor? { background?.asColor?.uiColor }
 }
