@@ -17,7 +17,7 @@ extension AdaptyUI.Button {
         }
     }
 
-    func getStateTitle(_ isSelected: Bool) -> AdaptyUI.CompoundText? {
+    func getStateTitle(_ isSelected: Bool) -> AdaptyUI.RichText? {
         if isSelected, let selected {
             return selected.title
         } else {
@@ -37,7 +37,7 @@ extension UIEdgeInsets {
 
 final class AdaptyButtonComponentView: UIButton {
     let component: AdaptyUI.Button
-    let tagConverter: AdaptyUI.Text.CustomTagConverter?
+    let tagConverter: AdaptyUI.CustomTagConverter?
     let onTap: (AdaptyUI.ButtonAction?) -> Void
 
     private var gradientLayer: CAGradientLayer?
@@ -45,7 +45,7 @@ final class AdaptyButtonComponentView: UIButton {
     private let contentViewMargins: UIEdgeInsets
 
     init(component: AdaptyUI.Button,
-         tagConverter: AdaptyUI.Text.CustomTagConverter?,
+         tagConverter: AdaptyUI.CustomTagConverter?,
          contentView: UIView? = nil,
          contentViewMargins: UIEdgeInsets = .zero,
          addProgressView: Bool = false,
@@ -83,12 +83,12 @@ final class AdaptyButtonComponentView: UIButton {
         }
 
         if addProgressView,
-           case let .text(text) = component.normal?.title?.items.first(where: {
+           case let .text(text, attributes) = component.normal?.title?.items.first(where: {
                guard case .text = $0 else { return false }
                return true
            }) {
             setAttributedTitle(NSAttributedString(string: ""), for: .disabled)
-            setupActivityIndicator(color: text.fill?.asColor?.uiColor ?? .white)
+            setupActivityIndicator(color: attributes?.uiColor ?? .white)
         }
 
         addTarget(self, action: #selector(buttonDidTouchUp), for: .touchUpInside)
@@ -140,7 +140,7 @@ final class AdaptyButtonComponentView: UIButton {
         updateContent(title)
     }
 
-    func updateContent(_ text: AdaptyUI.CompoundText?) {
+    func updateContent(_ text: AdaptyUI.RichText?) {
         contentView?.removeFromSuperview()
         contentView = nil
 

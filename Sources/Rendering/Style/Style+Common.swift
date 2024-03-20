@@ -9,7 +9,7 @@ import Adapty
 import Foundation
 
 extension AdaptyUI.LocalizedViewStyle {
-    var purchaseButtonOfferTitle: AdaptyUI.CompoundText? {
+    var purchaseButtonOfferTitle: AdaptyUI.RichText? {
         items["purchase_button_intro_offer_title"]?.asText
     }
 }

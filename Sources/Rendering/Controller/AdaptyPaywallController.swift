@@ -109,7 +109,7 @@ public class AdaptyPaywallController: UIViewController {
     private func buildInterface() {
         view.backgroundColor = .white
 
-        let tagConverter: AdaptyUI.Text.CustomTagConverter?
+        let tagConverter: AdaptyUI.CustomTagConverter?
 
         if let tagResolver = tagResolver {
             tagConverter = { tagResolver.replacement(for: $0) }

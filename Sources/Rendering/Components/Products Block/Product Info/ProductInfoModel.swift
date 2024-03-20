@@ -12,7 +12,7 @@ protocol ProductInfoModel {
     var id: String { get }
     var adaptyProduct: AdaptyPaywallProduct? { get }
     var eligibleOffer: AdaptyProductDiscount? { get }
-    var tagConverter: AdaptyUI.Text.ProductTagConverter { get }
+    var tagConverter: AdaptyUI.ProductTagConverter { get }
     var isEligibleForFreeTrial: Bool { get }
 }
 
@@ -20,7 +20,7 @@ struct EmptyProductInfo: ProductInfoModel {
     let id: String
     var adaptyProduct: AdaptyPaywallProduct? { nil }
     var eligibleOffer: AdaptyProductDiscount? { nil }
-    var tagConverter: AdaptyUI.Text.ProductTagConverter { { _ in nil } }
+    var tagConverter: AdaptyUI.ProductTagConverter { { _ in nil } }
     var isEligibleForFreeTrial: Bool { false }
 
     init(id: String) {
@@ -29,7 +29,7 @@ struct EmptyProductInfo: ProductInfoModel {
 }
 
 extension AdaptyPaywallProduct {
-    func isApplicableForTag(_ tag: AdaptyUI.Text.ProductTag) -> Bool {
+    func isApplicableForTag(_ tag: AdaptyUI.ProductTag) -> Bool {
         switch tag {
         case .title, .price:
             return true
@@ -59,7 +59,7 @@ struct RealProductInfo: ProductInfoModel {
     var id: String { product.vendorProductId }
     var adaptyProduct: AdaptyPaywallProduct? { product }
 
-    var tagConverter: AdaptyUI.Text.ProductTagConverter {
+    var tagConverter: AdaptyUI.ProductTagConverter {
         { tag in
             guard product.isApplicableForTag(tag) else { return .notApplicable }
 

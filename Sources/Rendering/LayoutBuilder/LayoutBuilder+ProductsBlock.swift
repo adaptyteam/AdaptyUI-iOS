@@ -13,7 +13,7 @@ extension LayoutBuilder {
         _ productsBlock: AdaptyUI.ProductsBlock,
         initialProducts: [ProductInfoModel],
         paywall: AdaptyPaywall,
-        tagConverter: AdaptyUI.Text.CustomTagConverter?,
+        tagConverter: AdaptyUI.CustomTagConverter?,
         in stackView: UIStackView
     ) throws -> ProductsComponentView {
         let productsView: ProductsComponentView

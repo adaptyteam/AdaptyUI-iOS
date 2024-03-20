@@ -11,18 +11,18 @@ import Foundation
 extension AdaptyUI {
     struct ProductInfo {
         let id: String
-        let title: AdaptyUI.CompoundText?
+        let title: AdaptyUI.RichText?
 
-        let subtitle: AdaptyUI.CompoundText?
-        let subtitlePayAsYouGo: AdaptyUI.CompoundText?
-        let subtitlePayUpFront: AdaptyUI.CompoundText?
-        let subtitleFreeTrial: AdaptyUI.CompoundText?
+        let subtitle: AdaptyUI.RichText?
+        let subtitlePayAsYouGo: AdaptyUI.RichText?
+        let subtitlePayUpFront: AdaptyUI.RichText?
+        let subtitleFreeTrial: AdaptyUI.RichText?
 
-        let secondTitle: AdaptyUI.CompoundText?
-        let secondSubitle: AdaptyUI.CompoundText?
+        let secondTitle: AdaptyUI.RichText?
+        let secondSubitle: AdaptyUI.RichText?
 
         let button: AdaptyUI.Button?
-        let tagText: AdaptyUI.CompoundText?
+        let tagText: AdaptyUI.RichText?
         let tagShape: AdaptyUI.Shape?
     }
 }

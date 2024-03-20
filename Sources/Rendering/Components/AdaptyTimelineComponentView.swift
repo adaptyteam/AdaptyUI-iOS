@@ -10,7 +10,7 @@ import UIKit
 
 extension AdaptyUI {
     struct TimelineEntry {
-        let text: AdaptyUI.CompoundText
+        let text: AdaptyUI.RichText
         let image: AdaptyUI.Image
         let imageColor: AdaptyUI.Color?
 
@@ -120,9 +120,9 @@ final class AdaptyTimelineEntrySideComponentView: UIView {
 
 final class AdaptyTimelineComponentView: UIStackView {
     let block: AdaptyUI.FeaturesBlock
-    let tagConverter: AdaptyUI.Text.CustomTagConverter?
+    let tagConverter: AdaptyUI.CustomTagConverter?
 
-    init(block: AdaptyUI.FeaturesBlock, tagConverter: AdaptyUI.Text.CustomTagConverter?) throws {
+    init(block: AdaptyUI.FeaturesBlock, tagConverter: AdaptyUI.CustomTagConverter?) throws {
         guard block.type == .timeline else {
             throw AdaptyUIError.wrongComponentType("type")
         }
@@ -152,8 +152,10 @@ final class AdaptyTimelineComponentView: UIStackView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.attributedText = entry.text.attributedString(paragraph: .init(lineSpacing: 2.0),
-                                                           tagConverter: tagConverter)
+        label.attributedText = entry.text.attributedString(
+            paragraph: .init(lineSpacing: 2.0),
+            tagConverter: tagConverter
+        )
 
         stack.addArrangedSubview(label)
 

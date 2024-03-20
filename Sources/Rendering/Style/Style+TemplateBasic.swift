@@ -36,7 +36,7 @@ extension AdaptyUI.LocalizedViewStyle {
         }
     }
 
-    var titleRows: AdaptyUI.CompoundText? {
+    var titleRows: AdaptyUI.RichText? {
         items["title_rows"]?.asText
     }
 

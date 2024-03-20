@@ -8,7 +8,7 @@
 import Adapty
 import Foundation
 
-extension AdaptyUI.Text {
+extension AdaptyUI {
     enum ProductTagReplacement {
         case notApplicable
         case value(String)
@@ -31,7 +31,7 @@ extension AdaptyUI.Text {
     }
 }
 
-extension AdaptyUI.Text.ProductTag {
+extension AdaptyUI.ProductTag {
     static func fromRawMatch(_ match: String) -> Self? {
         let cleanedMatch = match
             .replacingOccurrences(of: "</", with: "")
@@ -44,7 +44,7 @@ extension AdaptyUI.Text.ProductTag {
 extension String {
     private static let productTagPattern = "</[a-zA-Z_0-9-]+/>"
 
-    func replaceProductTags(converter: AdaptyUI.Text.ProductTagConverter) -> String? {
+    func replaceProductTags(converter: AdaptyUI.ProductTagConverter) -> String? {
         guard let regex = try? NSRegularExpression(pattern: Self.productTagPattern) else {
             return self
         }
@@ -62,7 +62,7 @@ extension String {
             }
 
             let matchTag = result[matchRange]
-            guard let tag = AdaptyUI.Text.ProductTag.fromRawMatch(String(matchTag)),
+            guard let tag = AdaptyUI.ProductTag.fromRawMatch(String(matchTag)),
                   let replacement = converter(tag) else {
                 result = result.replacingOccurrences(of: matchTag, with: "")
                 continue

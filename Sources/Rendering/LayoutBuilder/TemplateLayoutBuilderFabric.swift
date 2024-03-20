@@ -13,7 +13,7 @@ struct TemplateLayoutBuilderFabric {
         paywall: AdaptyPaywall,
         config: AdaptyUI.LocalizedViewConfiguration,
         products: [ProductInfoModel],
-        tagConverter: AdaptyUI.Text.CustomTagConverter?
+        tagConverter: AdaptyUI.CustomTagConverter?
     ) throws -> TemplateLayoutBuilderBasic {
         guard let coverImageHeightMultilpyer = config.mainImageRelativeHeight else {
             throw AdaptyUIError.componentNotFound("main_image_relative_height")
@@ -42,7 +42,7 @@ struct TemplateLayoutBuilderFabric {
         paywall: AdaptyPaywall,
         config: AdaptyUI.LocalizedViewConfiguration,
         products: [ProductInfoModel],
-        tagConverter: AdaptyUI.Text.CustomTagConverter?
+        tagConverter: AdaptyUI.CustomTagConverter?
     ) throws -> TemplateLayoutBuilderTransparent {
         let style = try config.extractDefaultStyle()
 
@@ -66,7 +66,7 @@ struct TemplateLayoutBuilderFabric {
         paywall: AdaptyPaywall,
         config: AdaptyUI.LocalizedViewConfiguration,
         products: [ProductInfoModel],
-        tagConverter: AdaptyUI.Text.CustomTagConverter?
+        tagConverter: AdaptyUI.CustomTagConverter?
     ) throws -> TemplateLayoutBuilderFlat {
         guard let coverImageHeightMultilpyer = config.mainImageRelativeHeight else {
             throw AdaptyUIError.componentNotFound("main_image_relative_height")
@@ -95,7 +95,7 @@ struct TemplateLayoutBuilderFabric {
         _ paywall: AdaptyPaywall,
         _ viewConfiguration: AdaptyUI.LocalizedViewConfiguration,
         products: [ProductInfoModel],
-        tagConverter: AdaptyUI.Text.CustomTagConverter?
+        tagConverter: AdaptyUI.CustomTagConverter?
     ) throws -> LayoutBuilder {
         switch viewConfiguration.templateId {
         case "basic":

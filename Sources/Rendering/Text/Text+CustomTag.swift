@@ -8,7 +8,7 @@
 import Adapty
 import Foundation
 
-extension AdaptyUI.Text {
+extension AdaptyUI {
     typealias CustomTagConverter = (String) -> String?
 }
 
@@ -20,7 +20,7 @@ extension String {
             .replacingOccurrences(of: "/>", with: "")
     }
 
-    func replaceCustomTags(converter: AdaptyUI.Text.CustomTagConverter?, fallback: String?) -> String {
+    func replaceCustomTags(converter: AdaptyUI.CustomTagConverter?, fallback: String?) -> String {
         guard let regex = try? NSRegularExpression(pattern: Self.customTagPattern) else {
             return self
         }
@@ -40,7 +40,7 @@ extension String {
 
             replacementMap[matchTag] = replacement
 
-            if AdaptyUI.Text.ProductTag.fromRawMatch(matchTagContent) == nil, replacement == nil {
+            if AdaptyUI.ProductTag.fromRawMatch(matchTagContent) == nil, replacement == nil {
                 unknownReplacementsCount += 1
             }
         }

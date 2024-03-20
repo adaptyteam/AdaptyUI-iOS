@@ -13,12 +13,12 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
 
     private var product: ProductInfoModel
     private let info: AdaptyUI.ProductInfo
-    private let tagConverter: AdaptyUI.Text.CustomTagConverter?
+    private let tagConverter: AdaptyUI.CustomTagConverter?
 
     init(
         product: ProductInfoModel,
         productsBlock: AdaptyUI.ProductsBlock,
-        tagConverter: AdaptyUI.Text.CustomTagConverter?
+        tagConverter: AdaptyUI.CustomTagConverter?
     ) throws {
         guard productsBlock.type == .single else {
             throw AdaptyUIError.wrongComponentType("products_block")

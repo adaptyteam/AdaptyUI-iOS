@@ -10,7 +10,7 @@ import UIKit
 
 extension LayoutBuilder {
     func layoutFeaturesBlock(_ block: AdaptyUI.FeaturesBlock,
-                             _ tagConverter: AdaptyUI.Text.CustomTagConverter?,
+                             _ tagConverter: AdaptyUI.CustomTagConverter?,
                              in stackView: UIStackView) throws {
         switch block.type {
         case .list:
@@ -18,10 +18,12 @@ extension LayoutBuilder {
                 throw AdaptyUIError.componentNotFound("list")
             }
 
-            try layoutText(text,
-                           tagConverter,
-                           paragraph: .init(paragraphSpacing: 8.0),
-                           in: stackView)
+            try layoutText(
+                text,
+                tagConverter,
+                paragraph: .init(paragraphSpacing: 8.0),
+                in: stackView
+            )
         case .timeline:
             let featuresTimelineView = try AdaptyTimelineComponentView(
                 block: block,

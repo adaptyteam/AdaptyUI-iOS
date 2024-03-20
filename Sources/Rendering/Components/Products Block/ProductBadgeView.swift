@@ -9,14 +9,14 @@ import Adapty
 import UIKit
 
 class ProductBadgeView: AdaptyShapeWithFillingView {
-    let text: AdaptyUI.CompoundText
+    let text: AdaptyUI.RichText
     let shape: AdaptyUI.Shape?
-    let tagConverter: AdaptyUI.Text.CustomTagConverter?
+    let tagConverter: AdaptyUI.CustomTagConverter?
         
     init(
-        text: AdaptyUI.CompoundText,
+        text: AdaptyUI.RichText,
         shape: AdaptyUI.Shape?,
-        tagConverter: AdaptyUI.Text.CustomTagConverter?
+        tagConverter: AdaptyUI.CustomTagConverter?
     ) throws {
         self.text = text
         self.shape = shape
@@ -34,8 +34,12 @@ class ProductBadgeView: AdaptyShapeWithFillingView {
     private func setupView() throws {
         let tagLabel = AdaptyInsetLabel()
 
+        // TODO: inspect
         tagLabel.translatesAutoresizingMaskIntoConstraints = false
-        tagLabel.attributedText = text.attributedString(kern: 0.2, tagConverter: tagConverter)
+        tagLabel.attributedText = text.attributedString(
+//            kern: 0.2,
+            tagConverter: tagConverter
+        )
 
         addSubview(tagLabel)
         addConstraints([

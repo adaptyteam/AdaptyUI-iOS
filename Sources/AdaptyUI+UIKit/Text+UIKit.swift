@@ -8,7 +8,7 @@
 import Adapty
 import UIKit
 
-extension AdaptyUI.Text {
+extension AdaptyUI.RichText.TextAttributes {
     var uiFont: UIFont? {
         guard let font = font?.uiFont else { return nil }
 
@@ -19,5 +19,5 @@ extension AdaptyUI.Text {
         }
     }
 
-    var uiColor: UIColor? { fill?.asColor?.uiColor }
+    var uiColor: UIColor? { color?.asColor?.uiColor }
 }

@@ -11,11 +11,11 @@ import UIKit
 final class HorizontalProductInfoView: UIStackView, ProductInfoView {
     let product: ProductInfoModel
     let info: AdaptyUI.ProductInfo
-    let tagConverter: AdaptyUI.Text.CustomTagConverter?
+    let tagConverter: AdaptyUI.CustomTagConverter?
     
     init(product: ProductInfoModel,
          info: AdaptyUI.ProductInfo,
-         tagConverter: AdaptyUI.Text.CustomTagConverter?) throws {
+         tagConverter: AdaptyUI.CustomTagConverter?) throws {
         self.product = product
         self.info = info
         self.tagConverter = tagConverter

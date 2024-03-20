@@ -11,5 +11,5 @@ import UIKit
 protocol ProductInfoView: UIView {
     init(product: ProductInfoModel, 
          info: AdaptyUI.ProductInfo,
-         tagConverter: AdaptyUI.Text.CustomTagConverter?) throws
+         tagConverter: AdaptyUI.CustomTagConverter?) throws
 }

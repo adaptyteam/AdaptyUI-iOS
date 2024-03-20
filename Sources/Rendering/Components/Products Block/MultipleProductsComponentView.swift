@@ -18,7 +18,7 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
     private let paywall: AdaptyPaywall
     private var products: [ProductInfoModel]
     private let productsBlock: AdaptyUI.ProductsBlock
-    private let tagConverter: AdaptyUI.Text.CustomTagConverter?
+    private let tagConverter: AdaptyUI.CustomTagConverter?
 
     var onProductSelected: ((ProductInfoModel) -> Void)?
 
@@ -27,7 +27,7 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
         paywall: AdaptyPaywall,
         products: [ProductInfoModel],
         productsBlock: AdaptyUI.ProductsBlock,
-        tagConverter: AdaptyUI.Text.CustomTagConverter?
+        tagConverter: AdaptyUI.CustomTagConverter?
     ) throws {
         self.paywall = paywall
         self.products = products
