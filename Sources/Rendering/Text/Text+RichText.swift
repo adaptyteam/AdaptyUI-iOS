@@ -8,6 +8,25 @@
 import Adapty
 import UIKit
 
+extension AdaptyUI.RichText.Item {
+    var uiFont: UIFont? {
+        switch self {
+        case let .text(_, attr), let .tag(_, attr): attr?.uiFont
+        default: nil
+        }
+    }
+}
+
+extension Array where Element == AdaptyUI.RichText.Item {
+    func closestItemFont(at index: Int) -> UIFont? {
+        if let prevItemFont = self[safe: index - 1]?.uiFont { return prevItemFont }
+        if let nextItemFont = self[safe: index + 1]?.uiFont { return nextItemFont }
+        if let prevItemRecursiveFont = closestItemFont(at: index - 1) { return prevItemRecursiveFont }
+        if let nextItemRecursiveFont = closestItemFont(at: index + 1) { return nextItemRecursiveFont }
+        return nil
+    }
+}
+
 extension AdaptyUI.RichText {
     func attributedString(
         paragraph: AdaptyUI.RichText.ParagraphStyle = .init(),
@@ -20,17 +39,19 @@ extension AdaptyUI.RichText {
         let result = NSMutableAttributedString(string: "")
         var paragraphStyle: NSParagraphStyle?
 
-        for item in items {
+        for i in 0 ..< items.count {
+            let item = items[i]
+
             switch item {
-            case let .text(value, attributes):
+            case let .text(value, attr):
                 result.append(.fromText(value,
-                                        attributes: attributes,
+                                        attributes: attr,
                                         paragraphStyle: paragraphStyle))
-            case let .tag(value, attributes):
+            case let .tag(value, attr):
                 let replacementValue = tagConverter?(value) ?? value
                 // TODO: replace tag
                 result.append(.fromText(replacementValue,
-                                        attributes: attributes,
+                                        attributes: attr,
                                         paragraphStyle: paragraphStyle))
             case let .paragraph(attr):
                 if result.length > 0 {
@@ -38,12 +59,15 @@ extension AdaptyUI.RichText {
                 }
 
                 paragraphStyle = attr?.paragraphStyle
-            case let .image(value, attributes):
-                if let value {
-                    result.append(.fromImage(value,
-                                             attributes: attributes,
-                                             paragraphStyle: paragraphStyle))
-                }
+            case let .image(value, attr):
+                guard let value else { break }
+
+                let font = items.closestItemFont(at: i) ?? .systemFont(ofSize: 15)
+
+                result.append(.fromImage(value,
+                                         attributes: attr,
+                                         font: font,
+                                         paragraphStyle: paragraphStyle))
             }
         }
 
@@ -89,9 +113,12 @@ extension NSAttributedString {
     static func fromImage(
         _ value: AdaptyUI.Image,
         attributes: AdaptyUI.RichText.ImageInTextAttributes?,
+        font: UIFont,
         paragraphStyle: NSParagraphStyle?
     ) -> NSAttributedString {
-        guard let attachment = value.formAttachment(attributes: attributes) else { return NSAttributedString(string: "") }
+        guard let attachment = value.formAttachment(font: font, attributes: attributes) else {
+            return NSAttributedString(string: "")
+        }
 
         let result = NSMutableAttributedString()
         result.append(NSAttributedString(attachment: attachment))
@@ -133,7 +160,10 @@ extension NSMutableAttributedString {
 }
 
 extension AdaptyUI.Image {
-    func formAttachment(attributes: AdaptyUI.RichText.ImageInTextAttributes?) -> NSTextAttachment? {
+    func formAttachment(
+        font: UIFont,
+        attributes: AdaptyUI.RichText.ImageInTextAttributes?
+    ) -> NSTextAttachment? {
         guard case let .raster(data) = self, var image = UIImage(data: data) else {
             return nil
         }
@@ -144,16 +174,12 @@ extension AdaptyUI.Image {
                 .withTintColor(tint.uiColor, renderingMode: .alwaysOriginal)
         }
 
-        let height = attributes?.size ?? image.size.height
+        let height = font.capHeight
         let width = height / image.size.height * image.size.width
 
-//        let font = font?.uiFont ?? .systemFont(ofSize: 17.0)
         let imageAttachment = NSTextAttachment()
         imageAttachment.image = image
-        imageAttachment.bounds = .init(x: 0,
-                                       y: 0, // (font.capHeight - size.height).rounded(.down) / 2.0,
-                                       width: width,
-                                       height: height)
+        imageAttachment.bounds = .init(x: 0, y: 0, width: width, height: height)
         return imageAttachment
     }
 }
