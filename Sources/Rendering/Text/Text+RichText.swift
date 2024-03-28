@@ -59,19 +59,33 @@ extension AdaptyUI.RichText {
                 }
 
                 paragraphStyle = attr.paragraphStyle
+
+                if let bullet = attr.bullet {
+                    result.append(.bullet(bullet,
+                                          bulletSpace: attr.bulletSpace,
+                                          paragraphStyle: paragraphStyle))
+                }
             case let .image(value, attr):
                 guard let value else { break }
-
-                let font = items.closestItemFont(at: i) ?? .systemFont(ofSize: 15)
-
-                result.append(.fromImage(value,
-                                         attributes: attr,
-                                         font: font,
-                                         paragraphStyle: paragraphStyle))
+                result.append(
+                    .fromImage(value,
+                               attributes: attr,
+                               paragraphStyle: paragraphStyle).0
+                )
             }
         }
 
         return result
+    }
+}
+
+extension String {
+    func calculatedWidth(_ attributes: AdaptyUI.RichText.TextAttributes?) -> CGFloat {
+        let str = self // Compiler Bug
+        return str.size(withAttributes: [
+            NSAttributedString.Key.foregroundColor: attributes?.uiColor ?? .darkText,
+            NSAttributedString.Key.font: attributes?.uiFont ?? .systemFont(ofSize: 15),
+        ]).width
     }
 }
 
@@ -85,26 +99,71 @@ extension NSAttributedString {
         )
     }
 
-    static func fromText(
-        _ value: String,
-        attributes: AdaptyUI.RichText.TextAttributes,
+    static func bullet(
+        _ bullet: AdaptyUI.RichText.Bullet,
+        bulletSpace: Double?,
         paragraphStyle: NSParagraphStyle?
     ) -> NSAttributedString {
-        let foregroundColor = attributes.uiColor ?? .darkText
+        let result = NSMutableAttributedString()
+        let reservedSpace: CGFloat
+
+        switch bullet {
+        case let .text(value, attr):
+            result.append(
+                .fromText(value,
+                          attributes: attr,
+                          paragraphStyle: paragraphStyle)
+            )
+
+            reservedSpace = value.calculatedWidth(attr)
+        case let .image(value, attr):
+            guard let value else {
+                reservedSpace = 0
+                break
+            }
+
+            let (string, attachmentSize) = NSAttributedString.fromImage(
+                value,
+                attributes: attr,
+                paragraphStyle: paragraphStyle
+            )
+
+            result.append(string)
+            reservedSpace = attachmentSize.width
+        }
+
+        if let bulletSpace, bulletSpace > 0 {
+            let additionalSpace = bulletSpace - reservedSpace
+
+            let padding = NSTextAttachment()
+            padding.bounds = CGRect(x: 0, y: 0, width: additionalSpace, height: 0)
+            result.append(NSAttributedString(attachment: padding))
+        }
+
+        // TODO: consider bulletSpace
+        return result
+    }
+
+    static func fromText(
+        _ value: String,
+        attributes: AdaptyUI.RichText.TextAttributes?,
+        paragraphStyle: NSParagraphStyle?
+    ) -> NSAttributedString {
+        let foregroundColor = attributes?.uiColor ?? .darkText
 
         let result = NSMutableAttributedString(
             string: value,
             attributes: [
                 .foregroundColor: foregroundColor,
-                .font: attributes.font.uiFont(size: attributes.size),
+                .font: attributes?.uiFont ?? .systemFont(ofSize: 15.0), // TODO: move to constant
             ]
         )
 
         result.addAttributes(
             paragraphStyle: paragraphStyle,
-            background: attributes.background,
-            strike: attributes.strike,
-            underline: attributes.underline
+            background: attributes?.background,
+            strike: attributes?.strike,
+            underline: attributes?.underline
         )
 
         return result
@@ -112,12 +171,11 @@ extension NSAttributedString {
 
     static func fromImage(
         _ value: AdaptyUI.Image,
-        attributes: AdaptyUI.RichText.TextAttributes,
-        font: UIFont,
+        attributes: AdaptyUI.RichText.TextAttributes?,
         paragraphStyle: NSParagraphStyle?
-    ) -> NSAttributedString {
-        guard let attachment = value.formAttachment(font: font, attributes: attributes) else {
-            return NSAttributedString(string: "")
+    ) -> (NSAttributedString, CGSize) {
+        guard let (attachment, attachmentSize) = value.formAttachment(attributes: attributes) else {
+            return (NSAttributedString(string: ""), .zero)
         }
 
         let result = NSMutableAttributedString()
@@ -125,12 +183,12 @@ extension NSAttributedString {
 
         result.addAttributes(
             paragraphStyle: paragraphStyle,
-            background: attributes.background,
-            strike: attributes.strike,
-            underline: attributes.underline
+            background: attributes?.background,
+            strike: attributes?.strike,
+            underline: attributes?.underline
         )
 
-        return result
+        return (result, attachmentSize)
     }
 }
 
@@ -161,9 +219,8 @@ extension NSMutableAttributedString {
 
 extension AdaptyUI.Image {
     func formAttachment(
-        font: UIFont,
         attributes: AdaptyUI.RichText.TextAttributes?
-    ) -> NSTextAttachment? {
+    ) -> (NSTextAttachment, CGSize)? {
         guard case let .raster(data) = self, let image = UIImage(data: data) else {
             return nil
         }
@@ -175,13 +232,17 @@ extension AdaptyUI.Image {
 //                .withTintColor(tint.uiColor, renderingMode: .alwaysOriginal)
 //        }
 
+        let font = attributes?.uiFont ?? .systemFont(ofSize: 15.0)
         let height = font.capHeight
         let width = height / image.size.height * image.size.width
 
         let imageAttachment = NSTextAttachment()
         imageAttachment.image = image
         imageAttachment.bounds = .init(x: 0, y: 0, width: width, height: height)
-        return imageAttachment
+        return (
+            imageAttachment,
+            CGSize(width: width, height: height)
+        )
     }
 }
 
