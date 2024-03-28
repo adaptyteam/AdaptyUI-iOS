@@ -74,6 +74,8 @@ struct MainView: View {
                             switch action {
                             case .close:
                                 paywallPresented = false
+                            case let .openURL(url):
+                                UIApplication.shared.open(url, options: [:])
                             default:
                                 break
                             }
