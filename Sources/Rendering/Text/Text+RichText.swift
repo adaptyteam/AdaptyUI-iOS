@@ -11,7 +11,7 @@ import UIKit
 extension AdaptyUI.RichText.Item {
     var uiFont: UIFont? {
         switch self {
-        case let .text(_, attr), let .tag(_, attr): attr?.uiFont
+        case let .text(_, attr), let .tag(_, attr): attr.uiFont
         default: nil
         }
     }
@@ -58,7 +58,7 @@ extension AdaptyUI.RichText {
                     result.append(.newLine(paragraphStyle: paragraphStyle))
                 }
 
-                paragraphStyle = attr?.paragraphStyle
+                paragraphStyle = attr.paragraphStyle
             case let .image(value, attr):
                 guard let value else { break }
 
@@ -87,24 +87,24 @@ extension NSAttributedString {
 
     static func fromText(
         _ value: String,
-        attributes: AdaptyUI.RichText.TextAttributes?,
+        attributes: AdaptyUI.RichText.TextAttributes,
         paragraphStyle: NSParagraphStyle?
     ) -> NSAttributedString {
-        let foregroundColor = attributes?.uiColor ?? .darkText
+        let foregroundColor = attributes.uiColor ?? .darkText
 
         let result = NSMutableAttributedString(
             string: value,
             attributes: [
                 .foregroundColor: foregroundColor,
-                .font: attributes?.font?.uiFont(size: attributes?.size) ?? .systemFont(ofSize: 15),
+                .font: attributes.font.uiFont(size: attributes.size),
             ]
         )
 
         result.addAttributes(
             paragraphStyle: paragraphStyle,
-            background: attributes?.background,
-            strike: attributes?.strike,
-            underline: attributes?.underline
+            background: attributes.background,
+            strike: attributes.strike,
+            underline: attributes.underline
         )
 
         return result
@@ -112,7 +112,7 @@ extension NSAttributedString {
 
     static func fromImage(
         _ value: AdaptyUI.Image,
-        attributes: AdaptyUI.RichText.ImageInTextAttributes?,
+        attributes: AdaptyUI.RichText.TextAttributes,
         font: UIFont,
         paragraphStyle: NSParagraphStyle?
     ) -> NSAttributedString {
@@ -125,9 +125,9 @@ extension NSAttributedString {
 
         result.addAttributes(
             paragraphStyle: paragraphStyle,
-            background: attributes?.background,
-            strike: attributes?.strike,
-            underline: attributes?.underline
+            background: attributes.background,
+            strike: attributes.strike,
+            underline: attributes.underline
         )
 
         return result
@@ -162,17 +162,18 @@ extension NSMutableAttributedString {
 extension AdaptyUI.Image {
     func formAttachment(
         font: UIFont,
-        attributes: AdaptyUI.RichText.ImageInTextAttributes?
+        attributes: AdaptyUI.RichText.TextAttributes?
     ) -> NSTextAttachment? {
-        guard case let .raster(data) = self, var image = UIImage(data: data) else {
+        guard case let .raster(data) = self, let image = UIImage(data: data) else {
             return nil
         }
 
-        if let tint = attributes?.tint?.asColor {
-            image = image
-                .withRenderingMode(.alwaysOriginal)
-                .withTintColor(tint.uiColor, renderingMode: .alwaysOriginal)
-        }
+        // TODO: inspect
+//        if let tint = attributes?.tint?.asColor {
+//            image = image
+//                .withRenderingMode(.alwaysOriginal)
+//                .withTintColor(tint.uiColor, renderingMode: .alwaysOriginal)
+//        }
 
         let height = font.capHeight
         let width = height / image.size.height * image.size.width
@@ -187,9 +188,9 @@ extension AdaptyUI.Image {
 extension AdaptyUI.RichText.ParagraphAttributes {
     var paragraphStyle: NSParagraphStyle {
         let result = NSMutableParagraphStyle()
-        result.firstLineHeadIndent = firstIndent ?? 0.0
-        result.headIndent = indent ?? 0.0
-        result.alignment = horizontalAlign?.textAlignment ?? .natural
+        result.firstLineHeadIndent = firstIndent
+        result.headIndent = indent
+        result.alignment = horizontalAlign.textAlignment
         return result
     }
 }

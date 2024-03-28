@@ -83,12 +83,12 @@ final class AdaptyButtonComponentView: UIButton {
         }
 
         if addProgressView,
-           case let .text(text, attributes) = component.normal?.title?.items.first(where: {
+           case let .text(_, attributes) = component.normal?.title?.items.first(where: {
                guard case .text = $0 else { return false }
                return true
            }) {
             setAttributedTitle(NSAttributedString(string: ""), for: .disabled)
-            setupActivityIndicator(color: attributes?.uiColor ?? .white)
+            setupActivityIndicator(color: attributes.uiColor ?? .white)
         }
 
         addTarget(self, action: #selector(buttonDidTouchUp), for: .touchUpInside)

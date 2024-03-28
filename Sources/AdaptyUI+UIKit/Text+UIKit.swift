@@ -9,16 +9,7 @@ import Adapty
 import UIKit
 
 extension AdaptyUI.RichText.TextAttributes {
-    var uiFont: UIFont? {
-        guard let font = font?.uiFont else { return nil }
-
-        if let size {
-            return font.withSize(size)
-        } else {
-            return font
-        }
-    }
-
-    var uiColor: UIColor? { color?.asColor?.uiColor }
+    var uiFont: UIFont { font.uiFont(size: size) }
+    var uiColor: UIColor? { color.asColor?.uiColor }
     var backgroundUIColor: UIColor? { background?.asColor?.uiColor }
 }

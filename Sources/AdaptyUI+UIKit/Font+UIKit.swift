@@ -57,24 +57,18 @@ extension UIFont {
 extension AdaptyUI.Font {
     static let systemFontReservedName = "adapty_system"
 
-    var uiColor: UIColor? { defaultColor?.uiColor }
-
-    var uiFont: UIFont { uiFont(size: nil) }
-    
-    func uiFont(size: Double?) -> UIFont {
-        let size = size ?? defaultSize ?? 15.0
-        
+    func uiFont(size: Double) -> UIFont {
         if !alias.isEmpty, let font = UIFont(name: alias, size: size) {
             return font
         }
 
         if familyName == Self.systemFontReservedName {
-            return .systemFont(ofSize: size, weight: .fromInteger(weight ?? 400), italic: italic)
+            return .systemFont(ofSize: size, weight: .fromInteger(weight), italic: italic)
         }
 
         return .customFont(ofSize: size,
                            name: familyName,
-                           weight: weight ?? 400,
+                           weight: weight,
                            italic: italic)
     }
 }
