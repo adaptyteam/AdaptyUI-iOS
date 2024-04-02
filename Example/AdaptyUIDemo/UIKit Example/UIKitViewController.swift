@@ -23,7 +23,7 @@ class UIKitViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        textField.text = "test_alexey"
         spinner.isHidden = true
         updatePaywallData()
     }
@@ -74,7 +74,7 @@ class UIKitViewController: UIViewController {
     private func presentPaywall(_ paywall: AdaptyPaywall,
                                 products: [AdaptyPaywallProduct]?,
                                 viewConfiguration: AdaptyUI.LocalizedViewConfiguration) {
-        let vc = AdaptyUI.paywallController(
+        let vc = AdaptyUI.paywallController3(
             for: paywall,
             products: products,
             viewConfiguration: viewConfiguration,
@@ -112,7 +112,7 @@ class UIKitViewController: UIViewController {
 
         setInProgress(true)
 
-        AdaptyUI.getViewConfiguration(forPaywall: paywall, locale: "en") { [weak self] result in
+        AdaptyUI.getViewConfiguration3(forPaywall: paywall, locale: "en") { [weak self] result in
             self?.setInProgress(false)
 
             switch result {
