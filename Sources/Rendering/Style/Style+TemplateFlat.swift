@@ -8,7 +8,7 @@
 import Adapty
 import Foundation
 
-extension AdaptyUI.LocalizedViewStyle {
+extension AdaptyUI.OldViewStyle {
     var background: AdaptyUI.Filling {
         get throws {
             guard let result = items["background"]?.asFilling else {
@@ -18,7 +18,7 @@ extension AdaptyUI.LocalizedViewStyle {
         }
     }
 
-    var coverImageShape: AdaptyUI.Shape {
+    var coverImageShape: AdaptyUI.Decorator {
         get throws {
             guard let result = items["cover_image"]?.asShape else {
                 throw AdaptyUIError.componentNotFound("cover_image")

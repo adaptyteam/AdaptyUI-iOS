@@ -17,7 +17,7 @@ extension Collection where Indices.Iterator.Element == Index {
 final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
     private let paywall: AdaptyPaywall
     private var products: [ProductInfoModel]
-    private let productsBlock: AdaptyUI.ProductsBlock
+    private let productsBlock: AdaptyUI.OldProductsBlock
     private let tagConverter: AdaptyUI.CustomTagConverter?
 
     var onProductSelected: ((ProductInfoModel) -> Void)?
@@ -26,7 +26,7 @@ final class MultipleProductsComponentView: UIStackView, ProductsComponentView {
         axis: NSLayoutConstraint.Axis,
         paywall: AdaptyPaywall,
         products: [ProductInfoModel],
-        productsBlock: AdaptyUI.ProductsBlock,
+        productsBlock: AdaptyUI.OldProductsBlock,
         tagConverter: AdaptyUI.CustomTagConverter?
     ) throws {
         self.paywall = paywall

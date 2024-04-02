@@ -10,12 +10,12 @@ import UIKit
 
 class ProductBadgeView: AdaptyShapeWithFillingView {
     let text: AdaptyUI.RichText
-    let shape: AdaptyUI.Shape?
+    let shape: AdaptyUI.Decorator?
     let tagConverter: AdaptyUI.CustomTagConverter?
         
     init(
         text: AdaptyUI.RichText,
-        shape: AdaptyUI.Shape?,
+        shape: AdaptyUI.Decorator?,
         tagConverter: AdaptyUI.CustomTagConverter?
     ) throws {
         self.text = text

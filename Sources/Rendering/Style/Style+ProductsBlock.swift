@@ -21,13 +21,13 @@ extension AdaptyUI {
         let secondTitle: AdaptyUI.RichText?
         let secondSubitle: AdaptyUI.RichText?
 
-        let button: AdaptyUI.Button?
+        let button: AdaptyUI.OldButton?
         let tagText: AdaptyUI.RichText?
-        let tagShape: AdaptyUI.Shape?
+        let tagShape: AdaptyUI.Decorator?
     }
 }
 
-extension AdaptyUI.ProductObject {
+extension AdaptyUI.OldProductObject {
     func toProductInfo(id: String) -> AdaptyUI.ProductInfo? {
         .init(
             id: id,

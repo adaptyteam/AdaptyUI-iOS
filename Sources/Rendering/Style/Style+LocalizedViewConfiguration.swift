@@ -9,14 +9,14 @@ import Adapty
 import Foundation
 
 extension AdaptyUI.LocalizedViewConfiguration {
-    func extractStyle(_ id: String) throws -> AdaptyUI.LocalizedViewStyle {
+    func extractStyle(_ id: String) throws -> AdaptyUI.OldViewStyle {
         guard let style = styles[id] else {
             throw AdaptyUIError.styleNotFound(id)
         }
         return style
     }
     
-    func extractDefaultStyle() throws -> AdaptyUI.LocalizedViewStyle {
+    func extractDefaultStyle() throws -> AdaptyUI.OldViewStyle {
         try extractStyle("default")
     }
 }

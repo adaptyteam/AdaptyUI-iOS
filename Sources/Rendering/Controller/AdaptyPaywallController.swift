@@ -160,6 +160,8 @@ public class AdaptyPaywallController: UIViewController {
             log(.verbose, "custom (\(id ?? "null") tap")
             guard let id = id else { return }
             delegate?.paywallController(self, didPerform: .custom(id: id))
+        case .selectProductId, .purchaseProductId, .purchaseSelectedProduct:
+            break
         }
     }
 
@@ -228,10 +230,10 @@ public class AdaptyPaywallController: UIViewController {
     private func subscribeForActions() {
         layoutBuilder?.productsView?.onProductSelected = { [weak self] product in
             guard let self = self else { return }
-            
+
             self.presenter.selectProduct(id: product.id)
             self.layoutBuilder?.continueButtonShowIntroCallToAction(product.isEligibleForFreeTrial)
-            
+
             if self.presenter.initiatePurchaseOnTap {
                 self.presenter.makePurchase()
             }

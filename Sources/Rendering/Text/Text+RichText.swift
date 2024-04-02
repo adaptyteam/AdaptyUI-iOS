@@ -66,7 +66,6 @@ extension AdaptyUI.RichText {
                                           paragraphStyle: paragraphStyle))
                 }
             case let .image(value, attr):
-                guard let value else { break }
                 result.append(
                     .fromImage(value,
                                attributes: attr,
@@ -117,11 +116,6 @@ extension NSAttributedString {
 
             reservedSpace = value.calculatedWidth(attr)
         case let .image(value, attr):
-            guard let value else {
-                reservedSpace = 0
-                break
-            }
-
             let (string, attachmentSize) = NSAttributedString.fromImage(
                 value,
                 attributes: attr,
@@ -170,7 +164,7 @@ extension NSAttributedString {
     }
 
     static func fromImage(
-        _ value: AdaptyUI.Image,
+        _ value: AdaptyUI.ImageData,
         attributes: AdaptyUI.RichText.TextAttributes?,
         paragraphStyle: NSParagraphStyle?
     ) -> (NSAttributedString, CGSize) {
@@ -217,7 +211,7 @@ extension NSMutableAttributedString {
     }
 }
 
-extension AdaptyUI.Image {
+extension AdaptyUI.ImageData {
     func formAttachment(
         attributes: AdaptyUI.RichText.TextAttributes?
     ) -> (NSTextAttachment, CGSize)? {
@@ -256,7 +250,7 @@ extension AdaptyUI.RichText.ParagraphAttributes {
     }
 }
 
-extension AdaptyUI.HorizontalAlign {
+extension AdaptyUI.HorizontalAlignment {
     var textAlignment: NSTextAlignment {
         switch self {
         case .left: return .natural

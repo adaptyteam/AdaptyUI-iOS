@@ -18,9 +18,9 @@ final class AdaptyBaseContentView: UIView {
     static let curveHeight: CGFloat = 36.0
 
     let layout: ContentLayout
-    let shape: AdaptyUI.Shape
+    let shape: AdaptyUI.Decorator
 
-    init(layout: ContentLayout, shape: AdaptyUI.Shape) {
+    init(layout: ContentLayout, shape: AdaptyUI.Decorator) {
         self.layout = layout
         self.shape = shape
 
@@ -36,7 +36,7 @@ final class AdaptyBaseContentView: UIView {
     // MARK: - Mask & Background
 
     private func updateMask() {
-        switch shape.type {
+        switch shape.shapeType {
         case let .rectangle(radius):
             layer.applyRectangleMask(radius: radius)
         case .curveUp:

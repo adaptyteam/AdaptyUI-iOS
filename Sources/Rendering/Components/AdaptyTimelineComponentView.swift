@@ -11,15 +11,15 @@ import UIKit
 extension AdaptyUI {
     struct TimelineEntry {
         let text: AdaptyUI.RichText
-        let image: AdaptyUI.Image
+        let image: AdaptyUI.ImageData
         let imageColor: AdaptyUI.Color?
 
-        let shape: AdaptyUI.Shape
+        let shape: AdaptyUI.Decorator
         let gradient: AdaptyUI.ColorGradient
     }
 }
 
-extension AdaptyUI.LocalizedViewItem {
+extension AdaptyUI.OldViewItem {
     var asTimelineEntry: AdaptyUI.TimelineEntry? {
         guard
             case let .object(customObject) = self,
@@ -57,7 +57,7 @@ final class AdaptyTimelineEntrySideComponentView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        shapeView?.layer.applyShapeMask(timelineEntry.shape.type)
+        shapeView?.layer.applyShapeMask(timelineEntry.shape.shapeType)
         gradientLayer?.frame = gradientView?.bounds ?? .zero
     }
 
@@ -119,10 +119,10 @@ final class AdaptyTimelineEntrySideComponentView: UIView {
 }
 
 final class AdaptyTimelineComponentView: UIStackView {
-    let block: AdaptyUI.FeaturesBlock
+    let block: AdaptyUI.OldFeaturesBlock
     let tagConverter: AdaptyUI.CustomTagConverter?
 
-    init(block: AdaptyUI.FeaturesBlock, tagConverter: AdaptyUI.CustomTagConverter?) throws {
+    init(block: AdaptyUI.OldFeaturesBlock, tagConverter: AdaptyUI.CustomTagConverter?) throws {
         guard block.type == .timeline else {
             throw AdaptyUIError.wrongComponentType("type")
         }

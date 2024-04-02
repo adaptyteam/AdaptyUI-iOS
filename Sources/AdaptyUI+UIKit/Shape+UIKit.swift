@@ -75,25 +75,25 @@ extension UIBezierPath {
 extension CALayer {
     var maxCornerRadius: CGFloat { min(bounds.width, bounds.height) / 2.0 }
 
-    func applyRectangleMask(radius: AdaptyUI.Shape.CornerRadius) {
+    func applyRectangleMask(radius: AdaptyUI.CornerRadius) {
         let maxRadius = maxCornerRadius
 
-        switch radius {
-        case let .same(value):
-            cornerRadius = min(value, maxRadius)
-            masksToBounds = true
-        case let .different(topLeft, topRight, bottomRight, bottomLeft):
+        if radius.isSameRadius {
+            cornerRadius = min(radius.topLeft, maxRadius)
+        } else {
             let maskLayer = CAShapeLayer()
-            maskLayer.path = UIBezierPath.customRoundedRect(in: bounds,
-                                                            min(topLeft, maxRadius),
-                                                            min(topRight, maxRadius),
-                                                            min(bottomLeft, maxRadius),
-                                                            min(bottomRight, maxRadius)).cgPath
+            maskLayer.path = UIBezierPath.customRoundedRect(
+                in: bounds,
+                min(radius.topLeft, maxRadius),
+                min(radius.topRight, maxRadius),
+                min(radius.bottomLeft, maxRadius),
+                min(radius.bottomRight, maxRadius)
+            ).cgPath
+            
             mask = maskLayer
-            masksToBounds = true
-        case .none:
-            masksToBounds = false
         }
+
+        masksToBounds = true
     }
 
     func applyShapeMask(_ type: AdaptyUI.ShapeType?) {

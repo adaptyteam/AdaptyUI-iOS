@@ -8,8 +8,8 @@
 import Adapty
 import UIKit
 
-extension AdaptyUI.Button {
-    func getStateShape(_ isSelected: Bool) -> AdaptyUI.Shape? {
+extension AdaptyUI.OldButton {
+    func getStateShape(_ isSelected: Bool) -> AdaptyUI.Decorator? {
         if isSelected, let selected {
             return selected.shape
         } else {
@@ -36,7 +36,7 @@ extension UIEdgeInsets {
 }
 
 final class AdaptyButtonComponentView: UIButton {
-    let component: AdaptyUI.Button
+    let component: AdaptyUI.OldButton
     let tagConverter: AdaptyUI.CustomTagConverter?
     let onTap: (AdaptyUI.ButtonAction?) -> Void
 
@@ -44,7 +44,7 @@ final class AdaptyButtonComponentView: UIButton {
     private var contentView: UIView?
     private let contentViewMargins: UIEdgeInsets
 
-    init(component: AdaptyUI.Button,
+    init(component: AdaptyUI.OldButton,
          tagConverter: AdaptyUI.CustomTagConverter?,
          contentView: UIView? = nil,
          contentViewMargins: UIEdgeInsets = .zero,
@@ -95,7 +95,7 @@ final class AdaptyButtonComponentView: UIButton {
 
         let shape = component.getStateShape(false)
 
-        updateShapeMask(shape?.type)
+        updateShapeMask(shape?.shapeType)
         updateShapeBackground(shape?.background)
         updateShapeBorder(shape?.border)
     }
@@ -191,7 +191,7 @@ final class AdaptyButtonComponentView: UIButton {
 
         let shape = component.getStateShape(isSelected)
 
-        updateShapeMask(shape?.type)
+        updateShapeMask(shape?.shapeType)
         updateShapeBackground(shape?.background)
         updateShapeBorder(shape?.border)
     }
@@ -223,7 +223,7 @@ final class AdaptyButtonComponentView: UIButton {
         }
     }
 
-    private func updateShapeBorder(_ border: AdaptyUI.Shape.Border?) {
+    private func updateShapeBorder(_ border: AdaptyUI.Border?) {
         layer.borderColor = border?.filling.asColor?.uiColor.cgColor
         layer.borderWidth = border?.thickness ?? 0.0
     }

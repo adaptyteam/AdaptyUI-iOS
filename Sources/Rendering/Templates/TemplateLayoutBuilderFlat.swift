@@ -10,16 +10,16 @@ import UIKit
 
 class TemplateLayoutBuilderFlat: LayoutBuilder {
     private let background: AdaptyUI.Filling?
-    private let contentShape: AdaptyUI.Shape
-    private let coverImage: AdaptyUI.Shape
+    private let contentShape: AdaptyUI.Decorator
+    private let coverImage: AdaptyUI.Decorator
     private let coverImageHeightMultilpyer: CGFloat
     private let titleRows: AdaptyUI.RichText?
-    private let featuresBlock: AdaptyUI.FeaturesBlock?
-    private let productsBlock: AdaptyUI.ProductsBlock
-    private let purchaseButton: AdaptyUI.Button
+    private let featuresBlock: AdaptyUI.OldFeaturesBlock?
+    private let productsBlock: AdaptyUI.OldProductsBlock
+    private let purchaseButton: AdaptyUI.OldButton
     private let purchaseButtonOfferTitle: AdaptyUI.RichText?
-    private let footerBlock: AdaptyUI.FooterBlock?
-    private let closeButton: AdaptyUI.Button?
+    private let footerBlock: AdaptyUI.OldFooterBlock?
+    private let closeButton: AdaptyUI.OldButton?
     private let initialProducts: [ProductInfoModel]
     private let paywall: AdaptyPaywall
     private let tagConverter: AdaptyUI.CustomTagConverter?
@@ -28,16 +28,16 @@ class TemplateLayoutBuilderFlat: LayoutBuilder {
 
     init(
         background: AdaptyUI.Filling?,
-        contentShape: AdaptyUI.Shape,
-        coverImage: AdaptyUI.Shape,
+        contentShape: AdaptyUI.Decorator,
+        coverImage: AdaptyUI.Decorator,
         coverImageHeightMultilpyer: CGFloat,
         titleRows: AdaptyUI.RichText?,
-        featuresBlock: AdaptyUI.FeaturesBlock?,
-        productsBlock: AdaptyUI.ProductsBlock,
-        purchaseButton: AdaptyUI.Button,
+        featuresBlock: AdaptyUI.OldFeaturesBlock?,
+        productsBlock: AdaptyUI.OldProductsBlock,
+        purchaseButton: AdaptyUI.OldButton,
         purchaseButtonOfferTitle: AdaptyUI.RichText?,
-        footerBlock: AdaptyUI.FooterBlock?,
-        closeButton: AdaptyUI.Button?,
+        footerBlock: AdaptyUI.OldFooterBlock?,
+        closeButton: AdaptyUI.OldButton?,
         initialProducts: [ProductInfoModel],
         paywall: AdaptyPaywall,
         tagConverter: AdaptyUI.CustomTagConverter?

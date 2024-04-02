@@ -8,8 +8,8 @@
 import Adapty
 import Foundation
 
-extension AdaptyUI.LocalizedViewStyle {
-    var backgroundImage: AdaptyUI.Image {
+extension AdaptyUI.OldViewStyle {
+    var backgroundImage: AdaptyUI.ImageData {
         get throws {
             guard let result = items["background_image"]?.asImage else {
                 throw AdaptyUIError.componentNotFound("background_image")
@@ -18,7 +18,7 @@ extension AdaptyUI.LocalizedViewStyle {
         }
     }
 
-    var coverImage: AdaptyUI.Image {
+    var coverImage: AdaptyUI.ImageData {
         get throws {
             guard let result = items["cover_image"]?.asImage else {
                 throw AdaptyUIError.componentNotFound("cover_image")
@@ -27,7 +27,7 @@ extension AdaptyUI.LocalizedViewStyle {
         }
     }
 
-    var contentShape: AdaptyUI.Shape {
+    var contentShape: AdaptyUI.Decorator {
         get throws {
             guard let result = items["main_content_shape"]?.asShape else {
                 throw AdaptyUIError.componentNotFound("main_content_shape")
@@ -40,7 +40,7 @@ extension AdaptyUI.LocalizedViewStyle {
         items["title_rows"]?.asText
     }
 
-    var purchaseButton: AdaptyUI.Button {
+    var purchaseButton: AdaptyUI.OldButton {
         get throws {
             guard let result = items["purchase_button"]?.asButton else {
                 throw AdaptyUIError.componentNotFound("purchase_button")
@@ -49,7 +49,7 @@ extension AdaptyUI.LocalizedViewStyle {
         }
     }
 
-    var closeButton: AdaptyUI.Button {
+    var closeButton: AdaptyUI.OldButton {
         get throws {
             guard let result = items["close_button"]?.asButton else {
                 throw AdaptyUIError.componentNotFound("close_button")

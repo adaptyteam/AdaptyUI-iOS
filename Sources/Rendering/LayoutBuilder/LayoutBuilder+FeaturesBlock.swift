@@ -9,7 +9,7 @@ import Adapty
 import UIKit
 
 extension LayoutBuilder {
-    func layoutFeaturesBlock(_ block: AdaptyUI.FeaturesBlock,
+    func layoutFeaturesBlock(_ block: AdaptyUI.OldFeaturesBlock,
                              _ tagConverter: AdaptyUI.CustomTagConverter?,
                              in stackView: UIStackView) throws {
         switch block.type {

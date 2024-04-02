@@ -9,9 +9,9 @@ import UIKit
 import Adapty
 
 final class AdaptyTitleImageComponentView: UIImageView {
-    let shape: AdaptyUI.Shape
+    let shape: AdaptyUI.Decorator
     
-    init(shape: AdaptyUI.Shape) {
+    init(shape: AdaptyUI.Decorator) {
         self.shape = shape
         
         super.init(frame: .zero)
@@ -43,11 +43,11 @@ final class AdaptyTitleImageComponentView: UIImageView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        updateShapeMask(shape.type)
+        updateShapeMask(shape.shapeType)
         updateShapeBorder(shape.border)
     }
     
-    private func updateShapeBorder(_ border: AdaptyUI.Shape.Border?) {
+    private func updateShapeBorder(_ border: AdaptyUI.Border?) {
         layer.borderColor = border?.filling.asColor?.uiColor.cgColor
         layer.borderWidth = border?.thickness ?? 0.0
     }

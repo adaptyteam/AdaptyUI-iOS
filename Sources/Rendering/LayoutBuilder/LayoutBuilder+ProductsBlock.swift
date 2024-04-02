@@ -10,7 +10,7 @@ import UIKit
 
 extension LayoutBuilder {
     func layoutProductsBlock(
-        _ productsBlock: AdaptyUI.ProductsBlock,
+        _ productsBlock: AdaptyUI.OldProductsBlock,
         initialProducts: [ProductInfoModel],
         paywall: AdaptyPaywall,
         tagConverter: AdaptyUI.CustomTagConverter?,

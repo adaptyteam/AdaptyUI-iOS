@@ -17,7 +17,7 @@ final class SingleProductComponentView: UIStackView, ProductsComponentView {
 
     init(
         product: ProductInfoModel,
-        productsBlock: AdaptyUI.ProductsBlock,
+        productsBlock: AdaptyUI.OldProductsBlock,
         tagConverter: AdaptyUI.CustomTagConverter?
     ) throws {
         guard productsBlock.type == .single else {

@@ -9,11 +9,11 @@ import Adapty
 import UIKit
 
 final class AdaptyFooterComponentView: UIStackView {
-    let footerBlock: AdaptyUI.FooterBlock
+    let footerBlock: AdaptyUI.OldFooterBlock
     let tagConverter: AdaptyUI.CustomTagConverter?
     let onTap: (AdaptyUI.ButtonAction?) -> Void
 
-    init(footerBlock: AdaptyUI.FooterBlock,
+    init(footerBlock: AdaptyUI.OldFooterBlock,
          tagConverter: AdaptyUI.CustomTagConverter?,
          onTap: @escaping (AdaptyUI.ButtonAction?) -> Void) throws {
         self.footerBlock = footerBlock

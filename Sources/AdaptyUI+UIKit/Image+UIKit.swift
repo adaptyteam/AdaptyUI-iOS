@@ -8,7 +8,7 @@
 import Adapty
 import UIKit
 
-extension AdaptyUI.Image {
+extension AdaptyUI.ImageData {
     var uiImage: UIImage? {
         switch self {
         case let .raster(data): UIImage(data: data)

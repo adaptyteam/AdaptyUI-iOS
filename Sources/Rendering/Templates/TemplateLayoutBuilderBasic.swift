@@ -8,10 +8,10 @@
 import Adapty
 import UIKit
 
-extension AdaptyUI.Shape {
+extension AdaptyUI.Decorator {
     fileprivate var recommendedContentOverlap: CGFloat {
-        switch type {
-        case let .rectangle(cornerRadius): return max(24.0, cornerRadius.value ?? 0.0)
+        switch shapeType {
+        case let .rectangle(cornerRadius): return max(24.0, cornerRadius.topLeft)
         case .curveUp: return 1.5 * AdaptyBaseContentView.curveHeight
         case .curveDown: return 0.8 * AdaptyBaseContentView.curveHeight
         case .circle: return 0.0
@@ -20,16 +20,16 @@ extension AdaptyUI.Shape {
 }
 
 class TemplateLayoutBuilderBasic: LayoutBuilder {
-    private let coverImage: AdaptyUI.Image
+    private let coverImage: AdaptyUI.ImageData
     private let coverImageHeightMultilpyer: CGFloat
-    private let contentShape: AdaptyUI.Shape
+    private let contentShape: AdaptyUI.Decorator
     private let titleRows: AdaptyUI.RichText?
-    private let featuresBlock: AdaptyUI.FeaturesBlock?
-    private let productsBlock: AdaptyUI.ProductsBlock
-    private let purchaseButton: AdaptyUI.Button
+    private let featuresBlock: AdaptyUI.OldFeaturesBlock?
+    private let productsBlock: AdaptyUI.OldProductsBlock
+    private let purchaseButton: AdaptyUI.OldButton
     private let purchaseButtonOfferTitle: AdaptyUI.RichText?
-    private let closeButton: AdaptyUI.Button?
-    private let footerBlock: AdaptyUI.FooterBlock?
+    private let closeButton: AdaptyUI.OldButton?
+    private let footerBlock: AdaptyUI.OldFooterBlock?
     private let initialProducts: [ProductInfoModel]
     private let paywall: AdaptyPaywall
     private let tagConverter: AdaptyUI.CustomTagConverter?
@@ -37,16 +37,16 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
     private let scrollViewDelegate = AdaptyCompoundScrollViewDelegate()
 
     init(
-        coverImage: AdaptyUI.Image,
+        coverImage: AdaptyUI.ImageData,
         coverImageHeightMultilpyer: CGFloat,
-        contentShape: AdaptyUI.Shape,
+        contentShape: AdaptyUI.Decorator,
         titleRows: AdaptyUI.RichText?,
-        featuresBlock: AdaptyUI.FeaturesBlock?,
-        productsBlock: AdaptyUI.ProductsBlock,
-        purchaseButton: AdaptyUI.Button,
+        featuresBlock: AdaptyUI.OldFeaturesBlock?,
+        productsBlock: AdaptyUI.OldProductsBlock,
+        purchaseButton: AdaptyUI.OldButton,
         purchaseButtonOfferTitle: AdaptyUI.RichText?,
-        footerBlock: AdaptyUI.FooterBlock?,
-        closeButton: AdaptyUI.Button?,
+        footerBlock: AdaptyUI.OldFooterBlock?,
+        closeButton: AdaptyUI.OldButton?,
         initialProducts: [ProductInfoModel],
         paywall: AdaptyPaywall,
         tagConverter: AdaptyUI.CustomTagConverter?

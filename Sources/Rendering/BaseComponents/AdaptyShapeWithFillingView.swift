@@ -12,9 +12,9 @@ class AdaptyShapeWithFillingView: UIView {
     private var gradientLayer: CAGradientLayer?
     private var imageView: UIImageView?
 
-    private let shape: AdaptyUI.Shape?
+    private let shape: AdaptyUI.Decorator?
 
-    init(shape: AdaptyUI.Shape?) {
+    init(shape: AdaptyUI.Decorator?) {
         self.shape = shape
 
         super.init(frame: .zero)
@@ -30,7 +30,7 @@ class AdaptyShapeWithFillingView: UIView {
         super.layoutSubviews()
 
         applyFilling(shape?.background)
-        layer.applyShapeMask(shape?.type)
+        layer.applyShapeMask(shape?.shapeType)
     }
 
     private func applyFilling(_ filling: AdaptyUI.Filling?) {
