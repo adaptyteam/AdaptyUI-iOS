@@ -215,16 +215,15 @@ extension AdaptyUI.ImageData {
     func formAttachment(
         attributes: AdaptyUI.RichText.TextAttributes?
     ) -> (NSTextAttachment, CGSize)? {
-        guard case let .raster(data) = self, let image = UIImage(data: data) else {
+        guard case let .raster(data) = self, var image = UIImage(data: data) else {
             return nil
         }
 
-        // TODO: inspect
-//        if let tint = attributes?.tint?.asColor {
-//            image = image
-//                .withRenderingMode(.alwaysOriginal)
-//                .withTintColor(tint.uiColor, renderingMode: .alwaysOriginal)
-//        }
+        if let tintColor = attributes?.color.asColor?.uiColor {
+            image = image
+                .withRenderingMode(.alwaysOriginal)
+                .withTintColor(tintColor, renderingMode: .alwaysOriginal)
+        }
 
         let font = attributes?.uiFont ?? .systemFont(ofSize: 15.0)
         let height = font.capHeight
