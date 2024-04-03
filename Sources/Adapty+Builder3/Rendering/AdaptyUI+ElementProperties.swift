@@ -23,7 +23,21 @@ extension View {
             minHeight: props?.frsme?.minHeight?.points(),
             maxHeight: props?.frsme?.maxHeight?.points()
         )
+        .offset(x: props?.offset.x ?? 0.0, y: props?.offset.y ?? 0.0)
         .background(props?.decorastor?.background)
+        .padding(props?.padding)
+    }
+
+    @ViewBuilder
+    func padding(_ insets: AdaptyUI.EdgeInsets?) -> some View {
+        if let insets {
+            padding(.leading, insets.left)
+                .padding(.top, insets.top)
+                .padding(.trailing, insets.right)
+                .padding(.bottom, insets.bottom)
+        } else {
+            self
+        }
     }
 
     @ViewBuilder

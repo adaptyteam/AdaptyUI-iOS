@@ -17,7 +17,6 @@ extension AdaptyUI {
 
 struct AdaptyUIUnknownElementView: View {
     var value: String
-    var properties: AdaptyUI.Element.Properties?
 
     @ViewBuilder
     private func debugView(_ element: AdaptyUI.DebugElement) -> some View {
@@ -30,10 +29,8 @@ struct AdaptyUIUnknownElementView: View {
     var body: some View {
         if let debugElement = AdaptyUI.DebugElement(rawValue: value) {
             debugView(debugElement)
-                .applyingProperties(properties)
         } else {
             Text("Unknown View \(value)")
-                .applyingProperties(properties)
         }
     }
 }
@@ -49,6 +46,5 @@ extension AdaptyUI.Element {
 }
 
 #Preview {
-    AdaptyUIUnknownElementView(value: AdaptyUI.DebugElement.circle.rawValue,
-                               properties: nil)
+    AdaptyUIUnknownElementView(value: AdaptyUI.DebugElement.circle.rawValue)
 }

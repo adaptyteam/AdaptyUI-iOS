@@ -87,12 +87,6 @@ extension View {
 
 struct AdaptyUIStackView: View {
     var stack: AdaptyUI.Stack
-    var properties: AdaptyUI.Element.Properties?
-
-    init(_ stack: AdaptyUI.Stack, _ properties: AdaptyUI.Element.Properties?) {
-        self.stack = stack
-        self.properties = properties
-    }
 
     var body: some View {
         switch stack.type {
@@ -104,7 +98,6 @@ struct AdaptyUIStackView: View {
                 }
             }
             .fixedHorizontalSizeIfFill(stack.horizontalAlignment)
-            .applyingProperties(properties)
         case .horizontal:
             HStack(alignment: stack.verticalAlignment.swiftuiValue) {
                 ForEach(0 ..< stack.elements.count, id: \.self) {
@@ -113,15 +106,13 @@ struct AdaptyUIStackView: View {
                 }
             }
             .fixedVerticalSizeIfFill(stack.verticalAlignment)
-            .applyingProperties(properties)
         case .z:
+            // TODO: implement fill-fill scenario
             ZStack(alignment: stack.alignment) {
                 ForEach(0 ..< stack.elements.count, id: \.self) {
                     stack.elements[$0]
                 }
             }
-            .applyingProperties(properties)
-            // TODO: implement fill-fill scenario
         }
     }
 }
@@ -153,7 +144,21 @@ extension AdaptyUI.Stack {
                 .space(1),
                 .text(.testBodyShort, nil),
                 .space(1),
-                .text(.testBodyLong, nil),
+                .text(
+                    .testBodyLong,
+                    .init(
+                        decorastor: .init(
+                            shapeType: .rectangle(cornerRadius: .zero),
+                            background: .color(.testGreen),
+                            border: nil
+                        ),
+                        frsme: nil,
+                        padding: .zero,
+                        offset: .zero,
+                        visibility: true,
+                        transitionIn: []
+                    )
+                ),
                 .space(1),
             ]
         )
@@ -165,10 +170,33 @@ extension AdaptyUI.Stack {
             horizontalAlignment: .right,
             verticalAlignment: .top,
             elements: [
-                .text(.testBodyLong, nil),
-//                .text(.testBodyShort, nil),
-                .unknown("circle", .init(decorastor: nil,
-                                         frsme: .init(height: .point(32), width: .point(32), minHeight: nil, maxHeight: nil, minWidth: nil, maxWidth: nil), padding: .zero, offset: .zero, visibility: true, transitionIn: [])),
+                .text(
+                    .testBodyLong,
+                    .init(
+                        decorastor: .init(
+                            shapeType: .rectangle(cornerRadius: .zero),
+                            background: .color(.testGreen),
+                            border: nil
+                        ),
+                        frsme: nil,
+                        padding: .zero,
+                        offset: .zero,
+                        visibility: true,
+                        transitionIn: []
+                    )
+                ),
+                .unknown("circle",
+                         .init(
+                             decorastor: nil,
+                             frsme: .init(height: .point(32), width: .point(32),
+                                          minHeight: nil, maxHeight: nil, minWidth: nil,
+                                          maxWidth: nil),
+                             padding: .zero,
+                             offset: .init(x: 20, y: -20),
+                             visibility: true,
+                             transitionIn: []
+                         )
+                ),
             ]
         )
     }
@@ -176,6 +204,6 @@ extension AdaptyUI.Stack {
 
 #Preview {
 //    AdaptyUIStackView(.testVStack, nil)
-//    AdaptyUIStackView(.testHStack, nil)
-    AdaptyUIStackView(.testZStack, nil)
+    AdaptyUIStackView(stack: .testHStack)
+//    AdaptyUIStackView(.testZStack, nil)
 }

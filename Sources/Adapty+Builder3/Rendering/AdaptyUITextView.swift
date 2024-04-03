@@ -10,12 +10,6 @@ import SwiftUI
 
 struct AdaptyUITextView: View {
     var text: AdaptyUI.RichText
-    var properties: AdaptyUI.Element.Properties?
-
-    init(_ text: AdaptyUI.RichText, _ properties: AdaptyUI.Element.Properties?) {
-        self.text = text
-        self.properties = properties
-    }
 
     @available(iOS 15, *)
     private var attributedString: AttributedString {
@@ -41,6 +35,8 @@ struct AdaptyUITextView: View {
 
 extension AdaptyUI.Color {
     static let testRed = AdaptyUI.Color(data: 0xFF0000FF)
+    static let testGreen = AdaptyUI.Color(data: 0x00FF00FF)
+    static let testBlue = AdaptyUI.Color(data: 0x0000FFFF)
 }
 
 extension AdaptyUI.RichText.ParagraphAttributes {
@@ -74,5 +70,5 @@ extension AdaptyUI.RichText {
 }
 
 #Preview {
-    AdaptyUITextView(.testBodyLong, nil)
+    AdaptyUITextView(text: .testBodyLong)
 }
