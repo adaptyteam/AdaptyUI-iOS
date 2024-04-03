@@ -148,7 +148,14 @@ extension AdaptyUI {
         }
 
         AdaptyUI.getViewConfiguration(data: data) { result in
-            completion(result.map { $0.extractLocale(locale) })
+            switch result {
+            case let .success(viewConfiguration):
+                AdaptyUI.chacheImagesIfNeeded(viewConfiguration: viewConfiguration, locale: locale)
+                
+                completion(.success(viewConfiguration.extractLocale(locale)))
+            case let .failure(error):
+                completion(.failure(error))
+            }
         }
     }
 

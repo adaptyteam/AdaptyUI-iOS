@@ -45,9 +45,10 @@ class AdaptyShapeWithFillingView: UIView {
         case let .image(image):
             backgroundColor = .clear
             if let imageView = imageView {
-                imageView.image = image.uiImage
+                imageView.setImage(image)
             } else {
-                let imageView = UIImageView(image: image.uiImage)
+                let imageView = UIImageView()
+                imageView.setImage(image)
                 imageView.translatesAutoresizingMaskIntoConstraints = false
                 addConstraints([
                     imageView.leadingAnchor.constraint(equalTo: leadingAnchor),

@@ -108,7 +108,8 @@ class TemplateLayoutBuilderBasic: LayoutBuilder {
         let backgroundView = AdaptyBackgroundComponentView(background: contentShape.background)
         layoutBackground(backgroundView, on: view)
 
-        let imageView = UIImageView(image: coverImage.uiImage)
+        let imageView = UIImageView()
+        imageView.setImage(coverImage)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
