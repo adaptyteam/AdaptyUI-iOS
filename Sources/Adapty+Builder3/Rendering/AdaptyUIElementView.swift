@@ -8,15 +8,9 @@
 import Adapty
 import SwiftUI
 
-struct AdaptyUIElementView: View {
-    var element: AdaptyUI.Element
-
-    init(_ element: AdaptyUI.Element) {
-        self.element = element
-    }
-
-    var body: some View {
-        switch element {
+extension AdaptyUI.Element: View {
+    public var body: some View {
+        switch self {
         case let .space(count):
             if count > 0 {
                 ForEach(0 ..< count, id: \.self) { _ in
@@ -31,8 +25,8 @@ struct AdaptyUIElementView: View {
             AdaptyUIImageView(image, properties)
         case let .button(button, properties):
             AdaptyUIButtonView(button, properties)
-        case let .unknown(string, properties):
-            Text("Unknown View")
+        case let .unknown(value, properties):
+            AdaptyUIUnknownElementView(value: value, properties: properties)
         }
     }
 }

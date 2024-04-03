@@ -49,7 +49,7 @@ public class AdaptyBuilder3PaywallController: UIViewController {
             view.backgroundColor = screen.background.asColor?.uiColor ?? .white
 
             if let mainBlock = screen.mainBlock {
-                addSubSwiftUIView(AdaptyUIElementView(mainBlock),
+                addSubSwiftUIView(mainBlock,
                                   to: view)
             } else {
                 addSubSwiftUIView(Text("No main block found"),
