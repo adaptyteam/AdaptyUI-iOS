@@ -8,12 +8,23 @@
 import Adapty
 import SwiftUI
 
-struct AdaptyUIButtonView: View {
-    var button: AdaptyUI.Button
+extension AdaptyUI.Button: View {
+    var currentStateView: AdaptyUI.Element? {
+        if isSelected {
+            selectedState ?? normalState
+        } else {
+            normalState
+        }
+    }
 
-    var body: some View {
-        Button(action: {}, label: {
-            Text("Button")
-        })
+    public var body: some View {
+        Button {
+        } label: {
+            if let currentStateView {
+                currentStateView
+            } else {
+                EmptyView()
+            }
+        }
     }
 }

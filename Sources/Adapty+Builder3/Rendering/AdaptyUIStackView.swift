@@ -85,32 +85,30 @@ extension View {
     }
 }
 
-struct AdaptyUIStackView: View {
-    var stack: AdaptyUI.Stack
-
-    var body: some View {
-        switch stack.type {
+extension AdaptyUI.Stack: View {
+    public var body: some View {
+        switch type {
         case .vertical:
-            VStack(alignment: stack.horizontalAlignment.swiftuiValue) {
-                ForEach(0 ..< stack.elements.count, id: \.self) {
-                    stack.elements[$0]
-                        .infiniteWidthIfFill(stack.horizontalAlignment)
+            VStack(alignment: horizontalAlignment.swiftuiValue) {
+                ForEach(0 ..< elements.count, id: \.self) {
+                    elements[$0]
+                        .infiniteWidthIfFill(horizontalAlignment)
                 }
             }
-            .fixedHorizontalSizeIfFill(stack.horizontalAlignment)
+            .fixedHorizontalSizeIfFill(horizontalAlignment)
         case .horizontal:
-            HStack(alignment: stack.verticalAlignment.swiftuiValue) {
-                ForEach(0 ..< stack.elements.count, id: \.self) {
-                    stack.elements[$0]
-                        .infiniteHeightIfFill(stack.verticalAlignment)
+            HStack(alignment: verticalAlignment.swiftuiValue) {
+                ForEach(0 ..< elements.count, id: \.self) {
+                    elements[$0]
+                        .infiniteHeightIfFill(verticalAlignment)
                 }
             }
-            .fixedVerticalSizeIfFill(stack.verticalAlignment)
+            .fixedVerticalSizeIfFill(verticalAlignment)
         case .z:
             // TODO: implement fill-fill scenario
-            ZStack(alignment: stack.alignment) {
-                ForEach(0 ..< stack.elements.count, id: \.self) {
-                    stack.elements[$0]
+            ZStack(alignment: alignment) {
+                ForEach(0 ..< elements.count, id: \.self) {
+                    elements[$0]
                 }
             }
         }
@@ -141,6 +139,28 @@ extension AdaptyUI.Stack {
             horizontalAlignment: .left,
             verticalAlignment: .fill,
             elements: [
+                .button(
+                    .init(
+                        action: .close,
+                        isSelected: false,
+                        normalState: .text(
+                            .testBodyLong,
+                            .init(
+                                decorastor: .init(
+                                    shapeType: .rectangle(cornerRadius: .zero),
+                                    background: .color(.testGreen),
+                                    border: nil
+                                ),
+                                frsme: nil,
+                                padding: .zero,
+                                offset: .zero,
+                                visibility: true,
+                                transitionIn: []
+                            )
+                        ),
+                        selectedState: nil),
+                    nil
+                ),
                 .space(1),
                 .text(.testBodyShort, nil),
                 .space(1),
@@ -159,7 +179,6 @@ extension AdaptyUI.Stack {
                         transitionIn: []
                     )
                 ),
-                .space(1),
             ]
         )
     }
@@ -203,7 +222,5 @@ extension AdaptyUI.Stack {
 }
 
 #Preview {
-//    AdaptyUIStackView(.testVStack, nil)
-    AdaptyUIStackView(stack: .testHStack)
-//    AdaptyUIStackView(.testZStack, nil)
+    AdaptyUI.Stack.testHStack
 }

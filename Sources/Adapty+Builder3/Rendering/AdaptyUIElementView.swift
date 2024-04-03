@@ -18,17 +18,13 @@ extension AdaptyUI.Element: View {
                 }
             }
         case let .stack(stack, properties):
-            AdaptyUIStackView(stack: stack)
-                .applyingProperties(properties)
+            stack.applyingProperties(properties)
         case let .text(text, properties):
-            AdaptyUITextView(text: text)
-                .applyingProperties(properties)
+            text.applyingProperties(properties)
         case let .image(image, properties):
-            AdaptyUIImageView(image: image)
-                .applyingProperties(properties)
+            image.applyingProperties(properties)
         case let .button(button, properties):
-            AdaptyUIButtonView(button: button)
-                .applyingProperties(properties)
+            button.applyingProperties(properties)
         case let .unknown(value, properties):
             AdaptyUIUnknownElementView(value: value)
                 .applyingProperties(properties)

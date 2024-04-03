@@ -8,24 +8,51 @@
 import Adapty
 import SwiftUI
 
-struct AdaptyUITextView: View {
-    var text: AdaptyUI.RichText
+extension Text {
+    func withAttributes(_ attributes: AdaptyUI.RichText.TextAttributes) -> Text {
+        font(Font(attributes.font.uiFont(size: attributes.size)))
+            .foregroundColor(attributes.color.asColor?.swiftuiColor)
+            .strikethrough(attributes.strike)
+            .underline(attributes.underline)
+//            .background(Color.yellow) as! Text
+        // TODO: background
+    }
+
+    func withAttributes(_ attributes: AdaptyUI.RichText.ParagraphAttributes) -> Text {
+        self
+    }
+}
+
+extension AdaptyUI.RichText: View {
+    // TODO: add tagConverter
 
     @available(iOS 15, *)
     private var attributedString: AttributedString {
-        AttributedString(text.attributedString(tagConverter: nil))
+        AttributedString(attributedString(tagConverter: nil))
     }
 
     private var plainString: String {
-        text.attributedString(tagConverter: nil).string
+        attributedString(tagConverter: nil).string
     }
 
-    var body: some View {
+    public var body: some View {
         if #available(iOS 15, *) {
             Text(attributedString)
         } else {
-            // TODO: implement
-            Text(plainString)
+            items.reduce(Text("")) { partialResult, item in
+                switch item {
+                case let .text(value, attr):
+                    return partialResult + Text(value).withAttributes(attr)
+                case let .tag(value, attr):
+                    // TODO: replace tags
+                    return partialResult + Text(value).withAttributes(attr)
+                case let .paragraph(attr):
+                    return partialResult.withAttributes(attr) + Text("\n")
+                case let .image(imageData, attributes):
+                    // TODO: implement
+                    return partialResult // + Text(Image("123"))
+                }
+            }
         }
     }
 }
@@ -70,5 +97,5 @@ extension AdaptyUI.RichText {
 }
 
 #Preview {
-    AdaptyUITextView(text: .testBodyLong)
+    AdaptyUI.RichText.testBodyLong
 }

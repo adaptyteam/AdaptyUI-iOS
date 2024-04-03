@@ -8,10 +8,8 @@
 import Adapty
 import SwiftUI
 
-struct AdaptyUIImageView: View {
-    var image: AdaptyUI.Image
-
-    var body: some View {
+extension AdaptyUI.Image: View {
+    public var body: some View {
         Text("Image")
     }
 }
