@@ -120,7 +120,7 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
 
 extension AdaptyUI {
     public static let SDKVersion = "2.1.4"
-    public static let BuilderVersion = "2"
+    public static let BuilderVersion = "3"
 
     /// If you are using the [Paywall Builder](https://docs.adapty.io/docs/paywall-builder-getting-started), you can use this method to get a configuration object for your paywall.
     ///
