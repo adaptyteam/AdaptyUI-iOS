@@ -12,7 +12,7 @@ let package = Package(
             targets: ["AdaptyUI"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/adaptyteam/AdaptySDK-iOS.git", exact: "2.10.2")
+        .package(url: "https://github.com/adaptyteam/AdaptySDK-iOS.git", "2.10.2" ..< "2.11.0")
     ],
     targets: [
         .target(
