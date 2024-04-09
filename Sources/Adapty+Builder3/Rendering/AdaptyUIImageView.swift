@@ -8,8 +8,19 @@
 import Adapty
 import SwiftUI
 
-extension AdaptyUI.Image: View {
-    public var body: some View {
-        Text("Image")
+struct AdaptyUIImageView: View {
+    var image: AdaptyUI.ImageData
+    
+    var body: some View {
+        switch image {
+        case .raster(let data):
+            if let uiImage = UIImage(data: data) {
+                Image(uiImage: uiImage)
+            }
+        case .url:
+            EmptyView()
+        case .none:
+            EmptyView()
+        }
     }
 }

@@ -8,11 +8,56 @@
 import Adapty
 import SwiftUI
 
+extension AdaptyUI.Point {
+    var unitPoint: UnitPoint { UnitPoint(x: x, y: y) }
+}
+
+extension AdaptyUI.ColorGradient.Item {
+    var gradientStop: Gradient.Stop { Gradient.Stop(color: color.swiftuiColor, location: p) }
+}
+
+struct AdaptyUIGradient: View {
+    var gradient: AdaptyUI.ColorGradient
+
+    init(_ gradient: AdaptyUI.ColorGradient) {
+        self.gradient = gradient
+    }
+
+    var body: some View {
+        switch gradient.kind {
+        case .linear:
+            LinearGradient(
+                stops: gradient.items.map { $0.gradientStop },
+                startPoint: gradient.start.unitPoint,
+                endPoint: gradient.end.unitPoint
+            )
+        case .conic:
+            // TODO: check implementation
+            AngularGradient(
+                gradient: .init(stops: gradient.items.map { $0.gradientStop }),
+                center: .center,
+                angle: .degrees(360)
+            )
+        case .radial:
+            // TODO: check implementation
+            RadialGradient(
+                gradient: .init(stops: gradient.items.map { $0.gradientStop }),
+                center: .center,
+                startRadius: 0.0,
+                endRadius: 1.0
+            )
+        }
+    }
+}
+
 // TODO: check decoration option
 // TODO: check inlinable
 extension View {
     @ViewBuilder
     func applyingProperties(_ props: AdaptyUI.Element.Properties?) -> some View {
+        // TODO: fix typo frsme
+        // TODO: fix typo decorastor
+
         frame(
             width: props?.frsme?.width?.points(),
             height: props?.frsme?.height?.points()
@@ -25,6 +70,7 @@ extension View {
         )
         .offset(x: props?.offset.x ?? 0.0, y: props?.offset.y ?? 0.0)
         .background(props?.decorastor?.background)
+        .border(props?.decorastor?.border)
         .padding(props?.padding)
     }
 
@@ -41,15 +87,24 @@ extension View {
     }
 
     @ViewBuilder
-    func background(_ background: AdaptyUI.Filling?) -> some View {
-        switch background {
+    func background(_ filling: AdaptyUI.Filling?) -> some View {
+        switch filling {
         case let .color(color):
-            self.background(color.swiftuiColor)
-        case let .colorGradient(colorGradient):
-            self // TODO: implement
+            background(color.swiftuiColor)
+        case let .colorGradient(gradient):
+            background(AdaptyUIGradient(gradient))
         case let .image(imageData):
             self // TODO: implement
         case nil:
+            self
+        }
+    }
+
+    @ViewBuilder
+    func border(_ border: AdaptyUI.Border?) -> some View {
+        if let border, let color = border.filling.asColor?.swiftuiColor {
+            self.border(color, width: border.thickness)
+        } else {
             self
         }
     }

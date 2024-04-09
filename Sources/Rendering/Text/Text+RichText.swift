@@ -219,6 +219,7 @@ extension AdaptyUI.ImageData {
             return nil
         }
 
+        // TODO: discuss optional tint
         if let tintColor = attributes?.color.asColor?.uiColor {
             image = image
                 .withRenderingMode(.alwaysOriginal)

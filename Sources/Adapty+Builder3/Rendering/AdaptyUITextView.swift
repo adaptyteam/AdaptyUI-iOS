@@ -30,29 +30,35 @@ extension AdaptyUI.RichText: View {
     private var attributedString: AttributedString {
         AttributedString(attributedString(tagConverter: nil))
     }
+    
+    private var nsAttributedString: NSAttributedString {
+        attributedString(tagConverter: nil)
+    }
 
     private var plainString: String {
         attributedString(tagConverter: nil).string
     }
 
     public var body: some View {
-        if #available(iOS 15, *) {
+        if false, #available(iOS 15, *) {
             Text(attributedString)
         } else {
-            items.reduce(Text("")) { partialResult, item in
-                switch item {
-                case let .text(value, attr):
-                    return partialResult + Text(value).withAttributes(attr)
-                case let .tag(value, attr):
-                    // TODO: replace tags
-                    return partialResult + Text(value).withAttributes(attr)
-                case let .paragraph(attr):
-                    return partialResult.withAttributes(attr) + Text("\n")
-                case let .image(imageData, attributes):
-                    // TODO: implement
-                    return partialResult // + Text(Image("123"))
-                }
-            }
+            FallbackText(nsAttributedString)
+                .fixedSize(horizontal: true, vertical: true)
+//            items.reduce(Text("")) { partialResult, item in
+//                switch item {
+//                case let .text(value, attr):
+//                    return partialResult + Text(value).withAttributes(attr)
+//                case let .tag(value, attr):
+//                    // TODO: replace tags
+//                    return partialResult + Text(value).withAttributes(attr)
+//                case let .paragraph(attr):
+//                    return partialResult.withAttributes(attr) + Text("\n")
+//                case let .image(imageData, attributes):
+//                    // TODO: implement
+//                    return partialResult // + Text(Image("123"))
+//                }
+//            }
         }
     }
 }
@@ -97,5 +103,12 @@ extension AdaptyUI.RichText {
 }
 
 #Preview {
-    AdaptyUI.RichText.testBodyLong
+//    HStack {
+        AdaptyUI.RichText.testBodyLong
+            .background(Color.yellow)
+//        Spacer()
+//        
+//        AdaptyUI.RichText.testBodyLong
+//            .background(Color.yellow)
+//    }
 }
