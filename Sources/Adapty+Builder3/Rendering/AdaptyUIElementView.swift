@@ -22,7 +22,8 @@ extension AdaptyUI.Element: View {
         case let .text(text, properties):
             text.applyingProperties(properties)
         case let .image(image, properties):
-            image.applyingProperties(properties)
+            AdaptyUIImageView(image)
+                .applyingProperties(properties)
         case let .button(button, properties):
             button.applyingProperties(properties)
         case let .unknown(value, properties):

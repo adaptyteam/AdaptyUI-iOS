@@ -119,8 +119,8 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
 }
 
 extension AdaptyUI {
-    public static let SDKVersion = "2.1.3"
-    public static let BuilderVersion = "2"
+    public static let SDKVersion = "2.1.4"
+    public static let BuilderVersion = "3"
 
     /// If you are using the [Paywall Builder](https://docs.adapty.io/docs/paywall-builder-getting-started), you can use this method to get a configuration object for your paywall.
     ///
@@ -148,7 +148,14 @@ extension AdaptyUI {
         }
 
         AdaptyUI.getViewConfiguration(data: data) { result in
-            completion(result.map { $0.extractLocale(locale) })
+            switch result {
+            case let .success(viewConfiguration):
+                AdaptyUI.chacheImagesIfNeeded(viewConfiguration: viewConfiguration, locale: locale)
+                
+                completion(.success(viewConfiguration.extractLocale(locale)))
+            case let .failure(error):
+                completion(.failure(error))
+            }
         }
     }
 
