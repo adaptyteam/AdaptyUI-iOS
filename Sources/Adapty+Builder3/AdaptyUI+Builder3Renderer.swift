@@ -49,8 +49,22 @@ public class AdaptyBuilder3PaywallController: UIViewController {
             view.backgroundColor = screen.background.asColor?.uiColor ?? .white
 
             if let mainBlock = screen.mainBlock {
-                addSubSwiftUIView(mainBlock,
-                                  to: view)
+                addSubSwiftUIView(
+                    ZStack(alignment: .center) {
+                        AdaptyUIElementView(mainBlock)
+                        
+                        VStack {
+                            HStack {
+                                Button("Dismiss") { [weak self] in
+                                    self?.dismiss(animated: true)
+                                }
+                                Spacer()
+                            }
+                            Spacer()
+                        }
+                    },
+                    to: view
+                )
             } else {
                 addSubSwiftUIView(Text("No main block found"),
                                   to: view)
@@ -58,8 +72,15 @@ public class AdaptyBuilder3PaywallController: UIViewController {
         } else {
             view.backgroundColor = .white // TODO: remove
 
-            addSubSwiftUIView(Text("Rendering Failed!"),
-                              to: view)
+            addSubSwiftUIView(
+                VStack {
+                    Text("Rendering Failed!")
+                    Button("Dismiss") { [weak self] in
+                        self?.dismiss(animated: true)
+                    }
+                },
+                to: view
+            )
         }
     }
 

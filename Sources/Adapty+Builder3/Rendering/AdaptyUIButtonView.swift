@@ -21,7 +21,7 @@ extension AdaptyUI.Button: View {
         Button {
         } label: {
             if let currentStateView {
-                currentStateView
+                AdaptyUIElementView(currentStateView)
             } else {
                 EmptyView()
             }

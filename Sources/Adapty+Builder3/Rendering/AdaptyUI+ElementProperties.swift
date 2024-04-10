@@ -50,27 +50,142 @@ struct AdaptyUIGradient: View {
     }
 }
 
+struct AdaptyUIDecoratorView: View {
+    var decorator: AdaptyUI.Decorator
+
+    init(_ decorator: AdaptyUI.Decorator) {
+        self.decorator = decorator
+    }
+
+    private func roundedRectangle(radius: AdaptyUI.CornerRadius) -> RoundedRectangle {
+        if radius.isSameRadius {
+            return RoundedRectangle(cornerRadius: radius.topLeft)
+        } else {
+            return RoundedRectangle(cornerRadius: 0.0)
+        }
+    }
+
+    var body: some View {
+        switch decorator.shapeType {
+        case let .rectangle(cornerRadius):
+            roundedRectangle(radius: cornerRadius)
+                .fillBackground(decorator.background)
+                .overlayBorder(decorator.border, shape: decorator.shapeType)
+        case .circle:
+            Circle()
+                .fillBackground(decorator.background)
+                .overlayBorder(decorator.border, shape: decorator.shapeType)
+        case .curveUp:
+            // TODO: implement
+            Rectangle()
+                .fillBackground(decorator.background)
+                .overlayBorder(decorator.border, shape: decorator.shapeType)
+        case .curveDown:
+            // TODO: implement
+            Rectangle()
+                .fillBackground(decorator.background)
+                .overlayBorder(decorator.border, shape: decorator.shapeType)
+        }
+    }
+}
+
+struct AdaptyUIOverlayBorderView: View {
+    var border: AdaptyUI.Border
+    var shape: AdaptyUI.ShapeType
+
+    init(_ border: AdaptyUI.Border, shape: AdaptyUI.ShapeType) {
+        self.border = border
+        self.shape = shape
+    }
+
+    private func roundedRectangle(radius: AdaptyUI.CornerRadius) -> RoundedRectangle {
+        if radius.isSameRadius {
+            return RoundedRectangle(cornerRadius: radius.topLeft)
+        } else {
+            return RoundedRectangle(cornerRadius: 0.0)
+        }
+    }
+
+    var body: some View {
+        switch shape {
+        case let .rectangle(cornerRadius):
+            roundedRectangle(radius: cornerRadius)
+                .strokeFilling(border.filling, lineWidth: border.thickness)
+        case .circle:
+            Circle()
+                .strokeFilling(border.filling, lineWidth: border.thickness)
+        case .curveUp:
+            // TODO: implement
+            Rectangle()
+                .strokeFilling(border.filling, lineWidth: border.thickness)
+        case .curveDown:
+            // TODO: implement
+            Rectangle()
+                .strokeFilling(border.filling, lineWidth: border.thickness)
+        }
+    }
+}
+
+extension Shape {
+    @ViewBuilder
+    func fillBackground(_ background: AdaptyUI.Filling?) -> some View {
+        if let background {
+            switch background {
+            case let .color(color):
+                fill(color.swiftuiColor)
+            case let .colorGradient(gradient):
+                // TODO: check implementation
+                fill(Color.clear)
+                    .background(AdaptyUIGradient(gradient))
+            case .image:
+                // TODO: implement
+                fill(Color.clear)
+            }
+        } else {
+            self
+        }
+    }
+
+    @ViewBuilder
+    func strokeFilling(_ filling: AdaptyUI.Filling, lineWidth: CGFloat) -> some View {
+        if let color = filling.asColor?.swiftuiColor {
+            stroke(color, lineWidth: lineWidth)
+        } else {
+            self
+        }
+    }
+}
+
+extension View {
+    @ViewBuilder
+    func overlayBorder(_ border: AdaptyUI.Border?, shape: AdaptyUI.ShapeType) -> some View {
+        if let border {
+            overlay(AdaptyUIOverlayBorderView(border, shape: shape))
+        } else {
+            self
+        }
+    }
+}
+
 // TODO: check decoration option
 // TODO: check inlinable
 extension View {
     @ViewBuilder
     func applyingProperties(_ props: AdaptyUI.Element.Properties?) -> some View {
-        // TODO: fix typo frsme
-        // TODO: fix typo decorastor
-
         frame(
-            width: props?.frsme?.width?.points(),
-            height: props?.frsme?.height?.points()
+            width: props?.frame?.width?.points(),
+            height: props?.frame?.height?.points()
         )
         .frame(
-            minWidth: props?.frsme?.minWidth?.points(),
-            maxWidth: props?.frsme?.maxWidth?.points(),
-            minHeight: props?.frsme?.minHeight?.points(),
-            maxHeight: props?.frsme?.maxHeight?.points()
+            minWidth: props?.frame?.minWidth?.points(),
+            maxWidth: props?.frame?.maxWidth?.points(),
+            minHeight: props?.frame?.minHeight?.points(),
+            maxHeight: props?.frame?.maxHeight?.points()
         )
         .offset(x: props?.offset.x ?? 0.0, y: props?.offset.y ?? 0.0)
-        .background(props?.decorastor?.background)
-        .border(props?.decorastor?.border)
+        .backgroundDecorator(props?.decorator)
+//        .background(props?.decorator?.background)
+//        .border(props?.decorator?.border)
         .padding(props?.padding)
     }
 
@@ -81,6 +196,17 @@ extension View {
                 .padding(.top, insets.top)
                 .padding(.trailing, insets.right)
                 .padding(.bottom, insets.bottom)
+        } else {
+            self
+        }
+    }
+
+    @ViewBuilder
+    func backgroundDecorator(_ decorator: AdaptyUI.Decorator?) -> some View {
+        if let decorator {
+            background(
+                AdaptyUIDecoratorView(decorator)
+            )
         } else {
             self
         }
@@ -122,4 +248,34 @@ extension AdaptyUI.Unit {
         case let .screen(value): value * screenInPoints
         }
     }
+}
+
+@testable import Adapty
+
+extension AdaptyUI.Decorator {
+    static var test: Self {
+        .init(shapeType: .rectangle(cornerRadius: .init(same: 10)),
+              background: .color(.testGreen),
+              border: .init(filling: .color(.testRed), thickness: 2.0)
+        )
+    }
+}
+
+extension AdaptyUI.Element.Properties {
+    static var test: Self {
+        .init(
+            decorator: .test,
+            frame: nil,
+            padding: .init(same: 12),
+            offset: .zero,
+            visibility: true,
+            transitionIn: []
+        )
+    }
+}
+
+#Preview {
+    AdaptyUIElementView(.text(.testBodyLong, .test))
+//    AdaptyUIRichTextView(.testBodyLong)
+//        .applyingProperties(.test)
 }

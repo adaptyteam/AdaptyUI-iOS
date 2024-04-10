@@ -29,25 +29,40 @@ struct AdaptyUIImageView: View {
         self.image = image
     }
 
-    var body: some View {
-        switch image.asset {
-        case let .raster(data):
-            if let uiImage = UIImage(data: data) {
+    @ViewBuilder
+    private func rasterImage(_ data: Data, tint: AdaptyUI.Filling?) -> some View {
+        if let uiImage = UIImage(data: data) {
+            if let tint = image.tint?.asColor?.swiftuiColor {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .renderingMode(.template)
+                    .foregroundColor(tint)
+                    .aspectRatio(image.aspect)
+
+            } else {
                 Image(uiImage: uiImage)
                     .resizable()
                     .aspectRatio(image.aspect)
-            } else {
-                EmptyView()
             }
+        } else {
+            EmptyView()
+        }
+    }
+
+    var body: some View {
+        switch image.asset {
+        case let .raster(data):
+            rasterImage(data, tint: image.tint)
         case let .url(url, preview):
             if #available(iOS 14.0, *) {
+                // TODO: Add support for tint
                 KFImage
                     .url(url)
                     .resizable()
                     .fade(duration: 0.25)
                     .placeholder {
-                        if let preview, let uiImage = UIImage(data: preview) {
-                            Image(uiImage: uiImage)
+                        if let preview {
+                            rasterImage(preview, tint: image.tint)
                         } else {
                             EmptyView()
                         }

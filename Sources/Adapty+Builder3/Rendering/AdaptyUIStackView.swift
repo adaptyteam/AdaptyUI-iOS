@@ -91,7 +91,7 @@ extension AdaptyUI.Stack: View {
         case .vertical:
             VStack(alignment: horizontalAlignment.swiftuiValue) {
                 ForEach(0 ..< elements.count, id: \.self) {
-                    elements[$0]
+                    AdaptyUIElementView(elements[$0])
                         .infiniteWidthIfFill(horizontalAlignment)
                 }
             }
@@ -99,7 +99,7 @@ extension AdaptyUI.Stack: View {
         case .horizontal:
             HStack(alignment: verticalAlignment.swiftuiValue) {
                 ForEach(0 ..< elements.count, id: \.self) {
-                    elements[$0]
+                    AdaptyUIElementView(elements[$0])
                         .infiniteHeightIfFill(verticalAlignment)
                 }
             }
@@ -108,7 +108,7 @@ extension AdaptyUI.Stack: View {
             // TODO: implement fill-fill scenario
             ZStack(alignment: alignment) {
                 ForEach(0 ..< elements.count, id: \.self) {
-                    elements[$0]
+                    AdaptyUIElementView(elements[$0])
                 }
             }
         }
@@ -146,12 +146,12 @@ extension AdaptyUI.Stack {
                         normalState: .text(
                             .testBodyLong,
                             .init(
-                                decorastor: .init(
+                                decorator: .init(
                                     shapeType: .rectangle(cornerRadius: .zero),
                                     background: .color(.testGreen),
                                     border: nil
                                 ),
-                                frsme: nil,
+                                frame: nil,
                                 padding: .zero,
                                 offset: .zero,
                                 visibility: true,
@@ -167,12 +167,12 @@ extension AdaptyUI.Stack {
                 .text(
                     .testBodyLong,
                     .init(
-                        decorastor: .init(
+                        decorator: .init(
                             shapeType: .rectangle(cornerRadius: .zero),
                             background: .color(.testGreen),
                             border: nil
                         ),
-                        frsme: nil,
+                        frame: nil,
                         padding: .zero,
                         offset: .zero,
                         visibility: true,
@@ -192,12 +192,12 @@ extension AdaptyUI.Stack {
                 .text(
                     .testBodyLong,
                     .init(
-                        decorastor: .init(
+                        decorator: .init(
                             shapeType: .rectangle(cornerRadius: .zero),
                             background: .color(.testGreen),
                             border: nil
                         ),
-                        frsme: nil,
+                        frame: nil,
                         padding: .zero,
                         offset: .zero,
                         visibility: true,
@@ -206,8 +206,8 @@ extension AdaptyUI.Stack {
                 ),
                 .unknown("circle",
                          .init(
-                             decorastor: nil,
-                             frsme: .init(height: .point(32), width: .point(32),
+                             decorator: nil,
+                             frame: .init(height: .point(32), width: .point(32),
                                           minHeight: nil, maxHeight: nil, minWidth: nil,
                                           maxWidth: nil),
                              padding: .zero,

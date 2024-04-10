@@ -23,23 +23,29 @@ extension Text {
     }
 }
 
-extension AdaptyUI.RichText: View {
+struct AdaptyUIRichTextView: View {
+    var text: AdaptyUI.RichText
+    
+    init(_ text: AdaptyUI.RichText) {
+        self.text = text
+    }
+    
     // TODO: add tagConverter
 
     @available(iOS 15, *)
     private var attributedString: AttributedString {
-        AttributedString(attributedString(tagConverter: nil))
+        AttributedString(text.attributedString(tagConverter: nil))
     }
     
     private var nsAttributedString: NSAttributedString {
-        attributedString(tagConverter: nil)
+        text.attributedString(tagConverter: nil)
     }
 
     private var plainString: String {
-        attributedString(tagConverter: nil).string
+        text.attributedString(tagConverter: nil).string
     }
 
-    public var body: some View {
+     var body: some View {
         if false, #available(iOS 15, *) {
             Text(attributedString)
         } else {
@@ -104,7 +110,7 @@ extension AdaptyUI.RichText {
 
 #Preview {
 //    HStack {
-        AdaptyUI.RichText.testBodyLong
+        AdaptyUIRichTextView(.testBodyLong)
             .background(Color.yellow)
 //        Spacer()
 //        

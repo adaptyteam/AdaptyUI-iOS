@@ -8,9 +8,15 @@
 import Adapty
 import SwiftUI
 
-extension AdaptyUI.Element: View {
-    public var body: some View {
-        switch self {
+struct AdaptyUIElementView: View {
+    var element: AdaptyUI.Element
+
+    init(_ element: AdaptyUI.Element) {
+        self.element = element
+    }
+
+    var body: some View {
+        switch element {
         case let .space(count):
             if count > 0 {
                 ForEach(0 ..< count, id: \.self) { _ in
@@ -20,7 +26,8 @@ extension AdaptyUI.Element: View {
         case let .stack(stack, properties):
             stack.applyingProperties(properties)
         case let .text(text, properties):
-            text.applyingProperties(properties)
+            AdaptyUIRichTextView(text)
+                .applyingProperties(properties)
         case let .image(image, properties):
             AdaptyUIImageView(image)
                 .applyingProperties(properties)
