@@ -89,7 +89,7 @@ extension AdaptyUI.Stack: View {
     public var body: some View {
         switch type {
         case .vertical:
-            VStack(alignment: horizontalAlignment.swiftuiValue) {
+            VStack(alignment: horizontalAlignment.swiftuiValue, spacing: 0) {
                 ForEach(0 ..< elements.count, id: \.self) {
                     AdaptyUIElementView(elements[$0])
                         .infiniteWidthIfFill(horizontalAlignment)
@@ -97,7 +97,7 @@ extension AdaptyUI.Stack: View {
             }
             .fixedHorizontalSizeIfFill(horizontalAlignment)
         case .horizontal:
-            HStack(alignment: verticalAlignment.swiftuiValue) {
+            HStack(alignment: verticalAlignment.swiftuiValue, spacing: 0) {
                 ForEach(0 ..< elements.count, id: \.self) {
                     AdaptyUIElementView(elements[$0])
                         .infiniteHeightIfFill(verticalAlignment)
