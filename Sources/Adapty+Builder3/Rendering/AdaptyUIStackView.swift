@@ -85,142 +85,224 @@ extension View {
     }
 }
 
-extension AdaptyUI.Stack: View {
-    public var body: some View {
-        switch type {
+struct AdaptyUIStackView: View {
+    var stack: AdaptyUI.Stack
+    var properties: AdaptyUI.Element.Properties?
+
+    init(_ stack: AdaptyUI.Stack,
+         _ properties: AdaptyUI.Element.Properties?) {
+        self.stack = stack
+        self.properties = properties
+    }
+
+    var body: some View {
+        switch stack.type {
         case .vertical:
-            VStack(alignment: horizontalAlignment.swiftuiValue, spacing: 0) {
-                ForEach(0 ..< elements.count, id: \.self) {
-                    AdaptyUIElementView(elements[$0])
-                        .infiniteWidthIfFill(horizontalAlignment)
+            VStack(alignment: stack.horizontalAlignment.swiftuiValue, spacing: 0) {
+                ForEach(0 ..< stack.elements.count, id: \.self) {
+                    AdaptyUIElementView(stack.elements[$0])
+                        .infiniteWidthIfFill(stack.horizontalAlignment)
                 }
             }
-            .fixedHorizontalSizeIfFill(horizontalAlignment)
+            .fixedHorizontalSizeIfFill(stack.horizontalAlignment)
+            .applyingProperties(properties)
         case .horizontal:
-            HStack(alignment: verticalAlignment.swiftuiValue, spacing: 0) {
-                ForEach(0 ..< elements.count, id: \.self) {
-                    AdaptyUIElementView(elements[$0])
-                        .infiniteHeightIfFill(verticalAlignment)
+            HStack(alignment: stack.verticalAlignment.swiftuiValue, spacing: 0) {
+                ForEach(0 ..< stack.elements.count, id: \.self) {
+                    AdaptyUIElementView(stack.elements[$0])
+                        .infiniteHeightIfFill(stack.verticalAlignment)
                 }
             }
-            .fixedVerticalSizeIfFill(verticalAlignment)
+            .fixedVerticalSizeIfFill(stack.verticalAlignment)
+            .applyingProperties(properties)
         case .z:
             // TODO: implement fill-fill scenario
-            ZStack(alignment: alignment) {
-                ForEach(0 ..< elements.count, id: \.self) {
-                    AdaptyUIElementView(elements[$0])
+            ZStack(alignment: stack.alignment) {
+                ForEach(0 ..< stack.elements.count, id: \.self) {
+                    AdaptyUIElementView(stack.elements[$0])
                 }
             }
+            .applyingProperties(properties)
         }
     }
 }
 
-@testable import Adapty
+#if DEBUG
+    @testable import Adapty
 
-extension AdaptyUI.Stack {
-    static var testVStack: AdaptyUI.Stack {
-        AdaptyUI.Stack(
-            type: .vertical,
-            horizontalAlignment: .fill,
-            verticalAlignment: .center,
-            elements: [
-                .space(1),
-                .text(.testBodyShort, nil),
-                .space(1),
-                .text(.testBodyLong, nil),
-                .space(1),
-            ]
-        )
+    extension AdaptyUI.Frame {
+        static func fixed(width: Double, height: Double) -> Self {
+            .init(
+                height: .point(height),
+                width: .point(width),
+                minHeight: nil,
+                maxHeight: nil,
+                minWidth: nil,
+                maxWidth: nil
+            )
+        }
     }
 
-    static var testHStack: AdaptyUI.Stack {
-        AdaptyUI.Stack(
-            type: .horizontal,
-            horizontalAlignment: .left,
-            verticalAlignment: .fill,
-            elements: [
-                .button(
-                    .init(
-                        action: .close,
-                        isSelected: false,
-                        normalState: .text(
-                            .testBodyLong,
-                            .init(
-                                decorator: .init(
-                                    shapeType: .rectangle(cornerRadius: .zero),
-                                    background: .color(.testGreen),
-                                    border: nil
-                                ),
-                                frame: nil,
-                                padding: .zero,
-                                offset: .zero,
-                                visibility: true,
-                                transitionIn: []
-                            )
-                        ),
-                        selectedState: nil),
-                    nil
-                ),
-                .space(1),
-                .text(.testBodyShort, nil),
-                .space(1),
-                .text(
-                    .testBodyLong,
-                    .init(
-                        decorator: .init(
-                            shapeType: .rectangle(cornerRadius: .zero),
-                            background: .color(.testGreen),
-                            border: nil
-                        ),
-                        frame: nil,
-                        padding: .zero,
-                        offset: .zero,
-                        visibility: true,
-                        transitionIn: []
-                    )
-                ),
-            ]
-        )
+    extension AdaptyUI.Stack {
+        static var testHStack: AdaptyUI.Stack {
+            AdaptyUI.Stack(
+                type: .horizontal,
+                horizontalAlignment: .left,
+                verticalAlignment: .fill,
+                elements: [
+                    .button(
+                        .init(
+                            action: .close,
+                            isSelected: false,
+                            normalState: .text(
+                                .testBodyLong,
+                                .init(
+                                    decorator: .init(
+                                        shapeType: .rectangle(cornerRadius: .zero),
+                                        background: .color(.testGreen),
+                                        border: nil
+                                    ),
+                                    frame: nil,
+                                    padding: .zero,
+                                    offset: .zero,
+                                    visibility: true,
+                                    transitionIn: []
+                                )
+                            ),
+                            selectedState: nil),
+                        nil
+                    ),
+                    .space(1),
+                    .text(.testBodyShort, nil),
+                    .space(1),
+                    .text(
+                        .testBodyLong,
+                        .init(
+                            decorator: .init(
+                                shapeType: .rectangle(cornerRadius: .zero),
+                                background: .color(.testGreen),
+                                border: nil
+                            ),
+                            frame: nil,
+                            padding: .zero,
+                            offset: .zero,
+                            visibility: true,
+                            transitionIn: []
+                        )
+                    ),
+                ]
+            )
+        }
+
+        static var testZStack: AdaptyUI.Stack {
+            AdaptyUI.Stack(
+                type: .z,
+                horizontalAlignment: .right,
+                verticalAlignment: .top,
+                elements: [
+                    .text(
+                        .testBodyLong,
+                        .init(
+                            decorator: .init(
+                                shapeType: .rectangle(cornerRadius: .zero),
+                                background: .color(.testGreen),
+                                border: nil
+                            ),
+                            frame: nil,
+                            padding: .zero,
+                            offset: .zero,
+                            visibility: true,
+                            transitionIn: []
+                        )
+                    ),
+                    .unknown("circle",
+                             .init(
+                                 decorator: nil,
+                                 frame: .fixed(width: 32, height: 32),
+                                 padding: .zero,
+                                 offset: .init(x: 20, y: -20),
+                                 visibility: true,
+                                 transitionIn: []
+                             )
+                    ),
+                ]
+            )
+        }
+
+        static var testZStackMykola: AdaptyUI.Stack {
+            AdaptyUI.Stack(
+                type: .z,
+                horizontalAlignment: .left,
+                verticalAlignment: .top,
+                elements: [
+                    // Green Rect 128x128
+                    .unknown(
+                        "rectangle_green",
+                        .init(
+                            decorator: .init(
+                                shapeType: .rectangle(cornerRadius: .zero),
+                                background: .color(.testClear),
+                                border: nil
+                            ),
+                            frame: .fixed(width: 128, height: 128),
+                            padding: .zero,
+                            offset: .zero,
+                            visibility: true,
+                            transitionIn: []
+                        )
+                    ),
+                    // Red Circle 64x64
+                    .unknown("circle_red",
+                             .init(
+                                 decorator: nil,
+                                 frame: .fixed(width: 64, height: 64),
+                                 padding: .zero,
+                                 offset: .zero,
+                                 visibility: true,
+                                 transitionIn: []
+                             )
+                    ),
+                ]
+            )
+        }
+
+        static var testVStack: AdaptyUI.Stack {
+            AdaptyUI.Stack(
+                type: .vertical,
+                horizontalAlignment: .left,
+                verticalAlignment: .center,
+                elements: [
+//                .space(1),
+                    .text(.testBodyShort, nil),
+                    .text(
+                        .testBodyShortAlignRight,
+                        nil
+//                        .init(decorator: nil, frame: .init(height: nil, width: nil, minHeight: nil, maxHeight: nil, minWidth: nil, maxWidth: .point(10000000)), padding: .zero, offset: .zero, visibility: true, transitionIn: [])
+                    ),
+//                .text(.testBodyLong, nil),
+//                .space(1),
+                    .space(1),
+                ]
+            )
+        }
     }
 
-    static var testZStack: AdaptyUI.Stack {
-        AdaptyUI.Stack(
-            type: .z,
-            horizontalAlignment: .right,
-            verticalAlignment: .top,
-            elements: [
-                .text(
-                    .testBodyLong,
-                    .init(
-                        decorator: .init(
-                            shapeType: .rectangle(cornerRadius: .zero),
-                            background: .color(.testGreen),
-                            border: nil
-                        ),
-                        frame: nil,
-                        padding: .zero,
-                        offset: .zero,
-                        visibility: true,
-                        transitionIn: []
-                    )
-                ),
-                .unknown("circle",
-                         .init(
-                             decorator: nil,
-                             frame: .init(height: .point(32), width: .point(32),
-                                          minHeight: nil, maxHeight: nil, minWidth: nil,
-                                          maxWidth: nil),
-                             padding: .zero,
-                             offset: .init(x: 20, y: -20),
-                             visibility: true,
-                             transitionIn: []
-                         )
-                ),
-            ]
+    #Preview {
+        AdaptyUIStackView(
+            .testVStack,
+            nil
+//            .init(
+//                decorator: .init(
+//                    shapeType: .rectangle(cornerRadius: .zero),
+//                    background: .color(.testBlue),
+//                    border: nil
+//                ),
+//                frame: .fixed(width: 200, height: 200),
+//                padding: .zero,
+//                offset: .zero,
+//                visibility: true,
+//                transitionIn: []
+//            )
         )
     }
-}
-
-#Preview {
-    AdaptyUI.Stack.testHStack
-}
+#endif

@@ -250,32 +250,34 @@ extension AdaptyUI.Unit {
     }
 }
 
-@testable import Adapty
+#if DEBUG
+    @testable import Adapty
 
-extension AdaptyUI.Decorator {
-    static var test: Self {
-        .init(shapeType: .rectangle(cornerRadius: .init(same: 10)),
-              background: .color(.testGreen),
-              border: .init(filling: .color(.testRed), thickness: 2.0)
-        )
+    extension AdaptyUI.Decorator {
+        static var test: Self {
+            .init(shapeType: .rectangle(cornerRadius: .init(same: 10)),
+                  background: .color(.testGreen),
+                  border: .init(filling: .color(.testRed), thickness: 2.0)
+            )
+        }
     }
-}
 
-extension AdaptyUI.Element.Properties {
-    static var test: Self {
-        .init(
-            decorator: .test,
-            frame: nil,
-            padding: .init(same: 12),
-            offset: .zero,
-            visibility: true,
-            transitionIn: []
-        )
+    extension AdaptyUI.Element.Properties {
+        static var test: Self {
+            .init(
+                decorator: .test,
+                frame: nil,
+                padding: .init(same: 12),
+                offset: .zero,
+                visibility: true,
+                transitionIn: []
+            )
+        }
     }
-}
 
-#Preview {
-    AdaptyUIElementView(.text(.testBodyLong, .test))
+    #Preview {
+        AdaptyUIElementView(.text(.testBodyLong, .test))
 //    AdaptyUIRichTextView(.testBodyLong)
 //        .applyingProperties(.test)
-}
+    }
+#endif

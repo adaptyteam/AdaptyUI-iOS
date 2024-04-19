@@ -24,7 +24,7 @@ struct AdaptyUIElementView: View {
                 }
             }
         case let .stack(stack, properties):
-            stack.applyingProperties(properties)
+            AdaptyUIStackView(stack, properties)
         case let .text(text, properties):
             AdaptyUIRichTextView(text)
                 .applyingProperties(properties)
