@@ -13,11 +13,13 @@ import Foundation
     extension AdaptyUI {
         /// If you are using the [Paywall Builder](https://docs.adapty.io/docs/paywall-builder-getting-started), you can use this method to get a configuration object for your paywall.
         ///
-        /// - Parameter forPaywall: the ``AdaptyPaywall`` for which you want to get a configuration.
+        /// - Parameters: 
+        ///   - forPaywall: the ``AdaptyPaywall`` for which you want to get a configuration.
+        ///   - loadTimeout: the `TimeInterval` value which limits the request time. Cached or Fallback result will be returned in case of timeout exeeds.
         /// - Returns: The ``AdaptyUI.LocalizedViewConfiguration`` object. Use it with [AdaptyUI](https://github.com/adaptyteam/AdaptySDK-iOS-VisualPaywalls.git) library.
-        public static func getViewConfiguration(forPaywall paywall: AdaptyPaywall, locale: String) async throws -> AdaptyUI.LocalizedViewConfiguration {
+        public static func getViewConfiguration(forPaywall paywall: AdaptyPaywall, loadTimeout: TimeInterval = 5.0) async throws -> AdaptyUI.LocalizedViewConfiguration {
             return try await withCheckedThrowingContinuation { continuation in
-                AdaptyUI.getViewConfiguration(forPaywall: paywall, locale: locale) { result in
+                AdaptyUI.getViewConfiguration(forPaywall: paywall, loadTimeout: loadTimeout) { result in
                     switch result {
                     case let .failure(error):
                         continuation.resume(throwing: error)

@@ -120,39 +120,28 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
 
 extension AdaptyUI {
     public static let SDKVersion = "2.1.4"
-    public static let BuilderVersion = "3"
 
     /// If you are using the [Paywall Builder](https://docs.adapty.io/docs/paywall-builder-getting-started), you can use this method to get a configuration object for your paywall.
     ///
     /// - Parameters:
     ///   - forPaywall: the ``AdaptyPaywall`` for which you want to get a configuration.
+    ///   - loadTimeout: the `TimeInterval` value which limits the request time. Cached or Fallback result will be returned in case of timeout exeeds.
     ///   - completion: A result containing the ``AdaptyUI.ViewConfiguration>`` object. Use it with [AdaptyUI](https://github.com/adaptyteam/AdaptySDK-iOS-VisualPaywalls.git) library.
     public static func getViewConfiguration(
         forPaywall paywall: AdaptyPaywall,
-        locale: String,
+        loadTimeout: TimeInterval = 5.0,
         _ completion: @escaping AdaptyResultCompletion<AdaptyUI.LocalizedViewConfiguration>
     ) {
-        let data: Data
-        do {
-            data = try JSONSerialization.data(withJSONObject: [
-                "paywall_variation_id": paywall.variationId,
-                "paywall_instance_id": paywall.instanceIdentity,
-                "locale": locale,
-                "ui_sdk_version": AdaptyUI.SDKVersion,
-                "builder_version": AdaptyUI.BuilderVersion,
-            ])
-        } catch {
-            let encodingError = AdaptyUIError.encoding(error)
-            completion(.failure(AdaptyError(encodingError)))
-            return
-        }
+        ImageUrlPrefetcher.shared.initialize()
 
-        AdaptyUI.getViewConfiguration(data: data) { result in
+        AdaptyUI.getViewConfiguration([
+            "paywall": paywall,
+            "ui_sdk_version": AdaptyUI.SDKVersion,
+            "load_timeout": loadTimeout,
+        ]) { result in
             switch result {
             case let .success(viewConfiguration):
-                AdaptyUI.chacheImagesIfNeeded(viewConfiguration: viewConfiguration, locale: locale)
-                
-                completion(.success(viewConfiguration.extractLocale(locale)))
+                completion(.success(viewConfiguration))
             case let .failure(error):
                 completion(.failure(error))
             }
