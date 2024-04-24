@@ -56,7 +56,7 @@ class UIKitViewController: UIViewController {
         isVisualImageView.tintColor = paywall.hasViewConfiguration ? .systemGreen : .systemRed
         variationLabel.text = paywall.variationId
         revisionLabel.text = "\(paywall.revision)"
-        localeLabel.text = paywall.locale
+        localeLabel.text = paywall.remoteConfig?.locale ?? "null"
         presentButton.isEnabled = true // paywall.hasViewConfiguration
         paywallInfoContainer.isHidden = false
     }
@@ -112,7 +112,7 @@ class UIKitViewController: UIViewController {
 
         setInProgress(true)
 
-        AdaptyUI.getViewConfiguration(forPaywall: paywall, locale: "en") { [weak self] result in
+        AdaptyUI.getViewConfiguration(forPaywall: paywall) { [weak self] result in
             self?.setInProgress(false)
 
             switch result {
