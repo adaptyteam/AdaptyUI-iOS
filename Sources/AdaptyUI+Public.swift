@@ -118,8 +118,13 @@ public protocol AdaptyPaywallControllerDelegate: NSObject {
                            didFailLoadingProductsWith error: AdaptyError) -> Bool
 }
 
+public protocol AdaptyObserverModeDelegate: NSObject {
+    func paywallController(_ controller: AdaptyPaywallController,
+                           didInitiatePurchase product: AdaptyPaywallProduct)
+}
+
 extension AdaptyUI {
-    public static let SDKVersion = "2.1.4"
+    public static let SDKVersion = "2.11.0"
 
     /// If you are using the [Paywall Builder](https://docs.adapty.io/docs/paywall-builder-getting-started), you can use this method to get a configuration object for your paywall.
     ///
@@ -162,6 +167,7 @@ extension AdaptyUI {
         products: [AdaptyPaywallProduct]? = nil,
         viewConfiguration: AdaptyUI.LocalizedViewConfiguration,
         delegate: AdaptyPaywallControllerDelegate,
+        observerModeDelegate: AdaptyObserverModeDelegate? = nil,
         tagResolver: AdaptyTagResolver? = nil
     ) -> AdaptyPaywallController {
         AdaptyPaywallController(
@@ -169,6 +175,7 @@ extension AdaptyUI {
             products: products,
             viewConfiguration: viewConfiguration,
             delegate: delegate,
+            observerModeDelegate: observerModeDelegate,
             tagResolver: tagResolver
         )
     }

@@ -17,6 +17,7 @@ public class AdaptyPaywallController: UIViewController {
     public var viewConfiguration: AdaptyUI.LocalizedViewConfiguration { presenter.viewConfiguration }
 
     public weak var delegate: AdaptyPaywallControllerDelegate?
+    public weak var observerModeDelegate: AdaptyObserverModeDelegate?
 
     private var layoutBuilder: LayoutBuilder?
     private let presenter: AdaptyPaywallPresenter
@@ -28,14 +29,16 @@ public class AdaptyPaywallController: UIViewController {
         products: [AdaptyPaywallProduct]?,
         viewConfiguration: AdaptyUI.LocalizedViewConfiguration,
         delegate: AdaptyPaywallControllerDelegate,
+        observerModeDelegate: AdaptyObserverModeDelegate?,
         tagResolver: AdaptyTagResolver?
     ) {
         let logId = AdaptyUI.generateLogId()
 
-        AdaptyUI.writeLog(level: .verbose, message: "#\(logId)# init template: \(viewConfiguration.templateId), products: \(products?.count ?? 0)")
+        AdaptyUI.writeLog(level: .verbose, message: "#\(logId)# init template: \(viewConfiguration.templateId), products: \(products?.count ?? 0), observerModeDelegate: \(observerModeDelegate != nil)")
 
         self.logId = logId
         self.delegate = delegate
+        self.observerModeDelegate = observerModeDelegate
 
         let selectedProductIndex: Int
 
@@ -228,10 +231,10 @@ public class AdaptyPaywallController: UIViewController {
     private func subscribeForActions() {
         layoutBuilder?.productsView?.onProductSelected = { [weak self] product in
             guard let self = self else { return }
-            
+
             self.presenter.selectProduct(id: product.id)
             self.layoutBuilder?.continueButtonShowIntroCallToAction(product.isEligibleForFreeTrial)
-            
+
             if self.presenter.initiatePurchaseOnTap {
                 self.presenter.makePurchase()
             }
@@ -239,14 +242,17 @@ public class AdaptyPaywallController: UIViewController {
 
         layoutBuilder?.addListeners(
             onContinue: { [weak self] in
-                guard let self = self else { return }
+                guard let self = self, let product = self.presenter.selectedAdaptyProduct else { return }
 
-                self.presenter.makePurchase()
+                if let observerModeDelegate = self.observerModeDelegate {
+                    observerModeDelegate.paywallController(self, didInitiatePurchase: product)
+                } else {
+                    self.presenter.makePurchase()
 
-                if let delegate = self.delegate, let product = self.presenter.selectedAdaptyProduct {
-                    delegate.paywallController(self, didStartPurchase: product)
+                    if let delegate = self.delegate {
+                        delegate.paywallController(self, didStartPurchase: product)
+                    }
                 }
-
             },
             onAction: { [weak self] action in
                 guard let action = action else { return }

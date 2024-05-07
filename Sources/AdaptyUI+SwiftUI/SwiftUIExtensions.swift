@@ -17,6 +17,7 @@ extension View {
         configuration: AdaptyUI.LocalizedViewConfiguration,
         tagResolver: AdaptyTagResolver? = nil,
         fullScreen: Bool = true,
+        observerModeDidInitiatePurchase: ((AdaptyPaywallProduct) -> Void)? = nil,
         didPerformAction: @escaping (AdaptyUI.Action) -> Void,
         didSelectProduct: ((AdaptyPaywallProduct) -> Void)? = nil,
         didStartPurchase: ((AdaptyPaywallProduct) -> Void)? = nil,
@@ -35,6 +36,7 @@ extension View {
             configuration: configuration,
             tagResolver: tagResolver,
             didPerformAction: didPerformAction,
+            didInitiatePurchase: observerModeDidInitiatePurchase,
             didSelectProduct: didSelectProduct,
             didStartPurchase: didStartPurchase,
             didFinishPurchase: didFinishPurchase,
@@ -72,6 +74,8 @@ struct AdaptyPaywallView: UIViewControllerRepresentable {
     let configuration: AdaptyUI.LocalizedViewConfiguration
 
     let delegate: AdaptyPaywallDelegate_SwiftUI
+    let observerModeDelegate: AdaptyObserverModeDelegate_SwiftUI?
+
     let tagResolver: AdaptyTagResolver?
 
     init(
@@ -80,6 +84,7 @@ struct AdaptyPaywallView: UIViewControllerRepresentable {
         configuration: AdaptyUI.LocalizedViewConfiguration,
         tagResolver: AdaptyTagResolver?,
         didPerformAction: @escaping (AdaptyUI.Action) -> Void,
+        didInitiatePurchase: ((AdaptyPaywallProduct) -> Void)?,
         didSelectProduct: ((AdaptyPaywallProduct) -> Void)?,
         didStartPurchase: ((AdaptyPaywallProduct) -> Void)?,
         didFinishPurchase: @escaping (AdaptyPaywallProduct, AdaptyPurchasedInfo) -> Void,
@@ -96,7 +101,7 @@ struct AdaptyPaywallView: UIViewControllerRepresentable {
         self.configuration = configuration
         self.tagResolver = tagResolver
 
-        delegate = .init(
+        delegate = AdaptyPaywallDelegate_SwiftUI(
             didPerformAction: didPerformAction,
             didSelectProduct: didSelectProduct,
             didStartPurchase: didStartPurchase,
@@ -109,6 +114,12 @@ struct AdaptyPaywallView: UIViewControllerRepresentable {
             didFailRendering: didFailRendering,
             didFailLoadingProducts: didFailLoadingProducts
         )
+
+        if let didInitiatePurchase {
+            observerModeDelegate = AdaptyObserverModeDelegate_SwiftUI(didInitiatePurchase: didInitiatePurchase)
+        } else {
+            observerModeDelegate = nil
+        }
     }
 
     func makeUIViewController(context: Context) -> UIViewController {
@@ -117,11 +128,24 @@ struct AdaptyPaywallView: UIViewControllerRepresentable {
             products: products,
             viewConfiguration: configuration,
             delegate: delegate,
+            observerModeDelegate: observerModeDelegate,
             tagResolver: tagResolver
         )
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) { }
+}
+
+class AdaptyObserverModeDelegate_SwiftUI: NSObject, AdaptyObserverModeDelegate {
+    private let didInitiatePurchase: (AdaptyPaywallProduct) -> Void
+
+    init(didInitiatePurchase: @escaping (AdaptyPaywallProduct) -> Void) {
+        self.didInitiatePurchase = didInitiatePurchase
+    }
+
+    func paywallController(_ controller: AdaptyPaywallController, didInitiatePurchase product: AdaptyPaywallProduct) {
+        didInitiatePurchase(product)
+    }
 }
 
 class AdaptyPaywallDelegate_SwiftUI: NSObject, AdaptyPaywallControllerDelegate {
