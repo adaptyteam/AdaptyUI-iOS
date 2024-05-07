@@ -36,6 +36,12 @@ public class AdaptyPaywallController: UIViewController {
 
         AdaptyUI.writeLog(level: .verbose, message: "#\(logId)# init template: \(viewConfiguration.templateId), products: \(products?.count ?? 0), observerModeDelegate: \(observerModeDelegate != nil)")
 
+        if Adapty.observerMode && observerModeDelegate == nil {
+            AdaptyUI.writeLog(level: .warn, message: "In order to handle purchases in Observer Mode enabled, provide the observerModeDelegate!")
+        } else if !Adapty.observerMode && observerModeDelegate != nil {
+            AdaptyUI.writeLog(level: .warn, message: "You should not pass observerModeDelegate if you're using Adapty in Full Mode")
+        }
+
         self.logId = logId
         self.delegate = delegate
         self.observerModeDelegate = observerModeDelegate
