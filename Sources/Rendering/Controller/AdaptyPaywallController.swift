@@ -249,7 +249,7 @@ public class AdaptyPaywallController: UIViewController {
                         self,
                         didInitiatePurchase: product,
                         onStartPurchase: { [weak self] in self?.presenter.observerOnStartPurchase() },
-                        onFinishPurchase: { [weak self] in self?.presenter.observerOnStartPurchase() }
+                        onFinishPurchase: { [weak self] in self?.presenter.observerOnFinishPurchase() }
                     )
                 } else {
                     self.presenter.makePurchase()
