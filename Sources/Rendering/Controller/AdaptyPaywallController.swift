@@ -245,7 +245,12 @@ public class AdaptyPaywallController: UIViewController {
                 guard let self = self, let product = self.presenter.selectedAdaptyProduct else { return }
 
                 if let observerModeDelegate = self.observerModeDelegate {
-                    observerModeDelegate.paywallController(self, didInitiatePurchase: product)
+                    observerModeDelegate.paywallController(
+                        self,
+                        didInitiatePurchase: product,
+                        onStartPurchase: { [weak self] in self?.presenter.observerOnStartPurchase() },
+                        onFinishPurchase: { [weak self] in self?.presenter.observerOnStartPurchase() }
+                    )
                 } else {
                     self.presenter.makePurchase()
 

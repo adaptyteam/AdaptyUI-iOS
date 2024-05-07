@@ -17,7 +17,7 @@ extension View {
         configuration: AdaptyUI.LocalizedViewConfiguration,
         tagResolver: AdaptyTagResolver? = nil,
         fullScreen: Bool = true,
-        observerModeDidInitiatePurchase: ((AdaptyPaywallProduct) -> Void)? = nil,
+        observerModeDidInitiatePurchase: AdaptyObserverModeCallback? = nil,
         didPerformAction: @escaping (AdaptyUI.Action) -> Void,
         didSelectProduct: ((AdaptyPaywallProduct) -> Void)? = nil,
         didStartPurchase: ((AdaptyPaywallProduct) -> Void)? = nil,
@@ -84,7 +84,7 @@ struct AdaptyPaywallView: UIViewControllerRepresentable {
         configuration: AdaptyUI.LocalizedViewConfiguration,
         tagResolver: AdaptyTagResolver?,
         didPerformAction: @escaping (AdaptyUI.Action) -> Void,
-        didInitiatePurchase: ((AdaptyPaywallProduct) -> Void)?,
+        didInitiatePurchase: AdaptyObserverModeCallback?,
         didSelectProduct: ((AdaptyPaywallProduct) -> Void)?,
         didStartPurchase: ((AdaptyPaywallProduct) -> Void)?,
         didFinishPurchase: @escaping (AdaptyPaywallProduct, AdaptyPurchasedInfo) -> Void,
@@ -136,15 +136,20 @@ struct AdaptyPaywallView: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) { }
 }
 
-class AdaptyObserverModeDelegate_SwiftUI: NSObject, AdaptyObserverModeDelegate {
-    private let didInitiatePurchase: (AdaptyPaywallProduct) -> Void
+public typealias AdaptyObserverModeCallback = (AdaptyPaywallProduct, () -> Void, () -> Void) -> Void
 
-    init(didInitiatePurchase: @escaping (AdaptyPaywallProduct) -> Void) {
+class AdaptyObserverModeDelegate_SwiftUI: NSObject, AdaptyObserverModeDelegate {
+    private let didInitiatePurchase: AdaptyObserverModeCallback
+
+    init(didInitiatePurchase: @escaping AdaptyObserverModeCallback) {
         self.didInitiatePurchase = didInitiatePurchase
     }
 
-    func paywallController(_ controller: AdaptyPaywallController, didInitiatePurchase product: AdaptyPaywallProduct) {
-        didInitiatePurchase(product)
+    func paywallController(_ controller: AdaptyPaywallController,
+                           didInitiatePurchase product: AdaptyPaywallProduct,
+                           onStartPurchase: () -> Void,
+                           onFinishPurchase: () -> Void) {
+        didInitiatePurchase(product, onStartPurchase, onFinishPurchase)
     }
 }
 

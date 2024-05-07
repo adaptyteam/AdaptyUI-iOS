@@ -114,6 +114,16 @@ class AdaptyPaywallPresenter {
             }
         }
     }
+    
+    func observerOnStartPurchase() {
+        log(.verbose, "observerDidStartPurchase")
+        purchaseInProgress = true
+    }
+    
+    func observerOnFinishPurchase() {
+        log(.verbose, "observerDidFinishPurchase")
+        purchaseInProgress = false
+    }
 
     func makePurchase() {
         guard let selectedProduct = selectedAdaptyProduct else { return }
