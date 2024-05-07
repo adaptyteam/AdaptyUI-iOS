@@ -136,7 +136,7 @@ struct AdaptyPaywallView: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) { }
 }
 
-public typealias AdaptyObserverModeCallback = (AdaptyPaywallProduct, () -> Void, () -> Void) -> Void
+public typealias AdaptyObserverModeCallback = (AdaptyPaywallProduct, @escaping () -> Void, @escaping () -> Void) -> Void
 
 class AdaptyObserverModeDelegate_SwiftUI: NSObject, AdaptyObserverModeDelegate {
     private let didInitiatePurchase: AdaptyObserverModeCallback
@@ -147,8 +147,8 @@ class AdaptyObserverModeDelegate_SwiftUI: NSObject, AdaptyObserverModeDelegate {
 
     func paywallController(_ controller: AdaptyPaywallController,
                            didInitiatePurchase product: AdaptyPaywallProduct,
-                           onStartPurchase: () -> Void,
-                           onFinishPurchase: () -> Void) {
+                           onStartPurchase: @escaping () -> Void,
+                           onFinishPurchase: @escaping () -> Void) {
         didInitiatePurchase(product, onStartPurchase, onFinishPurchase)
     }
 }

@@ -122,8 +122,8 @@ public protocol AdaptyObserverModeDelegate: NSObject {
     func paywallController(
         _ controller: AdaptyPaywallController,
         didInitiatePurchase product: AdaptyPaywallProduct,
-        onStartPurchase: () -> Void,
-        onFinishPurchase: () -> Void
+        onStartPurchase: @escaping () -> Void,
+        onFinishPurchase: @escaping () -> Void
     )
 }
 
