@@ -82,7 +82,10 @@ struct MainView: View {
                         },
                         didSelectProduct: { print("#Example# didSelectProduct \($0.vendorProductId)") },
                         didStartPurchase: { print("#Example# didStartPurchase \($0.vendorProductId)") },
-                        didFinishPurchase: { p, _ in print("#Example# didFinishPurchase \(p.vendorProductId)") },
+                        didFinishPurchase: { p, _ in
+                            print("#Example# didFinishPurchase \(p.vendorProductId)")
+                            paywallPresented = false
+                        },
                         didFailPurchase: { p, _ in print("#Example# didFailPurchase \(p.vendorProductId)") },
                         didCancelPurchase: { print("#Example# didCancelPurchase \($0.vendorProductId)") },
                         didStartRestore: { print("#Example# didStartRestore") },
