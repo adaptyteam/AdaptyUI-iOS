@@ -74,12 +74,15 @@ extension AdaptyUI {
 
         private var initialized = false
 
-        func initialize() {
-            defer { initialized = true }
-            guard !initialized else { return }
+        static func initialize() {
+            queue.async {
+                guard !shared.initialized else { return }
 
-            AdaptyUI.writeLog(level: .verbose, message: "#ImageUrlPrefetcher# initialize")
-            AdaptyUI.setImageUrlObserver(self, dispatchQueue: Self.queue)
+                AdaptyUI.writeLog(level: .verbose, message: "#ImageUrlPrefetcher# initialize")
+                AdaptyUI.setImageUrlObserver(shared, dispatchQueue: queue)
+
+                shared.initialized = true
+            }
         }
 
         func extractedImageUrls(_ urls: Set<URL>) {

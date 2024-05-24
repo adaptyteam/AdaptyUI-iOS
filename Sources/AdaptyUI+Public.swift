@@ -141,7 +141,7 @@ extension AdaptyUI {
         loadTimeout: TimeInterval = 5.0,
         _ completion: @escaping AdaptyResultCompletion<AdaptyUI.LocalizedViewConfiguration>
     ) {
-        ImageUrlPrefetcher.shared.initialize()
+        ImageUrlPrefetcher.initialize()
 
         AdaptyUI.getViewConfiguration([
             "paywall": paywall,
