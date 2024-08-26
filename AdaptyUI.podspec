@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'AdaptyUI'
-  s.version          = '2.11.2'
+  s.version          = '2.11.3'
   s.summary          = 'Adapty SDK for iOS.'
 
   s.description      = <<-DESC
@@ -28,7 +28,7 @@ AdaptyUI is an extension for AdaptySDK.
   
   s.source_files = 'Sources/**/*.swift'
   
-  s.dependency 'Adapty', '~> 2.11.0'
+  s.dependency 'Adapty', '~> 2.11.3'
 
   s.frameworks = 'Foundation'
   s.ios.framework = 'UIKit'
