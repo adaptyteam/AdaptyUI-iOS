@@ -28,14 +28,8 @@ extension AdaptyPaywallProduct {
 
         let numberOfPeriodsDecimal = Decimal(floatLiteral: numberOfPeriods)
         let pricePerPeriod = price / numberOfPeriodsDecimal
+        let nsDecimalPricePerPeriod = NSDecimalNumber(decimal: pricePerPeriod)
 
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.locale = skProduct.priceLocale
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 2
-        formatter.roundingMode = .ceiling
-
-        return formatter.string(from: NSDecimalNumber(decimal: pricePerPeriod))
+        return skProduct.priceLocale.localized(price: nsDecimalPricePerPeriod)
     }
 }
